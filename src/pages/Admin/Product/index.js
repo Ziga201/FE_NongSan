@@ -13,7 +13,6 @@ import UpdateComponent from './Update/UpdateComponent';
 import CreateComponent from './Create/CreateComponent';
 import Pagination from '@mui/material/Pagination';
 import * as React from 'react';
-import PaginationComponent from '../Pagination/PaginationComponent';
 
 const cx = classNames.bind(style);
 
@@ -145,7 +144,6 @@ function Product() {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Pagination count={totalPages} onChange={handlePageClick} color="primary" />
             </div>
-            {/* <PaginationComponent /> */}
         </div>
     );
 }

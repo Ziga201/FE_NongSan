@@ -145,7 +145,7 @@ function Product() {
                             </div>
                         </div>
                         <div className={cx('col-md-10')}>
-                            {posts.data !== undefined && posts.data.data.length > 0 && (
+                            {/* {posts.data !== undefined && posts.data.data.length > 0 && (
                                 <div className={cx('row')}>
                                     {posts.data.data
                                         // .filter((post) => {
@@ -178,7 +178,7 @@ function Product() {
                                             </div>
                                         ))}
                                 </div>
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </div>

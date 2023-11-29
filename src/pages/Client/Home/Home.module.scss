@@ -1,0 +1,261 @@
+@import url('https://fonts.cdnfonts.com/css/simple-brush-script');
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
+// ======Banner===========
+.banner {
+    background: url(https://demo2wpopal.b-cdn.net/freshio/wp-content/uploads/2020/08/rev-slider_h3-2.jpg);
+    height: 680px;
+}
+
+.hug-banner {
+    height: 100%;
+    width: 42%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.slogan {
+    color: #fff;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.highlight {
+    font-family: 'Kaushan Script', sans-serif;
+    font-weight: 700;
+    font-size: 80px;
+    color: #fff;
+}
+
+.btn {
+    margin-top: 40px;
+    padding: 18px 44px;
+    background-color: var(--dark-green);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all ease 0.5s;
+    &:hover {
+        background-color: #fff;
+        color: var(--dark-green);
+    }
+
+    &:hover .icon {
+        transform: translateX(2px);
+        transition: all ease 0.2s;
+    }
+}
+
+.icon {
+    margin-left: 10px;
+}
+
+// =======End Banner============
+
+.service {
+    margin: 80px 0 120px;
+}
+
+.list {
+    justify-content: center;
+}
+
+.item {
+    padding: 0 80px;
+    text-align: center;
+}
+
+.item:nth-child(1) .sticker {
+    background: url('https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/h5_shape-1.png') no-repeat center;
+}
+.item:nth-child(2) .sticker {
+    background: url('https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/h5_shape-2.png') no-repeat center;
+}
+.item:nth-child(3) .sticker {
+    background: url('https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/h5_shape-3.png') no-repeat center;
+}
+
+.sticker img {
+    transition: all ease 0.5s;
+}
+
+.sticker img:hover {
+    transform: scale(0.8);
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-green);
+    margin: 30px 0 15px 0;
+}
+
+.desc {
+    color: #555;
+}
+
+.product {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.text-editor {
+    font-family: 'Kaushan Script', sans-serif;
+    font-size: 24px;
+    color: var(--light-green);
+}
+
+.heading {
+    font-size: 40px;
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+.tab {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0 40px;
+}
+
+.tab-link.active {
+    background-color: var(--dark-green);
+    color: #fff;
+    &:hover {
+        color: #fff;
+    }
+}
+
+.tab-link {
+    margin: 0 5px;
+    border-radius: 20px;
+    padding: 10px 20px;
+    &:hover {
+        cursor: pointer;
+        color: var(--dark-green);
+    }
+}
+
+.product-block {
+    text-align: center;
+    padding: 20px;
+}
+
+.product-img {
+    width: 250px;
+    height: 230px;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    object-fit: cover;
+    transition: all ease 0.3s;
+}
+.product-price {
+    font-size: 16px;
+    color: var(--light-green);
+    font-weight: 700;
+}
+
+.product-name {
+    font-weight: 600;
+}
+
+.product-add {
+    font-weight: 600;
+    border: none;
+    background: none;
+    margin-top: 10px;
+    &:hover {
+        transition: all 0.3 ease-in;
+        color: var(--dark-green);
+    }
+}
+
+.add-icon {
+    margin-left: 5px;
+    transition: all ease 0.3s;
+}
+
+.product-add:hover .add-icon {
+    transform: translateX(5px);
+}
+
+.reason {
+    background-color: #f7f7f7;
+    height: 665px;
+}
+
+.reason-bg {
+    background: url('https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/h7_img.jpg') no-repeat;
+    background-position: 20% 100%;
+    height: 100%;
+    text-align: center;
+    mix-blend-mode: multiply;
+    padding: 75px 30px 90px;
+}
+
+.reason-list {
+    margin-top: 50px;
+}
+
+.reason-item {
+    display: flex;
+    padding: 30px 30px;
+    background-color: rgba(172, 255, 47, 0.481);
+    mix-blend-mode: unset;
+    margin: 10px 0;
+}
+
+.reason-drop {
+    margin-right: 10px;
+}
+
+.reason-text {
+    font-size: 18px;
+}
+
+.feedback {
+    background: url('https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/bg2-h4.jpg');
+    padding: 120px 30px;
+}
+
+.person {
+    text-align: center;
+}
+.avatar img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.speech {
+    margin: 30px 0 15px;
+}
+.info {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.brand {
+    padding: 70px 30px 40px;
+}
+
+.logo {
+    padding: 0 55px;
+}
+
+.logo img {
+    width: 100px;
+    height: 70px;
+    opacity: 0.3;
+    transition: all 0.5s ease;
+
+    &:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+}

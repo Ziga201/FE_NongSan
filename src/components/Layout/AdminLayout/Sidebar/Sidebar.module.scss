@@ -1,0 +1,43 @@
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #222931;
+    position: fixed;
+    top: 64px;
+    left: 0;
+}
+
+.element {
+    text-decoration: none;
+}
+
+.active {
+    background-color: rgb(0, 153, 255);
+}
+
+.active .desc,
+.active .logo {
+    color: #222931;
+}
+
+.element:first-child {
+    margin-top: 30px;
+}
+
+.element .wrap {
+    padding: 15px;
+    display: flex;
+    color: #ccc;
+    &:hover {
+        // background-color: aqua;
+        color: #fff;
+    }
+}
+
+.logo {
+    font-size: 20px;
+}
+
+.desc {
+    padding-left: 8px;
+}

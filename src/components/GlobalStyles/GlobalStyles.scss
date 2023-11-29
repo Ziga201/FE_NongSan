@@ -1,0 +1,94 @@
+@import 'normalize.css';
+@import url(//db.onlinewebfonts.com/c/eb5b5ee332420add9a40ee988cb6ac37?family=Mazzard+H);
+
+:root {
+    --dark-green: #0a472e;
+    --light-green: #a8b324;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    // font-size: 62.5%;
+}
+
+body {
+    font-family: mazzard soft h, helveticaneue-light, helvetica neue light, helvetica neue, Helvetica, Arial,
+        lucida grande, sans-serif;
+    font-size: 14px;
+    text-rendering: optimizeSpeed;
+}
+
+button,
+input,
+[tabindex] {
+    // outline: none;
+    // border: none;
+}
+
+a[href] {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.wrapper {
+    width: 1410px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+// 5 columns bootstrap
+.col-2dot4, // extra small
+.col-sm-2dot4, // small
+.col-md-2dot4, // medium
+.col-lg-2dot4, // large
+.col-xl-2dot4 {
+    // extra large
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+.col-2dot4 {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+@media (min-width: 540px) {
+    .col-sm-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (min-width: 720px) {
+    .col-md-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (min-width: 960px) {
+    .col-lg-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}
+@media (min-width: 1140px) {
+    .col-xl-2dot4 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 20%;
+        flex: 0 0 20%;
+        max-width: 20%;
+    }
+}

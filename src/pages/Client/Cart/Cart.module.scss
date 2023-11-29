@@ -1,0 +1,66 @@
+.cart {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+.heading {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.th,
+.td {
+    padding: 10px;
+    text-align: left;
+}
+
+.td img {
+}
+
+.th {
+    background-color: #4caf50;
+    color: white;
+}
+
+.tbody .tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.total {
+    text-align: right;
+}
+
+.total-value {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white !important;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.button:hover {
+    background-color: #3e8e41;
+}

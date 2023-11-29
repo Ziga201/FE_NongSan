@@ -1,0 +1,137 @@
+.banner {
+    background: url('https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/breadcrumb_woo.jpg');
+    padding: 96px 0;
+}
+
+.banner div {
+    // padding: 0 20px;
+}
+
+.heading {
+    font-size: 50px;
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+.path {
+    color: #999;
+}
+
+.content {
+    padding: 70px 0;
+}
+
+.text-editor {
+    font-family: 'Kaushan Script', sans-serif;
+    font-size: 24px;
+    color: var(--light-green);
+    text-align: center;
+}
+
+.search {
+    text-align: right;
+    display: block;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 220px;
+    height: 30px;
+    padding: 16px 12px;
+    border-radius: 50px;
+    outline: none;
+    border: 1px solid #333;
+    width: 250px;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+}
+
+.title {
+    font-weight: 700;
+    color: var(--dark-green);
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.item {
+    font-size: 15px;
+    display: flex;
+    margin: 5px;
+    transition: all ease 0.5s;
+    padding: 2px 0;
+
+    &:hover {
+        cursor: pointer;
+        color: var(--light-green);
+    }
+}
+
+.item-icon {
+    margin-right: 10px;
+}
+
+.product-block {
+    text-align: center;
+    padding: 20px;
+    // &:hover .product-img img {
+    //     transform: scale(1.1);
+    // }
+}
+
+// .product-block:hover .product-name {
+//     transform: scale(1.1);
+// }
+// .product-block:hover .product-price {
+//     transform: scale(1.1);
+// }
+
+.product-img {
+    width: 250px;
+    height: 230px;
+}
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    object-fit: cover;
+    transition: all ease 0.3s;
+}
+
+.product-name {
+    font-weight: 600;
+    transition: all ease 0.3s;
+}
+
+.product-price {
+    font-size: 16px;
+    color: var(--light-green);
+    font-weight: 700;
+    transition: all ease 0.3s;
+}
+
+.product-add {
+    font-weight: 600;
+    border: none;
+    background: none;
+    margin-top: 10px;
+    &:hover {
+        transition: all 0.3 ease-in;
+        color: var(--dark-green);
+    }
+}
+
+.add-icon {
+    margin-left: 5px;
+    transition: all ease 0.3s;
+}
+
+.product-add:hover .add-icon {
+    transform: translateX(5px);
+}

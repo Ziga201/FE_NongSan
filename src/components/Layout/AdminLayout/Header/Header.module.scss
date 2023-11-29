@@ -1,0 +1,52 @@
+.header {
+    width: 100%;
+    height: 64px;
+    // background-color: #ccc;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.logo {
+    width: 250px;
+    background-color: #1f262d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 80px;
+}
+
+.info {
+    flex: 1;
+    background-color: #141619;
+    display: flex;
+    color: #ccc;
+    justify-content: space-between;
+}
+
+.function,
+.notify {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+.function div,
+.notify div {
+    padding: 0 15px;
+}
+
+.element img {
+    border-radius: 50%;
+}
+
+.element:hover {
+    cursor: pointer;
+}

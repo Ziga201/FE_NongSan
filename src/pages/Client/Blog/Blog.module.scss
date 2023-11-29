@@ -1,0 +1,68 @@
+.banner {
+    background: url('https://demo2wpopal.b-cdn.net/freshio/wp-content/uploads/2020/08/breadcrumb_bkg.jpg');
+    padding: 96px 0;
+}
+
+.banner div {
+    // padding: 0 20px;
+}
+
+.heading {
+    font-size: 50px;
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+.path {
+    color: #999;
+}
+
+.content {
+    padding: 70px 0;
+}
+
+.page {
+    color: #000;
+}
+.item {
+    margin-bottom: 10px;
+}
+
+.image img {
+    border-radius: 5px;
+    width: 100%;
+    transition: transform ease 0.5s;
+    height: 200px;
+    object-fit: cover;
+}
+.image {
+    overflow: hidden;
+    &:hover img {
+        transform: scale(1.1);
+    }
+}
+
+.info {
+    color: var(--dark-green);
+    font-size: 12px;
+    margin: 25px 0 12px;
+}
+
+.title {
+    color: var(--dark-green);
+    font-size: 24px;
+    font-weight: 700;
+
+    &:hover {
+        color: var(--light-green);
+    }
+}
+
+.desc {
+    color: #555;
+    margin: 12px 0 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

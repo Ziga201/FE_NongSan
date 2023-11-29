@@ -1,0 +1,108 @@
+.footer {
+    background-color: var(--dark-green);
+    background-image: url(https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/footer-bg_1.png);
+}
+
+.line1 {
+    padding: 45px 0;
+}
+
+.line1-border {
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.contact {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.logo {
+    margin-right: 10px;
+    color: var(--light-green);
+    font-size: 48px;
+}
+
+.info {
+    font-weight: 600;
+}
+
+.text {
+    font-size: 12px;
+    color: #fff;
+}
+
+.number {
+    color: var(--light-green);
+    font-size: 20px;
+}
+
+.social {
+    align-self: center;
+    padding-left: 50px;
+}
+
+.social-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.social-icon {
+    color: var(--light-green);
+    font-size: 16px;
+}
+
+.font-icon {
+    margin-right: 10px;
+}
+
+.payment {
+    align-self: center;
+}
+
+.line2 {
+    padding: 65px 0px;
+    border-top: 1px #e1e1e163 solid;
+}
+
+.heading {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+.desc-item {
+    color: #909896;
+    padding: 2px 0;
+    &:hover {
+        color: var(--light-green);
+        cursor: pointer;
+    }
+}
+
+.form {
+    margin-top: 10px;
+    position: relative;
+    width: max-content;
+}
+
+.email {
+    width: max-content;
+    margin-top: 20px;
+    color: #fff;
+    border-bottom: 1px solid var(--light-green);
+}
+
+.input {
+    padding: 8px 20px;
+    border-radius: 20px;
+}
+
+.submit {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+}

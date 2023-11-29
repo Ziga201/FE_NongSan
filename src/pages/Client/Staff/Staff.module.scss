@@ -1,0 +1,168 @@
+.banner {
+    background: url('https://demo2wpopal.b-cdn.net/freshio/wp-content/uploads/2020/08/breadcrumb_bkg.jpg');
+    padding: 96px 0;
+}
+
+.banner div {
+    // padding: 0 20px;
+}
+
+.heading {
+    font-size: 50px;
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+.path {
+    color: #999;
+}
+
+.content {
+    padding: 70px 0;
+}
+
+.image {
+    text-align: center;
+}
+
+.intro {
+    margin: 50px 0;
+}
+.intro-item {
+}
+.intro-img {
+    height: 250px;
+    text-align: center;
+    display: block;
+}
+
+.intro-img img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+.intro-title {
+    font-size: 22px;
+    color: var(--dark-green);
+    font-weight: 700;
+    text-align: center;
+    margin: 20px 0 10px;
+}
+.intro-desc {
+    color: #555;
+    text-align: center;
+    padding: 0 30px;
+}
+
+.text-wrapper {
+    margin: 80px 0 40px;
+}
+
+.text-editor {
+    font-family: 'Kaushan Script', sans-serif;
+    font-size: 24px;
+    color: var(--light-green);
+    text-align: center;
+}
+.text-heading {
+    font-size: 40px;
+    color: var(--dark-green);
+    text-align: center;
+    font-weight: 700;
+}
+
+.logo {
+}
+
+.logo-icon {
+    position: relative;
+}
+
+.logo img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    fill: #e4d98b;
+}
+
+.slide-wrapper {
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // background-size: cover;
+    height: 350px;
+}
+
+.each-slide-effect span {
+    // padding: 20px;
+    // font-size: 20px;
+    // background: #efefef;
+    // text-align: center;
+}
+
+.feedback {
+    background-image: url(https://demo2.pavothemes.com/freshio/wp-content/uploads/2020/08/bg2-h4.jpg);
+}
+
+.avatar img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.slide-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.speech {
+    width: 600px;
+    font-size: 17px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+
+.name {
+    color: #aaa;
+}
+.info {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.info-item {
+    height: 360px;
+    width: 300px;
+}
+
+.info-img {
+    height: 100%;
+    width: 100%;
+}
+.info-img img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: all ease 0.3s;
+    &:hover {
+        filter: grayscale(50%);
+    }
+}
+
+.info-name {
+    color: var(--dark-green);
+    font-size: 18px;
+    margin: 30px 0 10px;
+    &:hover {
+        color: var(--light-green);
+    }
+}
+.info-position {
+    color: #999;
+}

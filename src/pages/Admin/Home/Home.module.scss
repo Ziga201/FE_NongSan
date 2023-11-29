@@ -1,0 +1,96 @@
+.hug {
+    background-color: #eee;
+    flex: 1;
+    margin: 64px 0 0 250px;
+    height: 100vh;
+    font-family: 'Source Sans Pro' !important;
+}
+
+.heading {
+    padding: 20px;
+    width: 100wh;
+    display: flex;
+    flex: 1;
+}
+
+.name_table {
+    color: #3e5569;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.wrapper {
+    padding: 20px;
+    background-color: #fff;
+    margin: 0 20px;
+}
+
+input {
+    padding: 5px;
+    width: 100%;
+    margin: 5px 0;
+}
+
+// =====================================
+
+.item {
+    border-radius: 5px;
+    margin-bottom: 50px;
+}
+
+.bg-1 {
+    background-color: #51a5d0;
+}
+.bg-2 {
+    background-color: #28a745;
+}
+.bg-3 {
+    background-color: #ffc107;
+}
+.bg-4 {
+    background-color: #dc3545;
+}
+
+.info {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.data {
+    color: #fff;
+}
+
+.number {
+    font-size: 35px;
+    font-weight: 700;
+}
+
+.text {
+    font-size: 16px;
+}
+
+.icon {
+    align-self: center;
+}
+
+.icon-item {
+    font-size: 50px;
+    opacity: 0.3;
+}
+
+.more {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #fff;
+    padding: 3px 0;
+    text-align: center;
+    transition: all ease 0.2s;
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+}
+
+.more:hover .more-item {
+    transform: translateX(5px);
+    transition: all ease-in-out 0.2s;
+}

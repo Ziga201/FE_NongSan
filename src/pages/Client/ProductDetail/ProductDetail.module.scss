@@ -1,0 +1,102 @@
+.image {
+    text-align: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.image img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.info {
+    padding: 20px;
+}
+
+.stocking {
+    background-color: #defaf2;
+    color: #333;
+    display: inline-block;
+    padding: 2px 5px;
+}
+
+.name {
+    font-size: 30px;
+    color: var(--dark-green);
+    font-weight: 800;
+    margin: 15px 0 12px;
+}
+
+.price {
+    font-size: 24px;
+    color: var(--light-green);
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.desc {
+    margin: 15px 0 20px;
+}
+
+.message {
+    color: #555;
+}
+
+.message span {
+    margin-left: 5px;
+    font-style: italic;
+}
+
+.category {
+    margin-top: 20px;
+    // font-weight: 00;
+    color: #000;
+}
+
+.category span {
+    color: #999;
+    font-weight: normal;
+}
+
+.add {
+    border-bottom: 1px solid #dad9d9;
+    padding-bottom: 20px;
+}
+.add-btn {
+    padding: 10px 0;
+    font-size: 16px;
+    border: none;
+    background-color: var(--light-green);
+    font-weight: 700;
+    color: #fff;
+    margin: 20px 0 0;
+    padding: 5px 40px;
+    line-height: 2.5;
+    border-radius: 50px;
+}
+
+.certify {
+    margin-top: 20px;
+    color: rgb(18, 146, 35);
+}
+
+.certify-item {
+    padding: 5px;
+}
+
+.desc {
+    margin-top: 50px;
+}
+
+.heading {
+    font-size: 35px;
+    color: var(--light-green);
+    font-weight: 700;
+    text-align: center;
+    border-bottom: 1px solid #dad9d9;
+    padding-bottom: 20px;
+}
+
+.desc-text {
+    margin: 20px 200px 0;
+}

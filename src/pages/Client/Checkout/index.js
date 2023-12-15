@@ -1,4 +1,3 @@
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import style from './Checkout.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
@@ -31,7 +30,7 @@ function Checkout() {
         const formData = new FormData();
         // const cart = JSON.parse(localStorage.getItem('cartItems'));
         const total = cartItems.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
-        const product = cartItems.reduce((acc, item) => acc + `${item.name} x${item.quantity} `, '');
+        const product = cartItems.reduce((acc, item) => acc + `${item.nameProduct} x${item.quantity} `, '');
         console.log(product);
 
         const today = new Date();
@@ -68,13 +67,6 @@ function Checkout() {
         event.target.reset();
 
         // initModal();
-    };
-
-    const handlePaypal = () => {
-        setTimeout(() => {
-            const button = document.getElementById('submit');
-            button.click();
-        }, 500);
     };
 
     return (
@@ -118,59 +110,6 @@ function Checkout() {
 
                             <div className={cx('row checkout')}>
                                 <div className={cx('col-md-4')}>
-                                    <p>Thanh toán ngay với Paypal</p>
-                                </div>
-                                <div className={cx('col-md-4')}>
-                                    <PayPalScriptProvider
-                                        options={{
-                                            'client-id':
-                                                'AY3o2DhF061U3MnsiFc0V9Q_RjXM-gkS8Y3VQWuGRlVzBd_7AEL7mGlM_WzNoSGxPQ3az2dBa-P1Feco',
-                                        }}
-                                    >
-                                        <PayPalButtons
-                                            type="submit"
-                                            // onClick={() => handleSubmit()}
-                                            style={{
-                                                layout: 'horizontal',
-                                            }}
-                                            createOrder={(data, actions) => {
-                                                const totalPrice = cartItems.reduce(
-                                                    (acc, item) => acc + Number(item.price) * item.quantity,
-                                                    0,
-                                                );
-
-                                                const totalUSD = (totalPrice / 23000).toFixed(2);
-                                                return actions.order.create({
-                                                    purchase_units: [
-                                                        {
-                                                            amount: {
-                                                                value: totalUSD,
-                                                            },
-                                                        },
-                                                    ],
-                                                    application_context: {
-                                                        shipping_preference: 'NO_SHIPPING',
-                                                    },
-                                                });
-                                            }}
-                                            onApprove={async (data, actions) => {
-                                                const details = await actions.order.capture();
-                                                const name =
-                                                    details.payer.name.given_name + ' ' + details.payer.name.surname;
-                                                setConfirm('Đã thanh toán Paypal, chủ thẻ: ' + name);
-                                                handlePaypal();
-
-                                                // const details = await actions.order.capture();
-                                                // const name = details.payer.name.given_name;
-                                                // alert('Transaction completed by ' + name);
-                                            }}
-                                            // onApprove={(data, actions) => {
-                                            //     return actions.order.capture().then((details) => {
-                                            //         alert('Transaction completed by ' + details.payer.name.given_name);
-                                            //     });
-                                            // }}
-                                        />
-                                    </PayPalScriptProvider>
                                     <input
                                         id="submit"
                                         className={cx('input-btn')}
@@ -195,7 +134,7 @@ function Checkout() {
                                         <>
                                             <div className={cx('order-product')}>
                                                 <div className={cx('')}>
-                                                    {item.name} x {item.quantity}{' '}
+                                                    {item.nameProduct} x {item.quantity}{' '}
                                                 </div>
                                                 <div className={cx('order-heading')}>
                                                     {parseInt(item.price).toLocaleString('vi-VN')}

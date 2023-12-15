@@ -24,6 +24,7 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         localStorage.setItem('admin', true);
+        localStorage.setItem('user', true);
         // accounts.data.data.forEach((element) => {
         //     // if (element.username == username && element.password == password) {
         //     //     // alert('MK đúng');

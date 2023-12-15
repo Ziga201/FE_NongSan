@@ -46,13 +46,9 @@ function Cart() {
                     <tbody className={cx('tbody')}>
                         {cartItems.map((item, index) => (
                             <tr className={cx('tr')} key={index}>
-                                <td className={cx('td')}>{item.name}</td>
+                                <td className={cx('td')}>{item.nameProduct}</td>
                                 <td className={cx('td')}>
-                                    <img
-                                        style={{ width: '100px' }}
-                                        src={'http://localhost:8000/api/postImages/' + item.image}
-                                        alt="product"
-                                    />
+                                    <img style={{ width: '100px' }} src={item.avartarImageProduct} alt="product" />
                                 </td>
                                 <td className={cx('td')}>{parseInt(item.price).toLocaleString('vi-VN')}</td>
                                 <td className={cx('td')}>{item.quantity}</td>

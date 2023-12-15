@@ -16,13 +16,19 @@ const cx = classNames.bind(style);
 
 function Product() {
     const [data, setData] = useState({});
-
+    const [pageNumber, setPageNumber] = useState({
+        pageNumber: 1,
+        pageSize: 99,
+    });
     useEffect(() => {
         const fetchData = async () => {
-            setData((await productService.getAll()).data);
+            const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
+
+            setData(response.data);
         };
         fetchData();
     }, []);
+    console.log(data.data);
 
     // Add to cart
     const [cartItems, setCartItems] = useState([]);
@@ -38,19 +44,14 @@ function Product() {
     function addToCart(item) {
         if (user) {
             toast.success('Thêm vào giỏ hàng thành công !');
-
-            // const newCartItems = [...cartItems, item];
-            // setCartItems(newCartItems);
-            // localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-            // const data = JSON.parse(localStorage.getItem('cartItems'));
             const product = {
-                id: item._id,
-                name: item.name,
-                image: item.image,
+                productID: item.productID,
+                nameProduct: item.nameProduct,
+                avartarImageProduct: item.avartarImageProduct,
                 price: item.price,
                 quantity: 1,
             };
-            const itemIndex = cartItems.findIndex((i) => i.id === item._id);
+            const itemIndex = cartItems.findIndex((i) => i.id === item.productID);
             console.log(itemIndex);
             if (itemIndex >= 0) {
                 const newCartItems = [...cartItems];
@@ -145,32 +146,32 @@ function Product() {
                             </div>
                         </div>
                         <div className={cx('col-md-10')}>
-                            {/* {posts.data !== undefined && posts.data.data.length > 0 && (
+                            {data.data !== undefined && (
                                 <div className={cx('row')}>
-                                    {posts.data.data
-                                        // .filter((post) => {
+                                    {data.data
+                                        // .filter((item) => {
                                         //     return key.toLowerCase() === ''
-                                        //         ? post
-                                        //         : post.category.toLowerCase().includes(key.toLowerCase());
+                                        //         ? item
+                                        //         : item.category.toLowerCase().includes(key.toLowerCase());
                                         // })
-                                        // .filter((post) => {
+                                        // .filter((item) => {
                                         //     return search.toLowerCase() === ''
-                                        //         ? post
-                                        //         : post.nameProduct.toLowerCase().includes(search.toLowerCase());
+                                        //         ? item
+                                        //         : item.nameProduct.toLowerCase().includes(search.toLowerCase());
                                         // })
-                                        .map((post) => (
-                                            <div key={post.productID} className={cx('product-block', 'col-md-3')}>
-                                                <div onClick={() => handleClick(post._id)}>
+                                        .map((item) => (
+                                            <div key={item.productID} className={cx('product-block', 'col-md-3')}>
+                                                <div onClick={() => handleClick(item.productID)}>
                                                     <div className={cx('product-img')}>
-                                                        <img src={post.avartarImageProduct} alt="product" />
+                                                        <img src={item.avartarImageProduct} alt="product" />
                                                     </div>
-                                                    <div className={cx('product-name')}>{post.nameProduct}</div>
+                                                    <div className={cx('product-name')}>{item.nameProduct}</div>
                                                 </div>
 
                                                 <div className={cx('product-price')}>
-                                                    {parseInt(post.price).toLocaleString('vi-VN')} VND
+                                                    {parseInt(item.price).toLocaleString('vi-VN')} VND
                                                 </div>
-                                                <button onClick={() => addToCart(post)} className={cx('product-add')}>
+                                                <button onClick={() => addToCart(item)} className={cx('product-add')}>
                                                     Thêm giỏ hàng
                                                     <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
                                                 </button>
@@ -178,7 +179,7 @@ function Product() {
                                             </div>
                                         ))}
                                 </div>
-                            )} */}
+                            )}
                         </div>
                     </div>
                 </div>

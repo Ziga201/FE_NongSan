@@ -3,21 +3,13 @@ import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import accountService from '~/services/accountService';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(style);
 
 function Login() {
-    const [accounts, setAccounts] = useState({});
-
-    const fetchAccounts = async () => {
-        setAccounts(await accountService.getAccounts());
-    };
-
-    useEffect(() => {
-        fetchAccounts();
-    }, [accounts]);
-
-    // Login
+    const [user, setUser] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -25,35 +17,21 @@ function Login() {
         event.preventDefault();
         localStorage.setItem('admin', true);
         localStorage.setItem('user', true);
-        // accounts.data.data.forEach((element) => {
-        //     // if (element.username == username && element.password == password) {
-        //     //     // alert('MK đúng');
-        //     //     localStorage.setItem('user', element.username);
-        //     //     window.location.href = '/admin';
-        //     // }
 
-        //     if (element.username == username && element.password == password && element.decentralization == 'Admin') {
-        //         // alert('MK đúng');
-        //         localStorage.setItem('admin', true);
-        //         window.location.href = '/admin';
-        //     } else if (
-        //         element.username == username &&
-        //         element.password == password &&
-        //         element.decentralization == 'User'
-        //     ) {
-        //         // alert('MK đúng');
-        //         const user = {
-        //             id: element._id,
-        //             username: element.username,
-        //             decentralization: element.decentralization,
-        //         };
+        const formData = new FormData();
 
-        //         localStorage.setItem('info', JSON.stringify(user));
-        //         localStorage.setItem('user', true);
-        //         localStorage.setItem('admin', true);
-        //         window.location.href = '/';
-        //     }
-        // });
+        formData.append('userName', username);
+        formData.append('password', password);
+
+        const response = await accountService.login(formData);
+        console.log(response);
+        if (response.data.status === 200) {
+            localStorage.setItem('jwtToken', response.data.data.accessToken);
+            toast.success(response.data.message);
+            window.location.href = '/';
+        } else {
+            toast.error(response.data.message);
+        }
     };
 
     return (
@@ -82,6 +60,7 @@ function Login() {
                     <button className={cx('button')} type="submit">
                         Đăng nhập
                     </button>
+                    <ToastContainer position="bottom-right" />
                 </form>
                 <p className={cx('p')}>
                     Bạn chưa có tài khoản ?{' '}

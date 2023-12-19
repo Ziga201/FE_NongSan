@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import productService from '~/services/productService';
+import productTypeService from '~/services/productTypeService';
 
 import UpdateComponent from './Update/UpdateComponent';
 import CreateComponent from './Create/CreateComponent';
@@ -20,23 +21,33 @@ function Product() {
     const [data, setData] = useState({});
     const [pageNumber, setPageNumber] = useState({
         pageNumber: 1,
-        pageSize: 4,
+        pageSize: 6,
     });
-    const [pageSize, setPageSize] = useState(4);
     const [totalPages, setTotalPages] = useState();
+    const [typeData, setTypeData] = useState({});
     useEffect(() => {
         const fetchData = async () => {
             const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
-            console.log(response);
+            // console.log(response);
             setData(response.data);
             setTotalPages(response.data.pagination.totalPage);
         };
         fetchData();
     }, [pageNumber]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await productTypeService.getAll();
+            setTypeData(response);
+        };
+        fetchData();
+    }, []);
+    console.log(typeData.data);
+
     const handlePageClick = (event, value) => {
-        setPageNumber({ pageNumber: value, pageSize: 4 });
+        setPageNumber({ pageNumber: value, pageSize: 6 });
     };
-    console.log(totalPages);
+    // console.log(totalPages);
 
     const deleteProduct = async (id, e) => {
         var response = await productService.delete(id);
@@ -53,19 +64,17 @@ function Product() {
     return (
         <div className={cx('hug')}>
             <div className={cx('heading')}>
-                <div className="col">
-                    <div className={cx('name_table')}>Danh mục sản phẩm</div>
+                <div className={cx('search')}>
+                    <input
+                        type="text"
+                        className={cx('search-input')}
+                        placeholder="Nhập tên sản phẩm ..."
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
+
                 <CreateComponent setPageNumber={setPageNumber} pageNumber={pageNumber} />
-            </div>
-            <div className={cx('search')}>
-                <input
-                    type="text"
-                    className={cx('search-input')}
-                    placeholder="Nhập tên sản phẩm ..."
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
             </div>
 
             {data.data !== undefined && (
@@ -82,8 +91,6 @@ function Product() {
                                 <th>Giảm giá</th>
                                 <th>Trạng thái</th>
                                 <th>Lượt xem</th>
-                                {/* <th>Ngày tạo</th>
-                                <th>Ngày sửa</th> */}
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -97,7 +104,15 @@ function Product() {
                                 .map((item, index) => (
                                     <tr key={item.productID}>
                                         <td>{index + 1}</td>
-                                        <td>{item.productTypeID}</td>
+                                        {typeData.data !== undefined && (
+                                            <td>
+                                                {
+                                                    typeData.data
+                                                        .filter((x) => x.productTypeID === item.productTypeID)
+                                                        .map((filteredItem) => filteredItem.nameProductType)[0]
+                                                }
+                                            </td>
+                                        )}
                                         <td>{item.nameProduct}</td>
                                         <td>{item.price}</td>
                                         <td>
@@ -107,13 +122,10 @@ function Product() {
                                                 alt="product"
                                             />
                                         </td>
-                                        <td className={cx('content-fix')}>{item.title}</td>
+                                        <td>{item.title}</td>
                                         <td>{item.discount}%</td>
                                         <td>{item.status}</td>
                                         <td>{item.numberOfViews}</td>
-                                        {/* <td>{item.createdAt}</td>
-                                        <td>{item.updateAt}</td> */}
-
                                         <td>
                                             <UpdateComponent
                                                 id={item.productID}
@@ -141,7 +153,7 @@ function Product() {
                     </table>
                 </div>
             )}
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
                 <Pagination count={totalPages} onChange={handlePageClick} color="primary" />
             </div>
         </div>

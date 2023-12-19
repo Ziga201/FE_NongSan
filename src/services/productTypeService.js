@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-class Decentralization {
+class ProductType {
     create(formData) {
-        const url = 'https://localhost:7211/api/Product/AddProduct';
+        const url = 'https://localhost:7211/api/ProductType/AddProductType';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -11,7 +11,7 @@ class Decentralization {
         return axios.post(url, formData, config);
     }
     update(formData) {
-        const url = 'https://localhost:7211/api/Product/UpdateProduct';
+        const url = 'https://localhost:7211/api/ProductType/UpdateProductType';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -20,14 +20,14 @@ class Decentralization {
         return axios.put(url, formData, config);
     }
     delete(id) {
-        const url = 'https://localhost:7211/api/Product/DeleteProduct/' + id;
+        const url = 'https://localhost:7211/api/ProductType/DeleteProductType/' + id;
         return axios.delete(url);
     }
 
-    getAll(pageSize, pageNumber) {
-        const url = `https://localhost:7211/api/Product/GetProduct?PageSize=${pageSize}&PageNumber=${pageNumber}`;
+    getAll() {
+        const url = 'https://localhost:7211/api/ProductType/GetAll';
         return axios.get(url);
     }
 }
 
-export default new Decentralization();
+export default new ProductType();

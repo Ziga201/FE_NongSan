@@ -1,0 +1,7 @@
+.admin .active {
+    background-color: #4b5969;
+}
+
+.admin .active div {
+    color: #fff;
+}

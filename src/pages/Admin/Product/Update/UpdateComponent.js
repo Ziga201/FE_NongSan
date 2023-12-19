@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import productService from '~/services/productService';
-
+import style from '~/pages/Admin/Page.module.scss';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(style);
 function UpdateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
@@ -63,7 +65,11 @@ function UpdateComponent(props) {
                 <form onSubmit={handleSubmit}>
                     <Modal.Body>
                         {typeData.data !== undefined && (
-                            <select value={type} onChange={(event) => setType(event.target.value)}>
+                            <select
+                                value={type}
+                                className={cx('modal-input')}
+                                onChange={(event) => setType(event.target.value)}
+                            >
                                 {typeData.data.map((item) => (
                                     <option key={item.productTypeID} value={item.productTypeID}>
                                         {item.nameProductType}
@@ -82,6 +88,7 @@ function UpdateComponent(props) {
                             type="text"
                             placeholder="Nhập tên sản phẩm"
                             value={name}
+                            className={cx('modal-input')}
                             onChange={(event) => setName(event.target.value)}
                             required
                         />
@@ -89,6 +96,7 @@ function UpdateComponent(props) {
                             type="text"
                             placeholder="Nhập giá sản phẩm"
                             value={price}
+                            className={cx('modal-input')}
                             onChange={(event) => setPrice(event.target.value)}
                             required
                         />
@@ -97,6 +105,7 @@ function UpdateComponent(props) {
                             type="text"
                             placeholder="Nhập tiêu đề"
                             value={title}
+                            className={cx('modal-input')}
                             onChange={(event) => setTitle(event.target.value)}
                             required
                         />
@@ -104,10 +113,15 @@ function UpdateComponent(props) {
                             type="text"
                             placeholder="Nhập giảm giá"
                             value={discount}
+                            className={cx('modal-input')}
                             onChange={(event) => setDiscount(event.target.value)}
                             required
                         />
-                        <select value={status} onChange={(event) => setStatus(event.target.value)}>
+                        <select
+                            value={status}
+                            className={cx('modal-input')}
+                            onChange={(event) => setStatus(event.target.value)}
+                        >
                             <option value="INACTIVE">INACTIVE</option>
                             <option value="ACTIVE">ACTIVE</option>
                         </select>

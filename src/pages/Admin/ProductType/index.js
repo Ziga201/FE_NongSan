@@ -1,34 +1,40 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
+import '../../../../node_modules/bootstrap/dist/css/bootstrap.css';
+
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-
 import { useState, useEffect } from 'react';
-import accountService from '~/services/accountService';
+import productTypeService from '~/services/productTypeService';
 
-import CreateComponent from './Create/CreateComponent';
 import UpdateComponent from './Update/UpdateComponent';
+import CreateComponent from './Create/CreateComponent';
+import * as React from 'react';
 
 const cx = classNames.bind(style);
 
-function Account() {
+function ProductType() {
     const [data, setData] = useState({});
     useEffect(() => {
         const fetchData = async () => {
-            const response = await accountService.getAll();
+            const response = await productTypeService.getAll();
             setData(response);
         };
         fetchData();
-    }, []);
-    console.log(data);
+    }, [data]);
 
-    const deleteAccount = async (id, e) => {
-        var response = await accountService.delete(id);
-
-        alert(response.data.message);
+    const deleteProductType = async (id, e) => {
+        var response = await productTypeService.delete(id);
+        if (response.data.status === 200) {
+            alert('Xoá thành công');
+            // document.getElementById(id).remove();
+        } else {
+            alert(response.data.message);
+        }
     };
+    // Search item
     const [search, setSearch] = useState('');
 
     return (
@@ -38,12 +44,11 @@ function Account() {
                     <input
                         type="text"
                         className={cx('search-input')}
-                        placeholder="Nhập tài khoản ..."
+                        placeholder="Nhập tên sản phẩm ..."
                         onChange={(e) => setSearch(e.target.value)}
                     />
                     <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
-
                 <CreateComponent />
             </div>
 
@@ -53,12 +58,9 @@ function Account() {
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Tài khoản</th>
-                                <th>Mật khẩu</th>
-                                <th>Avatar</th>
-                                <th>Email</th>
-                                <th>Trạng thái</th>
-                                <th>Quyền</th>
+                                <th>Loại sản phẩm</th>
+                                <th>Ngày tạo</th>
+                                <th>Ngày cập nhật</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -67,37 +69,23 @@ function Account() {
                                 .filter((item) => {
                                     return search.toLowerCase() === ''
                                         ? item
-                                        : item.userName.toLowerCase().includes(search.toLowerCase());
+                                        : item.nameProductType.toLowerCase().includes(search.toLowerCase());
                                 })
                                 .map((item, index) => (
-                                    <tr key={item.accountID}>
+                                    <tr key={item.productTypeID}>
                                         <td>{index + 1}</td>
-                                        <td>{item.userName}</td>
-                                        <td data-fulltext={item.password}>{item.password}</td>
-                                        <td>
-                                            <img
-                                                src={item.avatar}
-                                                style={{ width: '50px', height: '50px' }}
-                                                alt="avatar"
-                                            />
-                                        </td>
-                                        <td>{item.email}</td>
-                                        <td>{item.status}</td>
-                                        <td>{item.authorityName}</td>
+                                        <td>{item.nameProductType}</td>
+                                        <td>{item.createdAt}</td>
+                                        <td>{item.updateAt}</td>
                                         <td>
                                             <UpdateComponent
-                                                accountID={item.accountID}
-                                                userName={item.userName}
-                                                password={item.password}
-                                                avatar={item.avatar}
-                                                email={item.email}
-                                                status={item.status}
-                                                authorityName={item.authorityName}
+                                                productTypeID={item.productTypeID}
+                                                nameProductType={item.nameProductType}
                                             />
                                             <button
                                                 style={{ marginLeft: '5px', fontSize: '16px' }}
-                                                id={item.accountID}
-                                                onClick={(e) => deleteAccount(item.accountID, e)}
+                                                id={item.productTypeID}
+                                                onClick={(e) => deleteProductType(item.productTypeID, e)}
                                                 className="btn btn-danger"
                                             >
                                                 Xoá
@@ -113,4 +101,4 @@ function Account() {
     );
 }
 
-export default Account;
+export default ProductType;

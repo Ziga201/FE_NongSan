@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import productService from '~/services/productService';
+import productTypeService from '~/services/productTypeService';
 import 'bootstrap/dist/css/bootstrap.css';
-
-// import classNames from 'classnames/bind';
-// import style from '~/pages/';
-// const cx = classNames.bind(style);
+import style from '~/pages/Admin/Page.module.scss';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(style);
 
 function CreateComponent({ pageNumber, setPageNumber }) {
     const [isShow, invokeModal] = useState(false);
@@ -24,11 +24,12 @@ function CreateComponent({ pageNumber, setPageNumber }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await productService.getAllType();
-            setTypeData(response.data);
+            const response = await productTypeService.getAll();
+            setTypeData(response);
         };
         fetchData();
     }, []);
+    console.log(typeData);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -67,7 +68,7 @@ function CreateComponent({ pageNumber, setPageNumber }) {
 
     return (
         <>
-            <Button variant="primary" onClick={initModal} style={{ fontSize: '16px' }}>
+            <Button variant="primary" onClick={initModal}>
                 Thêm
             </Button>
             <Modal show={isShow}>
@@ -77,7 +78,11 @@ function CreateComponent({ pageNumber, setPageNumber }) {
                 <form onSubmit={handleSubmit}>
                     <Modal.Body>
                         {typeData.data !== undefined && (
-                            <select value={type} onChange={(event) => setType(event.target.value)}>
+                            <select
+                                value={type}
+                                className={cx('modal-input')}
+                                onChange={(event) => setType(event.target.value)}
+                            >
                                 {typeData.data.map((item) => (
                                     <option key={item.productTypeID} value={item.productTypeID}>
                                         {item.nameProductType}
@@ -92,20 +97,27 @@ function CreateComponent({ pageNumber, setPageNumber }) {
                             value={name}
                             onChange={(event) => setName(event.target.value)}
                             required
+                            className={cx('modal-input')}
                         />
                         <input
                             type="text"
                             placeholder="Nhập giá sản phẩm"
                             value={price}
+                            className={cx('modal-input')}
                             onChange={(event) => setPrice(event.target.value)}
                             required
                         />
-                        <input type="file" onChange={(event) => setImage(event.target.files[0])} />
+                        <input
+                            type="file"
+                            className={cx('modal-input')}
+                            onChange={(event) => setImage(event.target.files[0])}
+                        />
 
                         <input
                             type="text"
                             placeholder="Nhập tiêu đề"
                             value={title}
+                            className={cx('modal-input')}
                             onChange={(event) => setTitle(event.target.value)}
                             required
                         />
@@ -113,6 +125,7 @@ function CreateComponent({ pageNumber, setPageNumber }) {
                             type="text"
                             placeholder="Nhập giảm giá"
                             value={discount}
+                            className={cx('modal-input')}
                             onChange={(event) => setDiscount(event.target.value)}
                             required
                         />

@@ -9,27 +9,17 @@
 
 .element {
     text-decoration: none;
+    display: block;
 }
-
-.active {
-    background-color: rgb(0, 153, 255);
-}
-
-.active .desc,
-.active .logo {
-    color: #222931;
-}
-
-.element:first-child {
-    margin-top: 30px;
-}
-
 .element .wrap {
+    font-family: 'Segoe UI', Arial, sans-serif !important;
     padding: 15px;
     display: flex;
-    color: #ccc;
+    font-weight: 700;
+    color: #ccccccb7;
+    transition: all 0.3s ease;
     &:hover {
-        // background-color: aqua;
+        background-color: #4b5969;
         color: #fff;
     }
 }

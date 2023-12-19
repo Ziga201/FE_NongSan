@@ -27,21 +27,21 @@ function Home() {
     const [checkouts, setCheckouts] = useState({});
     const [accounts, setAccounts] = useState({});
 
-    const fetchCheckouts = async () => {
-        setCheckouts((await checkoutService.getCheckouts()).data.data);
-    };
-    useEffect(() => {
-        fetchCheckouts();
-    }, []);
+    // const fetchCheckouts = async () => {
+    //     setCheckouts((await checkoutService.getCheckouts()).data.data);
+    // };
+    // useEffect(() => {
+    //     fetchCheckouts();
+    // }, []);
 
-    const fetchAccounts = async () => {
-        setAccounts((await accountService.getAccounts()).data.data);
-    };
-    useEffect(() => {
-        fetchAccounts();
-    }, []);
+    // const fetchAccounts = async () => {
+    //     setAccounts((await accountService.getAccounts()).data.data);
+    // };
+    // useEffect(() => {
+    //     fetchAccounts();
+    // }, []);
 
-    const totalSales = Object.values(checkouts).reduce((acc, item) => acc + parseInt(item.total), 0);
+    // const totalSales = Object.values(checkouts).reduce((acc, item) => acc + parseInt(item.total), 0);
 
     const options = {
         animationEnabled: true,
@@ -83,7 +83,7 @@ function Home() {
                             <div className={cx('item', 'bg-1')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        <div className={cx('number')}>{checkouts.length}</div>
+                                        {/* <div className={cx('number')}>{checkouts.length}</div> */}
                                         <div className={cx('text')}>Tổng đơn hàng</div>
                                     </div>
                                     <div className={cx('icon')}>
@@ -101,7 +101,7 @@ function Home() {
                             <div className={cx('item', 'bg-2')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        <div className={cx('number')}>{accounts.length}</div>
+                                        {/* <div className={cx('number')}>{accounts.length}</div> */}
                                         <div className={cx('text')}>Khách hàng mới</div>
                                     </div>
                                     <div className={cx('icon')}>
@@ -119,7 +119,7 @@ function Home() {
                             <div className={cx('item', 'bg-3')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        <div className={cx('number')}>{totalSales.toLocaleString('vi-VN')} VND</div>
+                                        {/* <div className={cx('number')}>{totalSales.toLocaleString('vi-VN')} VND</div> */}
                                         <div className={cx('text')}>Tổng danh số</div>
                                     </div>
                                     <div className={cx('icon')}>

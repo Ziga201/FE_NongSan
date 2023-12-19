@@ -9,7 +9,7 @@
     padding: 20px;
     width: 100wh;
     display: flex;
-    flex: 1;
+    justify-content: space-between;
 }
 
 .name_table {
@@ -46,8 +46,7 @@ textarea {
 .search {
     display: block;
     position: relative;
-    margin-bottom: 20px;
-    width: 220px;
+    width: 250px;
 }
 
 .search-input {
@@ -57,13 +56,49 @@ textarea {
     border-radius: 50px;
     outline: none;
     border: 1px solid #333;
-    width: 250px;
-    margin-left: 20px;
+    width: 100%;
 }
 
 .search-icon {
     position: absolute;
     top: 50%;
-    right: -15%;
+    right: 5%;
     transform: translateY(-50%);
+}
+
+.modal-input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.modal-button {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #343a40;
+    color: #fff;
+    cursor: pointer;
+}
+
+table td {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+}
+
+table td:hover::after {
+    content: attr(data-fulltext);
+    position: absolute;
+    background-color: white;
+    z-index: 1000;
+    white-space: normal;
+    word-wrap: break-word;
+    left: 0;
+    top: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
 }

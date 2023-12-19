@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import accountService from '~/services/accountService';
+import decentralizationService from '~/services/decentralizationService';
 import 'bootstrap/dist/css/bootstrap.css';
-
-// import classNames from 'classnames/bind';
-// import style from '~/pages/';
-// const cx = classNames.bind(style);
-
+import style from '~/pages/Admin/Page.module.scss';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(style);
 function CreateComponent() {
     const [isShow, invokeModal] = useState(false);
 
@@ -14,38 +13,41 @@ function CreateComponent() {
         return invokeModal(!isShow);
     };
 
-    const [username, setUsername] = useState('');
+    const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
+    const [avatar, setAvatar] = useState('');
     const [email, setEmail] = useState('');
-    const [image, setImage] = useState('');
-    const [decentralization, setDecentralization] = useState('');
+    const [status, setStatus] = useState('');
+    const [authorityName, setAuthorityName] = useState('');
+    const [type, setType] = useState('');
 
-    const [message, setMessage] = useState('');
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await decentralizationService.getAll();
+            setType(response);
+        };
+        fetchData();
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData();
 
-        formData.append('username', username);
+        formData.append('userName', userName);
         formData.append('password', password);
-        formData.append('name', name);
+        formData.append('avatar', avatar);
         formData.append('email', email);
-        formData.append('image', image);
-        formData.append('decentralization', decentralization);
+        formData.append('status', status);
+        formData.append('authorityName', authorityName);
 
         const response = await accountService.create(formData);
-        if (response.data.success === true) {
-            setMessage('Tạo tài khoản thành công');
+
+        if (response.data.status === 200) {
+            alert('Thêm thành công');
         } else {
-            setMessage('Tạo tài khoản thất bại');
+            alert('Thêm thất bại');
         }
-
-        setTimeout(() => {
-            setMessage('');
-        }, 2000);
-
         event.target.reset();
         initModal();
     };
@@ -63,47 +65,54 @@ function CreateComponent() {
                     <Modal.Body>
                         <input
                             type="text"
-                            name="username"
                             placeholder="Nhập tài khoản"
-                            value={username}
-                            onChange={(event) => setUsername(event.target.value)}
+                            value={userName}
+                            className={cx('modal-input')}
+                            onChange={(event) => setUserName(event.target.value)}
                             required
                         />
                         <input
                             type="text"
-                            name="password"
                             placeholder="Nhập mật khẩu"
                             value={password}
+                            className={cx('modal-input')}
                             onChange={(event) => setPassword(event.target.value)}
                             required
                         />
                         <input
-                            type="text"
-                            name="name"
-                            placeholder="Nhập tên"
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            required
-                        />
-                        <input
                             type="email"
-                            name="email"
-                            placeholder="Nhập email"
+                            placeholder="Nhập Email"
                             value={email}
+                            className={cx('modal-input')}
                             onChange={(event) => setEmail(event.target.value)}
                             required
                         />
-                        <input type="file" name="file" onChange={(event) => setImage(event.target.files[0])} />
                         <select
-                            name="decentralization"
-                            value={decentralization}
-                            onChange={(event) => setDecentralization(event.target.value)}
+                            value={status}
+                            className={cx('modal-input')}
+                            onChange={(event) => setStatus(event.target.value)}
                         >
-                            <option value="Admin">Admin</option>
-                            <option value="User" selected>
-                                User
-                            </option>
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="INACTIVE">INACTIVE</option>
                         </select>
+                        <input
+                            type="file"
+                            className={cx('modal-input')}
+                            onChange={(event) => setAvatar(event.target.files[0])}
+                        />
+                        {type.data !== undefined && (
+                            <select
+                                value={authorityName}
+                                className={cx('modal-input')}
+                                onChange={(event) => setAuthorityName(event.target.value)}
+                            >
+                                {type.data.map((item) => (
+                                    <option key={item.decentralizationID} value={item.decentralizationID}>
+                                        {item.authorityName}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit" variant="dark">

@@ -18,7 +18,7 @@ function CreateComponent() {
     const [avatar, setAvatar] = useState('');
     const [email, setEmail] = useState('');
     const [status, setStatus] = useState('');
-    const [authorityName, setAuthorityName] = useState('');
+    const [authorityName, setAuthorityName] = useState(1);
     const [type, setType] = useState('');
 
     useEffect(() => {
@@ -39,7 +39,7 @@ function CreateComponent() {
         formData.append('avatar', avatar);
         formData.append('email', email);
         formData.append('status', status);
-        formData.append('authorityName', authorityName);
+        formData.append('decentralizationID', authorityName);
 
         const response = await accountService.create(formData);
 
@@ -108,7 +108,7 @@ function CreateComponent() {
                             >
                                 {type.data.map((item) => (
                                     <option key={item.decentralizationID} value={item.decentralizationID}>
-                                        {item.authorityName}
+                                        {item.authorityName} || id: {item.decentralizationID}
                                     </option>
                                 ))}
                             </select>

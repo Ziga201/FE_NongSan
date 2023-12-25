@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import productService from '~/services/productService';
+import productTypeService from '~/services/productTypeService';
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
 const cx = classNames.bind(style);
@@ -11,20 +12,20 @@ function UpdateComponent(props) {
         return invokeModal(!isShow);
     };
 
-    const [id] = useState(props.id);
-    const [type, setType] = useState(props.type);
-    const [name, setName] = useState(props.name);
+    const [productID] = useState(props.productID);
+    const [productTypeID, setProductTypeID] = useState(props.productTypeID);
+    const [nameProduct, setNameProduct] = useState(props.nameProduct);
     const [price, setPrice] = useState(props.price);
-    const [image, setImage] = useState(props.image);
+    const [avartarImageProduct, setAvartarImageProduct] = useState(props.avartarImageProduct);
     const [title, setTitle] = useState(props.title);
-    const [discount, setDiscount] = useState(props.type);
+    const [discount, setDiscount] = useState(props.discount);
     const [status, setStatus] = useState(props.status);
-    const [typeData, setTypeData] = useState({});
+    const [typeData, setTypeData] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await productService.getAllType();
-            setTypeData(response.data);
+            const response = await productTypeService.getAll();
+            setTypeData(response);
         };
         fetchData();
     }, []);
@@ -33,22 +34,18 @@ function UpdateComponent(props) {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append('productID', id);
-        formData.append('productTypeID', type);
-        formData.append('nameProduct', name);
+        formData.append('productID', productID);
+        formData.append('productTypeID', productTypeID);
+        formData.append('nameProduct', nameProduct);
         formData.append('price', price);
-        formData.append('avartarImageProduct', image);
+        formData.append('avartarImageProduct', avartarImageProduct);
         formData.append('title', title);
         formData.append('discount', discount);
         formData.append('status', status);
 
         const response = await productService.update(formData);
 
-        if (response.data.status === 200) {
-            alert('Sửa thành công');
-        } else {
-            alert('Sửa thất bại');
-        }
+        alert(response.data.message);
 
         initModal();
     };
@@ -66,9 +63,9 @@ function UpdateComponent(props) {
                     <Modal.Body>
                         {typeData.data !== undefined && (
                             <select
-                                value={type}
+                                value={productTypeID}
                                 className={cx('modal-input')}
-                                onChange={(event) => setType(event.target.value)}
+                                onChange={(event) => setProductTypeID(event.target.value)}
                             >
                                 {typeData.data.map((item) => (
                                     <option key={item.productTypeID} value={item.productTypeID}>
@@ -77,19 +74,12 @@ function UpdateComponent(props) {
                                 ))}
                             </select>
                         )}
-                        {/* <input
-                            type="text"
-                            placeholder="Nhập loại"
-                            value={type}
-                            onChange={(event) => setType(event.target.value)}
-                            required
-                        /> */}
                         <input
                             type="text"
                             placeholder="Nhập tên sản phẩm"
-                            value={name}
+                            value={nameProduct}
                             className={cx('modal-input')}
-                            onChange={(event) => setName(event.target.value)}
+                            onChange={(event) => setNameProduct(event.target.value)}
                             required
                         />
                         <input
@@ -100,7 +90,11 @@ function UpdateComponent(props) {
                             onChange={(event) => setPrice(event.target.value)}
                             required
                         />
-                        <input type="file" name="file" onChange={(event) => setImage(event.target.files[0])} />
+                        <input
+                            type="file"
+                            name="file"
+                            onChange={(event) => setAvartarImageProduct(event.target.files[0])}
+                        />
                         <input
                             type="text"
                             placeholder="Nhập tiêu đề"

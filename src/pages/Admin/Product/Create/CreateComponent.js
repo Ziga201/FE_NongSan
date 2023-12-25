@@ -20,7 +20,8 @@ function CreateComponent({ pageNumber, setPageNumber }) {
     const [image, setImage] = useState('');
     const [title, setTitle] = useState('');
     const [discount, setDiscount] = useState('');
-    const [typeData, setTypeData] = useState({});
+    const [productTypeID, setProductTypeID] = useState(1);
+    const [typeData, setTypeData] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,39 +30,24 @@ function CreateComponent({ pageNumber, setPageNumber }) {
         };
         fetchData();
     }, []);
-    console.log(typeData);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData();
 
-        formData.append('productTypeID', type);
+        formData.append('productTypeID', productTypeID);
         formData.append('nameProduct', name);
         formData.append('price', price);
         formData.append('avartarImageProduct', image);
         formData.append('title', title);
         formData.append('discount', discount);
         setPageNumber({ ...pageNumber });
-        //thêm nhiều ảnh
-        // if (event.target.files && event.target.files.length > 0) {
-        //     for (let i = 0; i < event.target.files.length; i++) {
-        //         formData.append('image', event.target.files[i]);
-        //     }
-        // }
-        // const formDataObject = {};
-        // formData.forEach((value, key) => {
-        //     formDataObject[key] = value;
-        // });
-        // console.log(formDataObject);
 
         const response = await productService.create(formData);
 
-        if (response.data.status === 200) {
-            alert('Thêm thành công');
-        } else {
-            alert('Thêm thất bại');
-        }
+        alert(response.data.message);
+
         event.target.reset();
         initModal();
     };
@@ -79,9 +65,9 @@ function CreateComponent({ pageNumber, setPageNumber }) {
                     <Modal.Body>
                         {typeData.data !== undefined && (
                             <select
-                                value={type}
+                                value={productTypeID}
                                 className={cx('modal-input')}
-                                onChange={(event) => setType(event.target.value)}
+                                onChange={(event) => setProductTypeID(event.target.value)}
                             >
                                 {typeData.data.map((item) => (
                                     <option key={item.productTypeID} value={item.productTypeID}>

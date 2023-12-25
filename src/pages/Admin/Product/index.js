@@ -42,21 +42,15 @@ function Product() {
         };
         fetchData();
     }, []);
-    console.log(typeData.data);
 
     const handlePageClick = (event, value) => {
         setPageNumber({ pageNumber: value, pageSize: 6 });
     };
-    // console.log(totalPages);
 
     const deleteProduct = async (id, e) => {
         var response = await productService.delete(id);
-        if (response.data.status === 200) {
-            alert('Xoá thành công');
-            document.getElementById(id).remove();
-        } else {
-            alert(response.data.message);
-        }
+
+        alert(response.data.message);
     };
     // Search item
     const [search, setSearch] = useState('');
@@ -128,11 +122,11 @@ function Product() {
                                         <td>{item.numberOfViews}</td>
                                         <td>
                                             <UpdateComponent
-                                                id={item.productID}
-                                                type={item.productTypeID}
-                                                name={item.nameProduct}
+                                                productID={item.productID}
+                                                productTypeID={item.productTypeID}
+                                                nameProduct={item.nameProduct}
                                                 price={item.price}
-                                                image={item.avartarImageProduct}
+                                                avartarImageProduct={item.avartarImageProduct}
                                                 title={item.title}
                                                 discount={item.discount}
                                                 status={item.status}

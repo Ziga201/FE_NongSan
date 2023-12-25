@@ -22,7 +22,6 @@ function Account() {
         };
         fetchData();
     }, []);
-    console.log(data);
 
     const deleteAccount = async (id, e) => {
         var response = await accountService.delete(id);

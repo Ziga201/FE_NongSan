@@ -10,8 +10,18 @@ class Account {
         };
         return axios.put(url, formData, config);
     }
+    // create(formData) {
+    //     const url = 'https://localhost:7211/api/Auth/Register';
+    //     const config = {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //         },
+    //     };
+    //     return axios.post(url, formData, config);
+    // }
+
     create(formData) {
-        const url = 'https://localhost:7211/api/Auth/Register';
+        const url = 'https://localhost:7211/api/Auth/AddAccount';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -19,6 +29,7 @@ class Account {
         };
         return axios.post(url, formData, config);
     }
+
     update(formData) {
         const url = 'https://localhost:7211/api/Auth/UpdateAccount';
         const config = {
@@ -37,8 +48,8 @@ class Account {
         return axios.get(url);
     }
 
-    getAccountById(id) {
-        const url = 'http://localhost:8000/api/get-account/' + id;
+    getAccountByID(id) {
+        const url = 'https://localhost:7211/api/Auth/GetAccountByID/' + id;
         return axios.get(url);
     }
 }

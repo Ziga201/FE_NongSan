@@ -18,7 +18,7 @@ function UpdateComponent(props) {
     const [avatar, setAvatar] = useState(props.avatar);
     const [email, setEmail] = useState(props.email);
     const [status, setStatus] = useState(props.status);
-    const [authorityName, setAuthorityName] = useState(props.authorityName);
+    const [decentralizationID, setDecentralizationID] = useState(2);
     const [type, setType] = useState('');
 
     useEffect(() => {
@@ -39,10 +39,13 @@ function UpdateComponent(props) {
         formData.append('avatar', avatar);
         formData.append('email', email);
         formData.append('status', status);
-        formData.append('authorityName', authorityName);
+        formData.append('decentralizationID', decentralizationID);
+
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
 
         const response = await accountService.update(formData);
-        console.log(response);
 
         alert(response.data.message);
 
@@ -99,9 +102,9 @@ function UpdateComponent(props) {
                         />
                         {type.data !== undefined && (
                             <select
-                                value={authorityName}
+                                value={decentralizationID}
                                 className={cx('modal-input')}
-                                onChange={(event) => setAuthorityName(event.target.value)}
+                                onChange={(event) => setDecentralizationID(event.target.value)}
                             >
                                 {type.data.map((item) => (
                                     <option key={item.decentralizationID} value={item.decentralizationID}>

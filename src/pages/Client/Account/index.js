@@ -1,29 +1,29 @@
 import style from './Account.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 // import UpdateComponent from '~/pages/Admin/Account/Update/UpdateComponent';
 import UpdateComponent from './Update/UpdateComponent';
 import accountService from '~/services/accountService';
+import { jwtDecode } from 'jwt-decode';
 
 const cx = classNames.bind(style);
-const info = JSON.parse(localStorage.getItem('info'));
 function Account() {
-    const [account, setAccount] = useState({});
+    const jwtToken = localStorage.getItem('jwtToken');
+    const responseJWT = jwtDecode(jwtToken);
 
-    const fetchAccounts = async () => {
-        setAccount((await accountService.getAccountById(info.id)).data.data);
-    };
-
+    const [data, setData] = useState({});
     useEffect(() => {
-        fetchAccounts();
-    }, [account]);
+        const fetchData = async () => {
+            const response = await accountService.getAccountByID(responseJWT.Id);
+            setData(response.data);
+        };
+        fetchData();
+    }, []);
 
     const signOut = () => {
-        localStorage.removeItem('info');
-        localStorage.removeItem('user');
         window.location.href = '/login';
     };
+
     return (
         <>
             <div className="">
@@ -32,31 +32,39 @@ function Account() {
                     <div className={cx('row')}>
                         <div className={cx('col-md-8')}>
                             <label className={cx('login-text')}>Tài khoản: </label>{' '}
-                            <span className={cx('login-info')}>{account.username}</span>
+                            <span className={cx('login-info')}>{data.userName}</span>
                             <br></br>
                             <label className={cx('login-text')}>Mật khẩu: </label>{' '}
-                            <span className={cx('login-info', 'login-pass')}>{account.password}</span>
+                            <span
+                                style={{
+                                    maxWidth: '100px',
+                                    display: 'inline-block',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                }}
+                                className={cx('login-info', 'login-pass')}
+                            >
+                                {data.password}
+                            </span>
                             <br></br>
-                            <label className={cx('login-text')}>Tên khách hàng: </label>{' '}
-                            <span className={cx('login-info')}>{account.name}</span>
+                            {/* <label className={cx('login-text')}>Tên khách hàng: </label>{' '}
+                            <span className={cx('login-info')}>{data.name}</span> */}
                             <br></br>
                             <label className={cx('login-text')}>Email: </label>{' '}
-                            <span className={cx('login-info')}>{account.email}</span>
+                            <span className={cx('login-info')}>{data.email}</span>
                         </div>
                         <div className={cx('col-md-4')}>
                             <div className={cx('avatar')}>
-                                <img src={'http://localhost:8000/api/accountImages/' + account.image} alt="blog" />
+                                <img src={data.avatar} alt="blog" />
                             </div>
                         </div>
                     </div>
                     <div className={cx('button')}>
                         <UpdateComponent
-                            id={account._id}
-                            username={account.username}
-                            password={account.password}
-                            name={account.name}
-                            email={account.email}
-                            decentralization={account.decentralization}
+                            accountID={data.accountID}
+                            userName={data.userName}
+                            password={data.password}
+                            email={data.email}
                             style={{ fontSize: '16px' }}
                         />
                         <div onClick={() => signOut()} className={cx('btn', 'btn-success')}>

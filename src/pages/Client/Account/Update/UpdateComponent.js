@@ -1,11 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import AccountService from '~/services/accountService';
-// import classNames from 'classnames/bind';
-// import style from './Update.module.scss';
-
-// const cx = classNames.bind(style);
-
+import accountService from '~/services/accountService';
+import style from '~/pages/Admin/Page.module.scss';
+import classNames from 'classnames/bind';
+const cx = classNames.bind(style);
 function UpdateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
@@ -13,37 +11,26 @@ function UpdateComponent(props) {
         return invokeModal(!isShow);
     };
 
-    const [username, setUsername] = useState(props.username);
+    const [accountID] = useState(props.accountID);
+    const [userName, setUserName] = useState(props.userName);
     const [password, setPassword] = useState(props.password);
-    const [id, setId] = useState(props.id);
-    const [name, setName] = useState(props.name);
+    const [avatar, setAvatar] = useState(props.avatar);
     const [email, setEmail] = useState(props.email);
-    const [selectedFile, setSelectedFile] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData();
-
-        const decentralization = 'User';
-        formData.append('id', id);
-        formData.append('username', username);
+        formData.append('accountID', accountID);
+        formData.append('userName', userName);
         formData.append('password', password);
-        formData.append('name', name);
+        formData.append('avatar', avatar);
         formData.append('email', email);
-        formData.append('decentralization', decentralization);
 
-        if (selectedFile !== '' && selectedFile.length !== 0) {
-            formData.append('image', selectedFile);
-        }
+        const response = await accountService.update(formData);
+        console.log(response);
 
-        const response = await AccountService.update(formData);
-
-        if (response.data.success === true) {
-            alert(response.data.msg);
-        } else {
-            alert(response.data.msg);
-        }
+        alert(response.data.message);
 
         initModal();
     };
@@ -61,37 +48,34 @@ function UpdateComponent(props) {
                     <Modal.Body>
                         <input
                             type="text"
-                            name="username"
                             placeholder="Nhập tài khoản"
-                            value={username}
-                            onChange={(event) => setUsername(event.target.value)}
-                            required
+                            value={userName}
+                            className={cx('modal-input')}
+                            onChange={(event) => setUserName(event.target.value)}
+                            disabled={true}
                         />
                         <input
                             type="text"
-                            name="password"
                             placeholder="Nhập mật khẩu"
                             value={password}
+                            className={cx('modal-input')}
                             onChange={(event) => setPassword(event.target.value)}
                             required
                         />
                         <input
-                            type="text"
-                            name="name"
-                            placeholder="Nhập tên"
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            required
-                        />
-                        <input
                             type="email"
-                            name="email"
-                            placeholder="Nhập email"
+                            placeholder="Nhập Email"
                             value={email}
+                            className={cx('modal-input')}
                             onChange={(event) => setEmail(event.target.value)}
                             required
                         />
-                        <input type="file" name="file" onChange={(event) => setSelectedFile(event.target.files[0])} />
+
+                        <input
+                            type="file"
+                            className={cx('modal-input')}
+                            onChange={(event) => setAvatar(event.target.files[0])}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit" variant="dark">

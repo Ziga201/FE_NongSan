@@ -34,21 +34,21 @@ const publicRoutes = [
     { path: '/login', component: Login },
     { path: '/signup', component: Signup },
 
-    { path: '/order', component: Order },
-    { path: '/checkout', component: Checkout },
-    { path: '/confirm', component: Confirm },
-    { path: '/cart', component: Cart },
-    { path: '/account', component: Account },
-
-    // Admin
-];
-
-const privateRoutes = [
     // { path: '/order', component: Order },
     // { path: '/checkout', component: Checkout },
     // { path: '/confirm', component: Confirm },
     // { path: '/cart', component: Cart },
     // { path: '/account', component: Account },
+
+    // Admin
+];
+
+const privateRoutes = [
+    { path: '/order', component: Order },
+    { path: '/checkout', component: Checkout },
+    { path: '/confirm', component: Confirm },
+    { path: '/cart', component: Cart },
+    { path: '/account', component: Account },
 ];
 
 const adminRoutes = [

@@ -1,72 +1,106 @@
 import style from './Checkout.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import checkoutService from '~/services/checkoutService';
+import cartService from '~/services/cartService';
+import userService from '~/services/userService';
+import orderService from '~/services/orderService';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
 function Checkout() {
-    const [cartItems, setCartItems] = useState([]);
+    const [cart, setCart] = useState([]);
+    const [user, setUser] = useState([]);
+    const [paymentType, setPaymentType] = useState([]);
 
     useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('cartItems')) || [];
-        setCartItems(items);
+        const fetchData = async () => {
+            const response = await userService.getByID(2);
+            setUser(response.data.data);
+        };
+        fetchData();
     }, []);
 
-    const totalPrice = cartItems.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
+    useEffect(() => {
+        if (user) {
+            setFullName(user.userName);
+            setEmail(user.email);
+            setPhone(user.phone);
+            setAddress(user.address);
+        }
+    }, [user]);
 
-    // const totalUSD = parseInt(totalPrice / 23000);
-
-    // ADD
-
-    const [name, setName] = useState('');
+    const [userID] = useState(2);
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const [message, setMessage] = useState('');
-    const [confirm, setConfirm] = useState('Thanh toán khi nhận hàng');
+    const [paymentID, setPaymentID] = useState(1);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await cartService.getAll(2);
+            setCart(response);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await orderService.getAllPayment();
+            setPaymentType(response);
+        };
+        fetchData();
+    }, []);
+    console.log(cart);
+    const totalPrice = cart.length == 0 ? 0 : cart.data.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    // ADD
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const formData = new FormData();
-        // const cart = JSON.parse(localStorage.getItem('cartItems'));
-        const total = cartItems.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0);
-        const product = cartItems.reduce((acc, item) => acc + `${item.nameProduct} x${item.quantity} `, '');
-        console.log(product);
+        // const formData = new FormData();
 
-        const today = new Date();
-        const hours = today.getHours();
-        const minutes = today.getMinutes();
-        const seconds = today.getSeconds();
-        const day = today.getDate();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
+        // formData.append('userID', userID);
+        // formData.append('fullName', fullName);
+        // formData.append('email', email);
+        // formData.append('phone', phone);
+        // formData.append('address', address);
+        // formData.append('paymentID', paymentID);
+        const order = {
+            PaymentID: paymentID,
+            UserID: userID,
+            FullName: fullName,
+            Email: email,
+            Phone: phone,
+            Address: address,
+        };
 
-        const orderdate = `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
-        formData.append('name', name);
-        formData.append('phone', phone);
-        formData.append('address', address);
-        formData.append('total', total);
-        formData.append('product', product);
-        formData.append('orderdate', orderdate);
-        formData.append('confirm', confirm);
-        // formData.append('cart', cart);
+        /////////
+        const orderDetail = [];
+        if (cart.data) {
+            const selectedData = cart.data.map((item) => ({
+                productID: item.productID,
+                quantity: item.quantity,
+            }));
 
-        const response = await checkoutService.create(formData);
-        if (response.data.success === true) {
-            setMessage('Đặt đơn hàng thành công');
-            window.location.href = '/confirm';
-        } else {
-            setMessage('Đặt đơn hàng thất bại');
+            orderDetail.push(...selectedData);
         }
 
-        setTimeout(() => {
-            setMessage('');
-        }, 2000);
+        console.log(order);
+        console.log(orderDetail);
+        toast.success('Đang đặt hàng !');
 
-        localStorage.removeItem('cartItems');
+        const response = await orderService.order(order, orderDetail);
+
+        const deleteCart = await cartService.deleteCart(2);
+
+        window.location.href = response.data.message;
+
+        // alert(response.data.message);
+
         event.target.reset();
-
-        // initModal();
     };
 
     return (
@@ -75,49 +109,57 @@ function Checkout() {
                 <div className={cx('row')}>
                     <div className={cx('col-md-7')}>
                         <form onSubmit={handleSubmit} className={cx('form')}>
-                            <label for="name" className={cx('label')}>
-                                Tên khách hàng:
-                            </label>
+                            <label className={cx('label')}>Tên khách hàng:</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
-                                id="name"
-                                name="name"
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
+                                value={fullName}
+                                onChange={(event) => setFullName(event.target.value)}
                                 required
                             />
-                            <label for="phone">Số điện thoại:</label>
+                            <label>Email:</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
-                                id="phone"
-                                name="phone"
+                                value={email}
+                                onChange={(event) => setEmail(event.target.value)}
+                                required
+                            />
+                            <label>Số điện thoại:</label>
+                            <input
+                                className={cx('input-form')}
+                                type="text"
                                 value={phone}
                                 onChange={(event) => setPhone(event.target.value)}
                                 required
                             />
-                            <label for="address">Địa chỉ:</label>
+                            <label>Địa chỉ:</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
-                                id="address"
-                                name="address"
                                 value={address}
                                 onChange={(event) => setAddress(event.target.value)}
                                 required
                             />
 
-                            <div className={cx('row checkout')}>
-                                <div className={cx('col-md-4')}>
-                                    <input
-                                        id="submit"
-                                        className={cx('input-btn')}
-                                        type="submit"
-                                        value="Thanh toán khi nhận hàng"
-                                    />
-                                </div>
-                                <div className={cx('col-md-4')}></div>
+                            {paymentType.data !== undefined && paymentType.data.length > 0 && (
+                                <select
+                                    value={paymentID}
+                                    style={{ padding: '9.7px' }}
+                                    className={cx('input-form')}
+                                    onChange={(event) => setPaymentID(event.target.value)}
+                                >
+                                    {paymentType.data.map((item) => (
+                                        <option key={item.paymentID} value={item.paymentID}>
+                                            {item.paymentMethod}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
+
+                            <div className={cx('')}>
+                                <input id="submit" className={cx('input-btn')} type="submit" value="Đặt hàng" />
+                                <ToastContainer position="bottom-right" />
                             </div>
                         </form>
                     </div>
@@ -129,19 +171,21 @@ function Checkout() {
                                     <div className={cx('order-heading')}>Số tiền</div>
                                 </div>
 
-                                <div style={{ 'border-bottom': '1px solid #eee' }}>
-                                    {cartItems.map((item, index) => (
+                                <div>
+                                    {cart.data !== undefined && cart.data.length > 0 && (
                                         <>
-                                            <div className={cx('order-product')}>
-                                                <div className={cx('')}>
-                                                    {item.nameProduct} x {item.quantity}{' '}
+                                            {cart.data.map((item, index) => (
+                                                <div key={item.cartItemID} className={cx('order-product')}>
+                                                    <div className={cx('')}>
+                                                        {item.nameProduct} x {item.quantity}{' '}
+                                                    </div>
+                                                    <div className={cx('order-heading')}>
+                                                        {item.price.toLocaleString('vi-VN')}
+                                                    </div>
                                                 </div>
-                                                <div className={cx('order-heading')}>
-                                                    {parseInt(item.price).toLocaleString('vi-VN')}
-                                                </div>
-                                            </div>
+                                            ))}
                                         </>
-                                    ))}
+                                    )}
                                 </div>
                                 <div className={cx('order-title')}>
                                     <div className={cx('order-heading')}>Tổng</div>

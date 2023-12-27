@@ -1,13 +1,14 @@
 import style from './Product.module.scss';
 import React, { useState, useEffect } from 'react';
 import productService from '~/services/productService';
-
+import productTypeService from '~/services/productTypeService';
+import cartService from '~/services/cartService';
 import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAnglesRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-// import ProductDetail from '../ProductDetail';
+import { jwtDecode } from 'jwt-decode';
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,6 +21,32 @@ function Product() {
         pageNumber: 1,
         pageSize: 99,
     });
+    const [typeData, setTypeData] = useState([]);
+    const [key, setKey] = useState('');
+    const [search, setSearch] = useState('');
+
+    const [user, setUser] = useState([]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const jwtToken = localStorage.getItem('jwtToken');
+            if (jwtToken) {
+                try {
+                    // 2. Sử dụng try-catch cho jwtDecode
+                    const response = await jwtDecode(jwtToken);
+                    if (response) {
+                        setUser(response);
+                    }
+                } catch (error) {
+                    console.error('Error decoding JWT:', error);
+                }
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    console.log(user);
     useEffect(() => {
         const fetchData = async () => {
             const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
@@ -28,61 +55,31 @@ function Product() {
         };
         fetchData();
     }, []);
-    console.log(data.data);
 
     // Add to cart
-    const [cartItems, setCartItems] = useState([]);
     useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('cartItems'));
-        if (items) {
-            setCartItems(items);
-        }
+        const fetchData = async () => {
+            const response = await productTypeService.getAll();
+            setTypeData(response);
+        };
+        fetchData();
     }, []);
 
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    function addToCart(item) {
-        if (user) {
-            toast.success('Thêm vào giỏ hàng thành công !');
-            const product = {
-                productID: item.productID,
-                nameProduct: item.nameProduct,
-                avartarImageProduct: item.avartarImageProduct,
-                price: item.price,
-                quantity: 1,
-            };
-            const itemIndex = cartItems.findIndex((i) => i.id === item.productID);
-            console.log(itemIndex);
-            if (itemIndex >= 0) {
-                const newCartItems = [...cartItems];
-                newCartItems[itemIndex].quantity++;
-                setCartItems(newCartItems);
-                localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-            } else {
-                // const newCartItem = { ...cartItems, quantity: 1 };
-                // product.quantity++;
-                const newCartItems = [...cartItems, product];
-                setCartItems(newCartItems);
-                localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-            }
-        } else {
-            window.location.href = '/login';
-        }
+    function handleFilter(item) {
+        setKey(item);
     }
+    function handleClick(id) {}
 
     // Search item
-    const [search, setSearch] = useState('');
-    // console.log(search);
-    const [key, setKey] = useState('');
-    const handleFilter = (key) => {
-        setKey(key);
-    };
 
-    // Chuyen huong product detail
+    const addToCart = async (item) => {
+        const formData = new FormData();
 
-    const handleClick = (productId) => {
-        // <Navigate to={`/product/${productId}`} />;
-        window.location.href = `/product/${productId}`;
+        formData.append('userID', 2);
+        formData.append('productID', item);
+
+        const response = await cartService.addToCart(formData);
+        toast.success(response.data.message);
     };
 
     return (
@@ -123,42 +120,34 @@ function Product() {
                                     <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
                                     <div className={cx('item-text')}>Tất cả</div>
                                 </div>
-                                <div className={cx('item')} onClick={() => handleFilter('Trái cây & rau củ')}>
-                                    <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
-                                    <div className={cx('item-text')}>Trái cây & Rau củ </div>
-                                </div>
-                                <div className={cx('item')} onClick={() => handleFilter('Sản phẩm đóng gói')}>
-                                    <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
-                                    <div className={cx('item-text')}>Sản phẩm đóng gói</div>
-                                </div>
-                                <div className={cx('item')} onClick={() => handleFilter('Sản phẩm chế biến')}>
-                                    <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
-                                    <div className={cx('item-text')}>Sản phẩm chế biến</div>
-                                </div>
-                                <div className={cx('item')} onClick={() => handleFilter('Hạt giống & cây trồng')}>
-                                    <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
-                                    <div className={cx('item-text')}>Hạt giống & cây trồng</div>
-                                </div>
-                                <div className={cx('item')} onClick={() => handleFilter('Chưa được phân loại')}>
-                                    <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
-                                    <div className={cx('item-text')}>Chưa được phân loại</div>
-                                </div>
+
+                                {typeData.data !== undefined && (
+                                    <div>
+                                        {typeData.data.map((item) => (
+                                            <div
+                                                className={cx('item')}
+                                                onClick={() => handleFilter(`${item.productTypeID}`)}
+                                            >
+                                                <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
+                                                <div className={cx('item-text')}>{item.nameProductType}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className={cx('col-md-10')}>
                             {data.data !== undefined && (
                                 <div className={cx('row')}>
                                     {data.data
-                                        // .filter((item) => {
-                                        //     return key.toLowerCase() === ''
-                                        //         ? item
-                                        //         : item.category.toLowerCase().includes(key.toLowerCase());
-                                        // })
-                                        // .filter((item) => {
-                                        //     return search.toLowerCase() === ''
-                                        //         ? item
-                                        //         : item.nameProduct.toLowerCase().includes(search.toLowerCase());
-                                        // })
+                                        .filter((item) => {
+                                            return key === '' ? item : item.productTypeID == key;
+                                        })
+                                        .filter((item) => {
+                                            return search.toLowerCase() === ''
+                                                ? item
+                                                : item.nameProduct.toLowerCase().includes(search.toLowerCase());
+                                        })
                                         .map((item) => (
                                             <div key={item.productID} className={cx('product-block', 'col-md-3')}>
                                                 <div onClick={() => handleClick(item.productID)}>
@@ -171,7 +160,10 @@ function Product() {
                                                 <div className={cx('product-price')}>
                                                     {parseInt(item.price).toLocaleString('vi-VN')} VND
                                                 </div>
-                                                <button onClick={() => addToCart(item)} className={cx('product-add')}>
+                                                <button
+                                                    onClick={() => addToCart(item.productID)}
+                                                    className={cx('product-add')}
+                                                >
                                                     Thêm giỏ hàng
                                                     <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
                                                 </button>

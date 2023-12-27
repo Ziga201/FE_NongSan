@@ -12,7 +12,7 @@ import '@fontsource/source-sans-pro'; // Defaults to weight 400
 import '@fontsource/source-sans-pro/400.css'; // Specify weight
 import '@fontsource/source-sans-pro/400-italic.css'; // Specify weight and style
 
-import checkoutService from '~/services/checkoutService';
+import checkoutService from '~/services/orderService';
 import accountService from '~/services/accountService';
 
 import React, { Component } from 'react';

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 import { useState, useEffect } from 'react';
-import checkoutService from '~/services/checkoutService';
+import checkoutService from '~/services/orderService';
 
 const cx = classNames.bind(style);
 

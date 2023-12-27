@@ -2,32 +2,35 @@ import { useEffect, useState } from 'react';
 import style from './Cart.module.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
+import cartService from '~/services/cartService';
 
 const cx = classNames.bind(style);
 
 function Cart() {
-    // const [cartItems, setCartItems] = useState([]);
+    const [cart, setCart] = useState([]);
 
-    const [cartItems, setCartItems] = useState(() => {
-        const cartData = JSON.parse(localStorage.getItem('cartItems'));
-        return cartData ? cartData : [];
-    });
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await cartService.getAll(2);
+            setCart(response);
+        };
+        fetchData();
+    }, []);
 
-    // useEffect(() => {
-    //     const items = JSON.parse(localStorage.getItem('cartItems')) || [];
-    //     setCartItems(items);
-    // }, []);
+    const deleteItem = async (cartItemID) => {
+        const response = await cartService.delete(cartItemID);
+    };
+    console.log(cart);
+    const totalPrice =
+        cart.length == 0 || cart.data == '' ? 0 : cart.data.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    function deleteItem(itemId) {
-        // const data = JSON.parse(localStorage.getItem(key));
-        const newData = cartItems.filter((item) => item.id !== itemId);
-        setCartItems(newData);
-        localStorage.setItem('cartItems', JSON.stringify(newData));
-        console.log(newData);
-    }
-
-    // const totalItems = cartItems.reduce((acc, item) => acc + item.qty, 0);
-    const totalPrice = cartItems.reduce((acc, item) => acc + parseInt(item.price) * item.quantity, 0);
+    console.log(cart);
+    const handleSubmit = () => {
+        if (cart.data == '') alert('Chưa có sản phẩm nào trong giỏ hàng !');
+        else {
+            window.location.href = 'http://localhost:3000/checkout';
+        }
+    };
     return (
         <>
             <div className={cx('cart')}>
@@ -43,35 +46,40 @@ function Cart() {
                             <th className={cx('th')}>Chức năng</th>
                         </tr>
                     </thead>
-                    <tbody className={cx('tbody')}>
-                        {cartItems.map((item, index) => (
-                            <tr className={cx('tr')} key={index}>
-                                <td className={cx('td')}>{item.nameProduct}</td>
-                                <td className={cx('td')}>
-                                    <img style={{ width: '100px' }} src={item.avartarImageProduct} alt="product" />
-                                </td>
-                                <td className={cx('td')}>{parseInt(item.price).toLocaleString('vi-VN')}</td>
-                                <td className={cx('td')}>{item.quantity}</td>
-                                <td className={cx('td')}>
-                                    {(parseInt(item.price) * item.quantity).toLocaleString('vi-VN')}
-                                </td>
+                    {cart.data !== undefined && cart.data.length > 0 && (
+                        <tbody className={cx('tbody')}>
+                            {cart.data.map((item, index) => (
+                                <tr className={cx('tr')} key={index}>
+                                    <td className={cx('td')}>{item.nameProduct}</td>
+                                    <td className={cx('td')}>
+                                        <img style={{ width: '100px' }} src={item.avartarImageProduct} alt="product" />
+                                    </td>
+                                    <td className={cx('td')}>{parseInt(item.price).toLocaleString('vi-VN')}</td>
+                                    <td className={cx('td')}>{item.quantity}</td>
+                                    <td className={cx('td')}>
+                                        {(parseInt(item.price) * item.quantity).toLocaleString('vi-VN')}
+                                    </td>
 
-                                <td className={cx('td')}>
-                                    <button className={cx('btn btn-danger')} onClick={() => deleteItem(item.id)}>
-                                        X
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
+                                    <td className={cx('td')}>
+                                        <button
+                                            className={cx('btn btn-danger')}
+                                            onClick={() => deleteItem(item.cartItemID)}
+                                        >
+                                            X
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    )}
                 </table>
                 <div className={cx('total')}>
                     <h2 className={cx('total-value')}>Tổng: {totalPrice.toLocaleString('vi-VN')} VND</h2>
                 </div>
                 <div className={cx('buttons')}>
-                    <Link to="/checkout" className={cx('button')}>
+                    <button onClick={handleSubmit} className={cx('button')}>
                         Thanh toán
-                    </Link>
+                    </button>
                     <Link to="/" className={cx('button')}>
                         Tiếp tục mua hàng
                     </Link>

@@ -9,14 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
 function Login() {
-    const [user, setUser] = useState('');
+    const [user, setUser] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        localStorage.setItem('admin', true);
-        localStorage.setItem('user', true);
 
         const formData = new FormData();
 

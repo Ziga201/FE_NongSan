@@ -5,9 +5,11 @@ import productTypeService from '~/services/productTypeService';
 import 'bootstrap/dist/css/bootstrap.css';
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
-function CreateComponent({ pageNumber, setPageNumber }) {
+function CreateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
     const initModal = () => {
@@ -39,14 +41,14 @@ function CreateComponent({ pageNumber, setPageNumber }) {
         formData.append('productTypeID', productTypeID);
         formData.append('nameProduct', name);
         formData.append('price', price);
-        formData.append('avartarImageProduct', image);
+        formData.append('avatarImageProduct', image);
         formData.append('title', title);
         formData.append('discount', discount);
-        setPageNumber({ ...pageNumber });
 
         const response = await productService.create(formData);
 
-        alert(response.data.message);
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
         event.target.reset();
         initModal();

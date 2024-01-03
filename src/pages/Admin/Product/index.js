@@ -1,7 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.css';
-
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,11 +8,12 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import productService from '~/services/productService';
 import productTypeService from '~/services/productTypeService';
-
 import UpdateComponent from './Update/UpdateComponent';
 import CreateComponent from './Create/CreateComponent';
 import Pagination from '@mui/material/Pagination';
 import * as React from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(style);
 
@@ -25,6 +25,8 @@ function Product() {
     });
     const [totalPages, setTotalPages] = useState();
     const [typeData, setTypeData] = useState({});
+    const [update, setUpdate] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
@@ -33,7 +35,7 @@ function Product() {
             setTotalPages(response.data.pagination.totalPage);
         };
         fetchData();
-    }, [pageNumber]);
+    }, [update]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,8 +51,8 @@ function Product() {
 
     const deleteProduct = async (id, e) => {
         var response = await productService.delete(id);
-
-        alert(response.data.message);
+        setUpdate(new Date());
+        toast.success(response.data.message);
     };
     // Search item
     const [search, setSearch] = useState('');
@@ -67,8 +69,8 @@ function Product() {
                     />
                     <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
-
-                <CreateComponent setPageNumber={setPageNumber} pageNumber={pageNumber} />
+                <ToastContainer position="bottom-right" />
+                <CreateComponent setUpdate={setUpdate} />
             </div>
 
             {data.data !== undefined && (
@@ -111,7 +113,7 @@ function Product() {
                                         <td>{item.price}</td>
                                         <td>
                                             <img
-                                                src={item.avartarImageProduct}
+                                                src={item.avatarImageProduct}
                                                 style={{ width: '50px', height: '50px' }}
                                                 alt="product"
                                             />
@@ -126,11 +128,12 @@ function Product() {
                                                 productTypeID={item.productTypeID}
                                                 nameProduct={item.nameProduct}
                                                 price={item.price}
-                                                avartarImageProduct={item.avartarImageProduct}
+                                                avatarImageProduct={item.avatarImageProduct}
                                                 title={item.title}
                                                 discount={item.discount}
                                                 status={item.status}
                                                 style={{ fontSize: '16px' }}
+                                                setUpdate={setUpdate}
                                             />
                                             <button
                                                 style={{ marginLeft: '5px', fontSize: '16px' }}

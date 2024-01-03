@@ -5,8 +5,10 @@ import decentralizationService from '~/services/decentralizationService';
 import 'bootstrap/dist/css/bootstrap.css';
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
-function CreateComponent() {
+function CreateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
     const initModal = () => {
@@ -15,10 +17,13 @@ function CreateComponent() {
 
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [avatar, setAvatar] = useState('');
     const [email, setEmail] = useState('');
-    const [status, setStatus] = useState('');
-    const [authorityName, setAuthorityName] = useState(1);
+    const [status, setStatus] = useState('ACTIVE');
+    const [decentralizationID, setDecentralizationID] = useState(1);
+    const [avatar, setAvatar] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
     const [type, setType] = useState('');
 
     useEffect(() => {
@@ -36,24 +41,25 @@ function CreateComponent() {
 
         formData.append('userName', userName);
         formData.append('password', password);
-        formData.append('avatar', avatar);
         formData.append('email', email);
         formData.append('status', status);
-        formData.append('decentralizationID', authorityName);
+        formData.append('decentralizationID', decentralizationID);
+        formData.append('avatar', avatar);
+        formData.append('fullName', fullName);
+        formData.append('phone', phone);
+        formData.append('address', address);
 
         const response = await accountService.create(formData);
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
-        if (response.data.status === 200) {
-            alert('Thêm thành công');
-        } else {
-            alert('Thêm thất bại');
-        }
         event.target.reset();
         initModal();
     };
 
     return (
         <>
+            <ToastContainer position="bottom-right" />
             <Button variant="primary" onClick={initModal} style={{ fontSize: '16px' }}>
                 Thêm
             </Button>
@@ -69,7 +75,6 @@ function CreateComponent() {
                             value={userName}
                             className={cx('modal-input')}
                             onChange={(event) => setUserName(event.target.value)}
-                            required
                         />
                         <input
                             type="text"
@@ -87,6 +92,28 @@ function CreateComponent() {
                             onChange={(event) => setEmail(event.target.value)}
                             required
                         />
+
+                        <input
+                            type="text"
+                            placeholder="Nhập tên khách hàng"
+                            value={fullName}
+                            className={cx('modal-input')}
+                            onChange={(event) => setFullName(event.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nhập số điện thoại"
+                            value={phone}
+                            className={cx('modal-input')}
+                            onChange={(event) => setPhone(event.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nhập địa chỉ"
+                            value={address}
+                            className={cx('modal-input')}
+                            onChange={(event) => setAddress(event.target.value)}
+                        />
                         <select
                             value={status}
                             className={cx('modal-input')}
@@ -95,24 +122,24 @@ function CreateComponent() {
                             <option value="ACTIVE">ACTIVE</option>
                             <option value="INACTIVE">INACTIVE</option>
                         </select>
+                        {type.data !== undefined && (
+                            <select
+                                value={decentralizationID}
+                                className={cx('modal-input')}
+                                onChange={(event) => setDecentralizationID(event.target.value)}
+                            >
+                                {type.data.map((item) => (
+                                    <option key={item.decentralizationID} value={item.decentralizationID}>
+                                        {item.authorityName}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                         <input
                             type="file"
                             className={cx('modal-input')}
                             onChange={(event) => setAvatar(event.target.files[0])}
                         />
-                        {type.data !== undefined && (
-                            <select
-                                value={authorityName}
-                                className={cx('modal-input')}
-                                onChange={(event) => setAuthorityName(event.target.value)}
-                            >
-                                {type.data.map((item) => (
-                                    <option key={item.decentralizationID} value={item.decentralizationID}>
-                                        {item.authorityName} || id: {item.decentralizationID}
-                                    </option>
-                                ))}
-                            </select>
-                        )}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit" variant="dark">

@@ -2,9 +2,10 @@ import style from './Checkout.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
 import cartService from '~/services/cartService';
-import userService from '~/services/userService';
+import accountService from '~/services/accountService';
 import orderService from '~/services/orderService';
 import { toast, ToastContainer } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
 import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
@@ -13,24 +14,30 @@ function Checkout() {
     const [user, setUser] = useState([]);
     const [paymentType, setPaymentType] = useState([]);
 
+    const jwtToken = localStorage.getItem('jwtToken');
+    const jwtDecoded = jwtDecode(jwtToken);
+
     useEffect(() => {
         const fetchData = async () => {
-            const response = await userService.getByID(2);
-            setUser(response.data.data);
+            const response = await accountService.getAccountByID(jwtDecoded.Id);
+            setUser(response.data);
         };
         fetchData();
     }, []);
 
+    console.log(user);
+
     useEffect(() => {
         if (user) {
-            setFullName(user.userName);
+            setAccountID(user.accountID);
+            setFullName(user.fullName);
             setEmail(user.email);
             setPhone(user.phone);
             setAddress(user.address);
         }
     }, [user]);
 
-    const [userID] = useState(2);
+    const [accountID, setAccountID] = useState('');
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
@@ -39,7 +46,7 @@ function Checkout() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await cartService.getAll(2);
+            const response = await cartService.getAll(jwtDecoded.Id);
             setCart(response);
         };
         fetchData();
@@ -52,7 +59,6 @@ function Checkout() {
         };
         fetchData();
     }, []);
-    console.log(cart);
     const totalPrice = cart.length == 0 ? 0 : cart.data.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
     // ADD
@@ -70,7 +76,7 @@ function Checkout() {
         // formData.append('paymentID', paymentID);
         const order = {
             PaymentID: paymentID,
-            UserID: userID,
+            AccountID: accountID,
             FullName: fullName,
             Email: email,
             Phone: phone,
@@ -88,17 +94,13 @@ function Checkout() {
             orderDetail.push(...selectedData);
         }
 
-        console.log(order);
-        console.log(orderDetail);
         toast.success('Đang đặt hàng !');
 
         const response = await orderService.order(order, orderDetail);
 
-        const deleteCart = await cartService.deleteCart(2);
+        const deleteCart = await cartService.deleteCart(jwtDecoded.Id);
 
         window.location.href = response.data.message;
-
-        // alert(response.data.message);
 
         event.target.reset();
     };
@@ -109,7 +111,7 @@ function Checkout() {
                 <div className={cx('row')}>
                     <div className={cx('col-md-7')}>
                         <form onSubmit={handleSubmit} className={cx('form')}>
-                            <label className={cx('label')}>Tên khách hàng:</label>
+                            <label className={cx('label')}>Tên khách hàng</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
@@ -117,7 +119,7 @@ function Checkout() {
                                 onChange={(event) => setFullName(event.target.value)}
                                 required
                             />
-                            <label>Email:</label>
+                            <label>Email</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
@@ -125,7 +127,7 @@ function Checkout() {
                                 onChange={(event) => setEmail(event.target.value)}
                                 required
                             />
-                            <label>Số điện thoại:</label>
+                            <label>Số điện thoại</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
@@ -133,7 +135,7 @@ function Checkout() {
                                 onChange={(event) => setPhone(event.target.value)}
                                 required
                             />
-                            <label>Địa chỉ:</label>
+                            <label>Địa chỉ</label>
                             <input
                                 className={cx('input-form')}
                                 type="text"
@@ -141,7 +143,7 @@ function Checkout() {
                                 onChange={(event) => setAddress(event.target.value)}
                                 required
                             />
-
+                            <label>Hình thức thanh toán</label>
                             {paymentType.data !== undefined && paymentType.data.length > 0 && (
                                 <select
                                     value={paymentID}

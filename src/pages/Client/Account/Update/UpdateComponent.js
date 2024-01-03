@@ -3,6 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import accountService from '~/services/accountService';
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
+import { toast } from 'react-toastify';
 const cx = classNames.bind(style);
 function UpdateComponent(props) {
     const [isShow, invokeModal] = useState(false);
@@ -14,8 +15,23 @@ function UpdateComponent(props) {
     const [accountID] = useState(props.accountID);
     const [userName, setUserName] = useState(props.userName);
     const [password, setPassword] = useState(props.password);
-    const [avatar, setAvatar] = useState(props.avatar);
     const [email, setEmail] = useState(props.email);
+    const [avatar, setAvatar] = useState(props.avatar);
+    const [fullName, setFullName] = useState(props.fullName);
+    const [phone, setPhone] = useState(props.phone);
+    const [address, setAddress] = useState(props.address);
+
+    // useEffect(() => {
+    //     if (props) {
+    //         setUserName(props.userName);
+    //         // setPassword(props.password);
+    //         // setEmail(props.email);
+    //         // setAvatar(props.avatar);
+    //         // setFullName(props.fullName);
+    //         // setPhone(props.phone);
+    //         // setAddress(props.address);
+    //     }
+    // }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -24,13 +40,17 @@ function UpdateComponent(props) {
         formData.append('accountID', accountID);
         formData.append('userName', userName);
         formData.append('password', password);
-        formData.append('avatar', avatar);
         formData.append('email', email);
+        formData.append('avatar', avatar);
+        formData.append('fullName', fullName);
+        formData.append('phone', phone);
+        formData.append('address', address);
 
+        toast('Vui lòng chờ...');
         const response = await accountService.update(formData);
-        console.log(response);
+        props.setUpdate(new Date());
 
-        alert(response.data.message);
+        toast.success(response.data.message);
 
         initModal();
     };
@@ -69,6 +89,27 @@ function UpdateComponent(props) {
                             className={cx('modal-input')}
                             onChange={(event) => setEmail(event.target.value)}
                             required
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nhập tên khách hàng"
+                            value={fullName}
+                            className={cx('modal-input')}
+                            onChange={(event) => setFullName(event.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nhập số điện thoại"
+                            value={phone}
+                            className={cx('modal-input')}
+                            onChange={(event) => setPhone(event.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nhập địa chỉ"
+                            value={address}
+                            className={cx('modal-input')}
+                            onChange={(event) => setAddress(event.target.value)}
                         />
 
                         <input

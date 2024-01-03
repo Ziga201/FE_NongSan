@@ -1,24 +1,26 @@
 import style from './Account.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-// import UpdateComponent from '~/pages/Admin/Account/Update/UpdateComponent';
 import UpdateComponent from './Update/UpdateComponent';
 import accountService from '~/services/accountService';
 import { jwtDecode } from 'jwt-decode';
+import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
 const cx = classNames.bind(style);
 function Account() {
     const jwtToken = localStorage.getItem('jwtToken');
     const responseJWT = jwtDecode(jwtToken);
 
-    const [data, setData] = useState({});
+    const [data, setData] = useState(null);
+    const [update, setUpdate] = useState();
     useEffect(() => {
         const fetchData = async () => {
             const response = await accountService.getAccountByID(responseJWT.Id);
             setData(response.data);
         };
         fetchData();
-    }, []);
+    }, [update]);
 
     const signOut = () => {
         window.location.href = '/login';
@@ -27,54 +29,73 @@ function Account() {
 
     return (
         <>
-            <div className="">
-                <div className={cx('login-wrap')}>
-                    <div className={cx('login-heading')}>Hồ sơ của tôi</div>
-                    <div className={cx('row')}>
-                        <div className={cx('col-md-8')}>
-                            <label className={cx('login-text')}>Tài khoản: </label>{' '}
-                            <span className={cx('login-info')}>{data.userName}</span>
-                            <br></br>
-                            <label className={cx('login-text')}>Mật khẩu: </label>{' '}
-                            <span
-                                style={{
-                                    maxWidth: '100px',
-                                    display: 'inline-block',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap',
-                                }}
-                                className={cx('login-info', 'login-pass')}
-                            >
-                                {data.password}
-                            </span>
-                            <br></br>
-                            {/* <label className={cx('login-text')}>Tên khách hàng: </label>{' '}
-                            <span className={cx('login-info')}>{data.name}</span> */}
-                            <br></br>
-                            <label className={cx('login-text')}>Email: </label>{' '}
-                            <span className={cx('login-info')}>{data.email}</span>
+            {data != null && (
+                <div className="">
+                    <div className={cx('login-wrap')}>
+                        <div className={cx('login-heading')}>Hồ sơ của tôi</div>
+                        <div className={cx('row')}>
+                            <div className={cx('col-md-8')}>
+                                <div>
+                                    <label className={cx('login-text')}>Tài khoản: </label>{' '}
+                                    <span className={cx('login-info')}>{data.userName}</span>
+                                </div>
+
+                                <div>
+                                    <label className={cx('login-text')}>Mật khẩu: </label>{' '}
+                                    <span className={cx('login-info', 'login-pass')}>****************</span>
+                                </div>
+
+                                <div>
+                                    <label className={cx('login-text')}>Email: </label>{' '}
+                                    <span className={cx('login-info')}>{data.email}</span>
+                                </div>
+                                <div>
+                                    <label className={cx('login-text')}>Tên khách hàng: </label>{' '}
+                                    <span className={cx('login-info')}>{data.fullName}</span>
+                                </div>
+                                <div>
+                                    <label className={cx('login-text')}>Số điện thoại: </label>{' '}
+                                    <span className={cx('login-info')}>{data.phone}</span>
+                                </div>
+                                <div>
+                                    <label className={cx('login-text')}>Địa chỉ: </label>{' '}
+                                    <span className={cx('login-info')}>{data.address}</span>
+                                </div>
+                            </div>
+                            <div className={cx('col-md-4')}>
+                                <div className={cx('avatar')}>
+                                    <img src={data.avatar} alt="blog" />
+                                </div>
+                            </div>
                         </div>
-                        <div className={cx('col-md-4')}>
-                            <div className={cx('avatar')}>
-                                <img src={data.avatar} alt="blog" />
+                        <div className={cx('button')}>
+                            {responseJWT.Username == 'admin' && (
+                                <div className={cx('btn', 'btn-success')}>
+                                    <Link to="/admin">Admin</Link>
+                                </div>
+                            )}
+
+                            <UpdateComponent
+                                accountID={data.accountID}
+                                userName={data.userName}
+                                password={data.password}
+                                email={data.email}
+                                status={data.status}
+                                decentralizationID={data.decentralizationID}
+                                avatar={data.avatar}
+                                fullName={data.fullName}
+                                phone={data.phone}
+                                address={data.address}
+                                setUpdate={setUpdate}
+                            />
+                            <div onClick={() => signOut()} className={cx('btn', 'btn-success')}>
+                                Đăng xuất
                             </div>
                         </div>
                     </div>
-                    <div className={cx('button')}>
-                        <UpdateComponent
-                            accountID={data.accountID}
-                            userName={data.userName}
-                            password={data.password}
-                            email={data.email}
-                            style={{ fontSize: '16px' }}
-                        />
-                        <div onClick={() => signOut()} className={cx('btn', 'btn-success')}>
-                            Đăng xuất
-                        </div>
-                    </div>
+                    <ToastContainer position="bottom-right" />;
                 </div>
-                ;
-            </div>
+            )}
         </>
     );
 }

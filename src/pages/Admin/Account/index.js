@@ -4,29 +4,30 @@ import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-
 import { useState, useEffect } from 'react';
 import accountService from '~/services/accountService';
-
 import CreateComponent from './Create/CreateComponent';
 import UpdateComponent from './Update/UpdateComponent';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
 function Account() {
     const [data, setData] = useState({});
+    const [update, setUpdate] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await accountService.getAll();
             setData(response);
         };
         fetchData();
-    }, []);
+    }, [update]);
 
     const deleteAccount = async (id, e) => {
         var response = await accountService.delete(id);
-
-        alert(response.data.message);
+        setUpdate(new Date());
+        toast.success(response.data.message);
     };
     const [search, setSearch] = useState('');
 
@@ -42,8 +43,8 @@ function Account() {
                     />
                     <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
-
-                <CreateComponent />
+                <ToastContainer position="bottom-right" />
+                <CreateComponent setUpdate={setUpdate} />
             </div>
 
             {data.data !== undefined && (
@@ -54,13 +55,17 @@ function Account() {
                                 <th>STT</th>
                                 <th>Tài khoản</th>
                                 <th>Mật khẩu</th>
-                                <th>Avatar</th>
                                 <th>Email</th>
                                 <th>Trạng thái</th>
                                 <th>Quyền</th>
+                                <th>Avatar</th>
+                                <th>Tên khách hàng</th>
+                                <th>Điện thoại</th>
+                                <th>Địa chỉ</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {data.data
                                 .filter((item) => {
@@ -73,6 +78,10 @@ function Account() {
                                         <td>{index + 1}</td>
                                         <td>{item.userName}</td>
                                         <td data-fulltext={item.password}>{item.password}</td>
+
+                                        <td>{item.email}</td>
+                                        <td>{item.status}</td>
+                                        <td>{item.authorityName}</td>
                                         <td>
                                             <img
                                                 src={item.avatar}
@@ -80,18 +89,23 @@ function Account() {
                                                 alt="avatar"
                                             />
                                         </td>
-                                        <td>{item.email}</td>
-                                        <td>{item.status}</td>
-                                        <td>{item.authorityName}</td>
+                                        <td>{item.fullName}</td>
+                                        <td>{item.phone}</td>
+                                        <td>{item.address}</td>
+
                                         <td>
                                             <UpdateComponent
                                                 accountID={item.accountID}
                                                 userName={item.userName}
                                                 password={item.password}
-                                                avatar={item.avatar}
                                                 email={item.email}
                                                 status={item.status}
-                                                authorityName={item.authorityName}
+                                                decentralizationID={item.decentralizationID}
+                                                avatar={item.avatar}
+                                                fullName={item.fullName}
+                                                phone={item.phone}
+                                                address={item.address}
+                                                setUpdate={setUpdate}
                                             />
                                             <button
                                                 style={{ marginLeft: '5px', fontSize: '16px' }}

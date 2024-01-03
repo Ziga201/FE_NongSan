@@ -1,94 +1,90 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.bundle';
-
 import style from '~/pages/Client/Order/Order.module.scss';
-// import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
-
+import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
-import checkoutService from '~/services/orderService';
-
+import orderService from '~/services/orderService';
+import { format } from 'date-fns';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
 function Order() {
-    const [checkouts, setCheckouts] = useState({});
+    const [order, setOrder] = useState([]);
+    const [update, setUpdate] = useState();
 
-    const fetchCheckouts = async () => {
-        setCheckouts(await checkoutService.getCheckouts());
+    const jwtToken = localStorage.getItem('jwtToken');
+    const responseJWT = jwtDecode(jwtToken);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await orderService.getAllOrderByID(2);
+            setOrder(response);
+        };
+        fetchData();
+    }, [update]);
+
+    const formatDate = (date) => {
+        const dateObject = new Date(date);
+
+        const formattedDate = format(dateObject, 'dd-MM-yyyy');
+        return formattedDate;
     };
 
-    useEffect(() => {
-        fetchCheckouts();
-    }, []);
-
-    const deleteCheckout = async (id, e) => {
-        const confirm = window.confirm('Bạn có muốn huỷ đơn hàng không');
-        if (confirm) {
-            var response = await checkoutService.deleteCheckout(id);
-            if (response.data.success === true) {
-                alert('Huỷ đơn hàng thành công');
-                document.getElementById(id).parentElement.parentElement.remove();
-            } else {
-                alert(response.data.msg);
-            }
+    console.log(order);
+    const cancelOrder = async (id) => {
+        const result = window.confirm('Bạn có chắc chắn muốn hủy đơn hàng?');
+        if (result) {
+            const response = await orderService.delete(id);
+            console.log(response);
+            toast.success(response.data.message);
+            setUpdate(id);
+        } else {
+            toast.success('Bạn đã chọn Cancel!');
         }
     };
 
     return (
-        <>
-            <div className={cx('hug')}>
-                {checkouts.data !== undefined && checkouts.data.data.length > 0 && (
-                    <div className={cx('wrapper')}>
-                        <div className={cx('heading')}>
-                            <div className="col">
-                                <div className={cx('name_table')}>Đơn đặt hàng</div>
+        <div className={cx('container')}>
+            {order.data !== undefined && order.data.length > 0 && (
+                <div>
+                    {order.data.map((item) => (
+                        <div className={cx('order-details')}>
+                            {item.orderDetailDTOs.map((itemDetail) => (
+                                <div className={cx('product')}>
+                                    <img src={itemDetail.avatarImageProduct} alt="Product Image" />
+                                    <div className={cx('product-info')}>
+                                        <h5>{itemDetail.nameProduct}</h5>
+                                        <span>x{itemDetail.quantity}</span>
+                                        <p>Giá: {itemDetail.priceTotal}</p>
+                                    </div>
+                                </div>
+                            ))}
+                            <div className={cx('order-status')}>
+                                <h3>Trạng Thái Đơn Hàng</h3>
+                                <div className={cx('status-item')}>
+                                    <span>Trạng thái hiện tại:</span>
+                                    <p>{item.orderName}</p>
+                                </div>
+                                <div className={cx('status-item')}>
+                                    <span>Ngày đặt hàng:</span>
+                                    <p>{formatDate(item.createdAt)}</p>
+                                </div>
+                                <div className={cx('status-item')}>
+                                    <span>Tổng thanh toán:</span>
+                                    <p>{item.actualPrice.toLocaleString('vi-VN')} VND</p>
+                                </div>
+                            </div>
+                            <div className={cx('cancel')}>
+                                <button className={cx('cancel-btn')} onClick={() => cancelOrder(item.orderID)}>
+                                    Hủy Đơn Hàng
+                                </button>
+                                <ToastContainer position="bottom-right" />
                             </div>
                         </div>
-                        <table className="table" style={{ textAlign: 'center' }}>
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Tên khách hàng</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Địa chỉ</th>
-                                    <th>Tổng</th>
-                                    <th>Ngày đặt hàng</th>
-                                    <th>Tình trạng</th>
-                                    <th>Chức năng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {checkouts.data.data.map((checkout, index) => (
-                                    <tr>
-                                        <td>{index}</td>
-                                        <td>{checkout.product}</td>
-                                        <td>{checkout.name}</td>
-
-                                        <td>{checkout.phone}</td>
-                                        <td>{checkout.address}</td>
-                                        <td>{parseInt(checkout.total).toLocaleString('vi-VN')} VND</td>
-                                        <td>{checkout.orderdate}</td>
-                                        <td>{checkout.confirm}</td>
-
-                                        <td>
-                                            <button
-                                                style={{ marginLeft: '5px', fontSize: '16px' }}
-                                                id={checkout._id}
-                                                onClick={(e) => deleteCheckout(checkout._id, e)}
-                                                className="btn btn-danger"
-                                            >
-                                                Huỷ đơn hàng
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
-        </>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }
 

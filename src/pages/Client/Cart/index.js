@@ -3,36 +3,42 @@ import style from './Cart.module.scss';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import cartService from '~/services/cartService';
-
+import { jwtDecode } from 'jwt-decode';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
 function Cart() {
     const [cart, setCart] = useState([]);
+    const [update, setUpdate] = useState([]);
+    const jwtToken = localStorage.getItem('jwtToken');
+    const jwt = jwtDecode(jwtToken);
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await cartService.getAll(2);
+            const response = await cartService.getAll(jwt.Id);
             setCart(response);
         };
         fetchData();
-    }, []);
+    }, [update]);
 
     const deleteItem = async (cartItemID) => {
         const response = await cartService.delete(cartItemID);
+        toast.success('Xóa sản phẩm khỏi giỏ hàng');
+        setUpdate(new Date());
     };
-    console.log(cart);
     const totalPrice =
         cart.length == 0 || cart.data == '' ? 0 : cart.data.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    console.log(cart);
     const handleSubmit = () => {
-        if (cart.data == '') alert('Chưa có sản phẩm nào trong giỏ hàng !');
+        if (cart.data == '') toast.error('Chưa có sản phẩm trong giỏ hàng !');
         else {
             window.location.href = 'http://localhost:3000/checkout';
         }
     };
     return (
         <>
+            <ToastContainer position="bottom-right" />
             <div className={cx('cart')}>
                 <h1 className={cx('heading')}>Giỏ hàng</h1>
                 <table className={cx('table')}>
@@ -52,7 +58,7 @@ function Cart() {
                                 <tr className={cx('tr')} key={index}>
                                     <td className={cx('td')}>{item.nameProduct}</td>
                                     <td className={cx('td')}>
-                                        <img style={{ width: '100px' }} src={item.avartarImageProduct} alt="product" />
+                                        <img style={{ width: '100px' }} src={item.avatarImageProduct} alt="product" />
                                     </td>
                                     <td className={cx('td')}>{parseInt(item.price).toLocaleString('vi-VN')}</td>
                                     <td className={cx('td')}>{item.quantity}</td>

@@ -25,17 +25,17 @@ function Product() {
     const [key, setKey] = useState('');
     const [search, setSearch] = useState('');
 
-    const [user, setUser] = useState([]);
+    const [account, setAccount] = useState([]);
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetch = async () => {
             const jwtToken = localStorage.getItem('jwtToken');
             if (jwtToken) {
                 try {
                     // 2. Sử dụng try-catch cho jwtDecode
                     const response = await jwtDecode(jwtToken);
                     if (response) {
-                        setUser(response);
+                        setAccount(response);
                     }
                 } catch (error) {
                     console.error('Error decoding JWT:', error);
@@ -43,10 +43,9 @@ function Product() {
             }
         };
 
-        fetchUser();
+        fetch();
     }, []);
 
-    console.log(user);
     useEffect(() => {
         const fetchData = async () => {
             const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
@@ -75,7 +74,7 @@ function Product() {
     const addToCart = async (item) => {
         const formData = new FormData();
 
-        formData.append('userID', 2);
+        formData.append('accountID', account.Id);
         formData.append('productID', item);
 
         const response = await cartService.addToCart(formData);
@@ -152,7 +151,7 @@ function Product() {
                                             <div key={item.productID} className={cx('product-block', 'col-md-3')}>
                                                 <div onClick={() => handleClick(item.productID)}>
                                                     <div className={cx('product-img')}>
-                                                        <img src={item.avartarImageProduct} alt="product" />
+                                                        <img src={item.avatarImageProduct} alt="product" />
                                                     </div>
                                                     <div className={cx('product-name')}>{item.nameProduct}</div>
                                                 </div>

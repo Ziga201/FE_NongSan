@@ -8,31 +8,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useState, useEffect } from 'react';
 import productTypeService from '~/services/productTypeService';
-
 import UpdateComponent from './Update/UpdateComponent';
 import CreateComponent from './Create/CreateComponent';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import * as React from 'react';
 
 const cx = classNames.bind(style);
 
 function ProductType() {
     const [data, setData] = useState({});
+    const [update, setUpdate] = useState('');
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await productTypeService.getAll();
             setData(response);
         };
         fetchData();
-    }, [data]);
+    }, [update]);
 
     const deleteProductType = async (id, e) => {
         var response = await productTypeService.delete(id);
-        if (response.data.status === 200) {
-            alert('Xoá thành công');
-            // document.getElementById(id).remove();
-        } else {
-            alert(response.data.message);
-        }
+        toast.success(response.data.message);
     };
     // Search item
     const [search, setSearch] = useState('');
@@ -49,7 +47,8 @@ function ProductType() {
                     />
                     <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
-                <CreateComponent />
+                <ToastContainer position="bottom-right" />
+                <CreateComponent setUpdate={setUpdate} />
             </div>
 
             {data.data !== undefined && (
@@ -81,6 +80,7 @@ function ProductType() {
                                             <UpdateComponent
                                                 productTypeID={item.productTypeID}
                                                 nameProductType={item.nameProductType}
+                                                setUpdate={setUpdate}
                                             />
                                             <button
                                                 style={{ marginLeft: '5px', fontSize: '16px' }}

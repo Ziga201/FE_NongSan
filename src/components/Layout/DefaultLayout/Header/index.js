@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import logo from '~/assets/images/logo.svg';
 import { NavLink, Link } from 'react-router-dom';
-import { faCartShopping, faSignOut, faTruck, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faMailBulk, faTruck, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const cx = classNames.bind(style);
@@ -64,7 +64,7 @@ function Header() {
                     <div className={cx('action')}>
                         <div>
                             <div className={cx('search')}>
-                                <FontAwesomeIcon icon={faSignOut} />
+                                <FontAwesomeIcon icon={faMailBulk} />
                             </div>
                         </div>
                         <Link to="/account">

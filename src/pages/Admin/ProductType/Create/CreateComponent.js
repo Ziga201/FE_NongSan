@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import productTypeService from '~/services/productTypeService';
 import 'bootstrap/dist/css/bootstrap.css';
-
-function CreateComponent() {
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+function CreateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
     const initModal = () => {
@@ -14,18 +15,12 @@ function CreateComponent() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
         const formData = new FormData();
-
         formData.append('nameProductType', nameProductType);
-
         const response = await productTypeService.create(formData);
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
-        if (response.data.status === 200) {
-            alert('Thêm thành công');
-        } else {
-            alert('Thêm thất bại');
-        }
         event.target.reset();
         initModal();
     };

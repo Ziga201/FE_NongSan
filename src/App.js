@@ -7,27 +7,18 @@ import { jwtDecode } from 'jwt-decode';
 import Product from '~/pages/Client/Product';
 
 function App() {
-    const [user, setUser] = useState([]);
+    const jwtToken = localStorage.getItem('jwtToken');
+    let userId;
+    if (jwtToken) {
+        try {
+            const decodedToken = jwtDecode(jwtToken);
+            userId = decodedToken.Username;
+        } catch (error) {
+            console.error('Error decoding JWT:', error);
+        }
+    }
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const jwtToken = localStorage.getItem('jwtToken');
-            if (jwtToken) {
-                try {
-                    const response = await jwtDecode(jwtToken);
-                    if (response) {
-                        setUser(response);
-                    }
-                } catch (error) {
-                    console.error('Error decoding JWT:', error);
-                }
-            }
-        };
-
-        fetchUser();
-    }, []);
-
-    console.log(user.Username);
+    console.log(userId);
     return (
         <Router>
             <div className="App">
@@ -59,62 +50,57 @@ function App() {
                         );
                     })}
 
-                    {
-                        user.Username == 'user' ||
-                            (user.Username == 'admin' &&
-                                privateRoutes.map((route, index) => {
-                                    const Page = route.component;
-                                    let Layout = DefaultLayout;
+                    {userId == 'admin' || userId == 'user'
+                        ? privateRoutes.map((route, index) => {
+                              const Page = route.component;
+                              let Layout = DefaultLayout;
 
-                                    if (route.layout) {
-                                        Layout = route.layout;
-                                    } else if (route.layout === null) {
-                                        Layout = Fragment;
-                                    }
-                                    return (
-                                        <Route
-                                            key={index}
-                                            path={route.path}
-                                            element={
-                                                <Layout>
-                                                    <Page />
-                                                </Layout>
-                                            }
-                                        />
-                                    );
-                                }))
-                        // : privateRoutes.map((route, index) => {
-                        //       return <Route key={index} path={route.path} element={<Navigate to="/login" />} />;
-                        //   })
-                    }
+                              if (route.layout) {
+                                  Layout = route.layout;
+                              } else if (route.layout === null) {
+                                  Layout = Fragment;
+                              }
+                              return (
+                                  <Route
+                                      key={index}
+                                      path={route.path}
+                                      element={
+                                          <Layout>
+                                              <Page />
+                                          </Layout>
+                                      }
+                                  />
+                              );
+                          })
+                        : privateRoutes.map((route, index) => {
+                              return <Route key={index} path={route.path} element={<Navigate to="/login" />} />;
+                          })}
 
-                    {
-                        user.Username === 'admin' &&
-                            adminRoutes.map((route, index) => {
-                                const Page = route.component;
-                                let Layout = DefaultLayout;
+                    {userId == 'admin'
+                        ? adminRoutes.map((route, index) => {
+                              const Page = route.component;
+                              let Layout = DefaultLayout;
 
-                                if (route.layout) {
-                                    Layout = route.layout;
-                                } else if (route.layout === null) {
-                                    Layout = Fragment;
-                                }
-                                return (
-                                    <Route
-                                        key={index}
-                                        path={route.path}
-                                        element={
-                                            <Layout>
-                                                <Page />
-                                            </Layout>
-                                        }
-                                    />
-                                );
-                            })
-                        // : adminRoutes.map((route, index) => {
-                        //       return <Route key={index} path={route.path} element={<Navigate to="/login" />} />;
-                        //   })
-                    }
+                              if (route.layout) {
+                                  Layout = route.layout;
+                              } else if (route.layout === null) {
+                                  Layout = Fragment;
+                              }
+                              return (
+                                  <Route
+                                      key={index}
+                                      path={route.path}
+                                      element={
+                                          <Layout>
+                                              <Page />
+                                          </Layout>
+                                      }
+                                  />
+                              );
+                          })
+                        : adminRoutes.map((route, index) => {
+                              return <Route key={index} path={route.path} element={<Navigate to="/login" />} />;
+                          })}
                 </Routes>
             </div>
         </Router>

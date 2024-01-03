@@ -2,21 +2,37 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faBell, faSignOut } from '@fortawesome/free-solid-svg-icons';
 import style from './Header.module.scss';
-import avatar from './img/avatar.jpg';
 import logo from './img/logo.svg';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
+import accountService from '~/services/accountService';
+import { jwtDecode } from 'jwt-decode';
+import { useEffect, useState } from 'react';
 
 const cx = classNames.bind(style);
 
 function Header() {
     const signOut = () => {
-        localStorage.removeItem('admin');
         window.location.href = '/login';
+        localStorage.removeItem('jwtToken');
     };
+
+    const jwtToken = localStorage.getItem('jwtToken');
+    const responseJWT = jwtDecode(jwtToken);
+
+    const [data, setData] = useState({});
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await accountService.getAccountByID(responseJWT.Id);
+            setData(response.data);
+        };
+        fetchData();
+    }, []);
+
+    console.log(data);
     return (
         <header className={cx('header')}>
-            <Link to="/admin" className={cx('logo')}>
+            <Link to="/" className={cx('logo')}>
                 <img src={logo} />
             </Link>
             <div className={cx('info')}>
@@ -33,7 +49,7 @@ function Header() {
                         <FontAwesomeIcon icon={faSignOut} />
                     </div>
                     <div className={cx('element')}>
-                        <img src={avatar} width="35px" />
+                        <img src={data.avatar} width="35px" />
                     </div>
                 </div>
             </div>

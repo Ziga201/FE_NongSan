@@ -12,7 +12,7 @@ class Cart {
     }
 
     getAll(id) {
-        const url = 'https://localhost:7211/api/Cart/GetAll?userID=' + id;
+        const url = 'https://localhost:7211/api/Cart/GetAll/' + id;
 
         return axios.get(url);
     }

@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
+import confirm from '~/assets/images/confirm.jpg';
 
 function Confirm() {
     return (
         <div style={{ textAlign: 'center' }}>
-            <img src="https://shopta.vn/images/2015/11/dat-hang-thanh-cong.jpg" />
+            <img src={confirm} />
             <div style={{ marginBottom: '50px' }}>
                 <Link to="/">
                     <button className="btn btn-success">Tiếp tục mua hàng</button>

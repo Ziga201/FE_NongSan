@@ -4,6 +4,8 @@ import productService from '~/services/productService';
 import productTypeService from '~/services/productTypeService';
 import style from '~/pages/Admin/Page.module.scss';
 import classNames from 'classnames/bind';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 function UpdateComponent(props) {
     const [isShow, invokeModal] = useState(false);
@@ -16,7 +18,7 @@ function UpdateComponent(props) {
     const [productTypeID, setProductTypeID] = useState(props.productTypeID);
     const [nameProduct, setNameProduct] = useState(props.nameProduct);
     const [price, setPrice] = useState(props.price);
-    const [avartarImageProduct, setAvartarImageProduct] = useState(props.avartarImageProduct);
+    const [avatarImageProduct, setAvatarImageProduct] = useState(props.avatarImageProduct);
     const [title, setTitle] = useState(props.title);
     const [discount, setDiscount] = useState(props.discount);
     const [status, setStatus] = useState(props.status);
@@ -38,14 +40,14 @@ function UpdateComponent(props) {
         formData.append('productTypeID', productTypeID);
         formData.append('nameProduct', nameProduct);
         formData.append('price', price);
-        formData.append('avartarImageProduct', avartarImageProduct);
+        formData.append('avatarImageProduct', avatarImageProduct);
         formData.append('title', title);
         formData.append('discount', discount);
         formData.append('status', status);
 
         const response = await productService.update(formData);
-
-        alert(response.data.message);
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
         initModal();
     };
@@ -93,7 +95,7 @@ function UpdateComponent(props) {
                         <input
                             type="file"
                             name="file"
-                            onChange={(event) => setAvartarImageProduct(event.target.files[0])}
+                            onChange={(event) => setAvatarImageProduct(event.target.files[0])}
                         />
                         <input
                             type="text"

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import productTypeService from '~/services/productTypeService';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function UpdateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
@@ -21,11 +22,8 @@ function UpdateComponent(props) {
 
         const response = await productTypeService.update(formData);
 
-        if (response.data.status === 200) {
-            alert('Sửa thành công');
-        } else {
-            alert('Sửa thất bại');
-        }
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
         initModal();
     };

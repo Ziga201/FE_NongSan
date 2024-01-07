@@ -1,51 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import blogService from '~/services/blogService';
+import blogTypeService from '~/services/blogTypeService';
+import accountService from '~/services/accountService';
 import 'bootstrap/dist/css/bootstrap.css';
+import style from '~/pages/Admin/Page.module.scss';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import classNames from 'classnames/bind';
 
-// import classNames from 'classnames/bind';
-// import style from '~/pages/';
-// const cx = classNames.bind(style);
+const cx = classNames.bind(style);
 
-function CreateComponent() {
+function CreateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
     const initModal = () => {
         return invokeModal(!isShow);
     };
 
+    const [blogTypeID, setBlogTypeID] = useState(1);
+    const [accountID, setAccountID] = useState(1);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
-    const [author, setAuthor] = useState('');
-    const [message, setMessage] = useState('');
+    const [typeData, setTypeData] = useState([]);
+    const [account, setAccount] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await blogTypeService.getAll();
+            setTypeData(response);
+        };
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await accountService.getAll();
+            setAccount(response);
+        };
+        fetchData();
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const today = new Date();
-        const day = today.getDate();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
-        const createAt = `${day}/${month}/${year}`;
-
         const formData = new FormData();
+
+        formData.append('blogTypeID', blogTypeID);
+        formData.append('accountID', accountID);
         formData.append('title', title);
         formData.append('content', content);
         formData.append('image', image);
-        formData.append('author', author);
-        formData.append('createAt', createAt);
 
         const response = await blogService.create(formData);
-        if (response.data.success === true) {
-            setMessage('Tạo Blog thành công');
-        } else {
-            setMessage('Blog Tạo Blog thất bại');
-        }
 
-        setTimeout(() => {
-            setMessage('');
-        }, 2000);
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
         event.target.reset();
         initModal();
@@ -62,12 +72,40 @@ function CreateComponent() {
                 </Modal.Header>
                 <form onSubmit={handleSubmit}>
                     <Modal.Body>
+                        {typeData.data !== undefined && typeData.data.length > 0 && (
+                            <select
+                                value={blogTypeID}
+                                className={cx('modal-input')}
+                                onChange={(event) => setBlogTypeID(event.target.value)}
+                            >
+                                {typeData.data.map((item) => (
+                                    <option key={item.blogTypeID} value={item.blogTypeID}>
+                                        {item.blogTypeName}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+
+                        {account.data !== undefined && account.data.length > 0 && (
+                            <select
+                                value={accountID}
+                                className={cx('modal-input')}
+                                onChange={(event) => setAccountID(event.target.value)}
+                            >
+                                {account.data.map((item) => (
+                                    <option key={item.accountID} value={item.accountID}>
+                                        {item.fullName}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                         <input
                             type="text"
                             name="title"
                             placeholder="Nhập tiêu đề bài viết"
                             value={title}
                             onChange={(event) => setTitle(event.target.value)}
+                            className={cx('modal-input')}
                             required
                         />
                         <textarea
@@ -76,17 +114,11 @@ function CreateComponent() {
                             placeholder="Nhập nội dung"
                             value={content}
                             onChange={(event) => setContent(event.target.value)}
+                            className={cx('modal-input')}
                             required
                         />
                         <input type="file" name="file" onChange={(event) => setImage(event.target.files[0])} />
-                        <input
-                            type="text"
-                            name="author"
-                            placeholder="Nhập tên tác giả"
-                            value={author}
-                            onChange={(event) => setAuthor(event.target.value)}
-                            required
-                        />
+                        <ToastContainer position="bottom-right" />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit" variant="dark">

@@ -10,28 +10,16 @@ import blogService from '~/services/blogService';
 const cx = classNames.bind(style);
 
 function Blog() {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
-            // const response = await fetch('https://localhost:7211/api/Product/GetProductTest');
-            // const result = await response.json();
-            // setData(result);
-            setData((await blogService.getBlogs()).data);
+            const response = await blogService.getAll();
+            setData(response);
         };
         fetchData();
-    }, [data]);
+    }, []);
 
-    if (!data) {
-        return <p>No data found</p>;
-    }
-
-    // Chuyen huong detail
-
-    const handleClick = (blogId) => {
-        // <Navigate to={`/product/${productId}`} />;
-        window.location.href = `/blog/${blogId}`;
-    };
     return (
         <>
             <div className={cx('banner')}>
@@ -49,28 +37,26 @@ function Blog() {
 
             <div className={cx('content')}>
                 <div className={cx('wrapper')}>
-                    <div className={cx('row')}>
-                        {data.map((blog) => (
-                            <div
-                                key={blog.productID}
-                                className={cx('item', 'col-md-4')}
-                                onClick={() => handleClick(blog.productID)}
-                            >
-                                <div className={cx('image')}>
-                                    <img src={blog.avartarImageProduct} alt="blog" />
-                                </div>
-                                <div className={cx('info')}>
-                                    <FontAwesomeIcon icon={faCalendarDays} /> {blog.createdAt} /{' '}
-                                    <FontAwesomeIcon icon={faUser} /> bởi admin / <FontAwesomeIcon icon={faComments} />{' '}
-                                    6
-                                </div>
-                                <Link to="/">
-                                    <div className={cx('title')}>{blog.title}</div>
+                    {data.data !== undefined && data.data.length > 0 && (
+                        <div className={cx('row')}>
+                            {data.data.map((blog) => (
+                                <Link to={`/blog/${blog.blogID}`} key={blog.blogID} className={cx('item', 'col-md-4')}>
+                                    <div className={cx('image')}>
+                                        <img src={blog.image} alt="blog" />
+                                    </div>
+                                    <div className={cx('info')}>
+                                        <FontAwesomeIcon icon={faCalendarDays} /> {blog.createdAt} /{' '}
+                                        <FontAwesomeIcon icon={faUser} /> bởi {blog.fullName} /{' '}
+                                        <FontAwesomeIcon icon={faComments} />
+                                    </div>
+                                    <Link to="/">
+                                        <div className={cx('title')}>{blog.title}</div>
+                                    </Link>
+                                    <div className={cx('desc')}>{blog.content}</div>
                                 </Link>
-                                <div className={cx('desc')}>{blog.nameProduct}</div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </>

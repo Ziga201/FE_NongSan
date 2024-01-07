@@ -6,8 +6,6 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
-import messageService from '~/services/messageService';
-
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,19 +27,9 @@ function Contact() {
         formData.append('topic', topic);
         formData.append('message', message);
 
-        const response = await messageService.create(formData);
-        if (response.data.success === true) {
-            toast.success('Gửi lời nhắn thành công !');
-        } else {
-            toast.success('Gửi lời nhắn thất bại !');
-        }
-
-        // setTimeout(() => {
-        //     setMessage('');
-        // }, 2000);
+        // const response = await messageService.create(formData);
 
         event.target.reset();
-        // initModal();
     };
 
     return (

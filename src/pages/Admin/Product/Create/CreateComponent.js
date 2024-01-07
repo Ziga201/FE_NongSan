@@ -21,6 +21,7 @@ function CreateComponent(props) {
     const [price, setPrice] = useState('');
     const [image, setImage] = useState('');
     const [title, setTitle] = useState('');
+    const [status, setStatus] = useState('ACTIVE');
     const [discount, setDiscount] = useState('');
     const [productTypeID, setProductTypeID] = useState(1);
     const [typeData, setTypeData] = useState('');
@@ -44,6 +45,7 @@ function CreateComponent(props) {
         formData.append('avatarImageProduct', image);
         formData.append('title', title);
         formData.append('discount', discount);
+        formData.append('status', status);
 
         const response = await productService.create(formData);
 
@@ -117,6 +119,14 @@ function CreateComponent(props) {
                             onChange={(event) => setDiscount(event.target.value)}
                             required
                         />
+                        <select
+                            value={status}
+                            className={cx('modal-input')}
+                            onChange={(event) => setStatus(event.target.value)}
+                        >
+                            <option value="ACTIVE">ACTIVE</option>
+                            <option value="INACTIVE">INACTIVE</option>
+                        </select>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit" variant="dark">

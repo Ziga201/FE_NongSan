@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-class Decentralization {
+class BlogType {
     create(formData) {
-        const url = 'https://localhost:7211/api/Product/AddProduct';
+        const url = 'https://localhost:7211/api/BlogType/AddBlogType';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -11,7 +11,7 @@ class Decentralization {
         return axios.post(url, formData, config);
     }
     update(formData) {
-        const url = 'https://localhost:7211/api/Product/UpdateProduct';
+        const url = 'https://localhost:7211/api/BlogType/UpdateBlogType';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -20,18 +20,18 @@ class Decentralization {
         return axios.put(url, formData, config);
     }
     delete(id) {
-        const url = 'https://localhost:7211/api/Product/DeleteProduct/' + id;
+        const url = 'https://localhost:7211/api/BlogType/DeleteBlogType/' + id;
         return axios.delete(url);
     }
-
-    getAll(pageSize, pageNumber) {
-        const url = `https://localhost:7211/api/Product/GetProduct?PageSize=${pageSize}&PageNumber=${pageNumber}`;
+    getAll() {
+        const url = 'https://localhost:7211/api/BlogType/GetAll';
         return axios.get(url);
     }
-    getProductByID(id) {
-        const url = 'https://localhost:7211/api/Product/GetProductByID/' + id;
+
+    getBlogTypeById(id) {
+        const url = 'https://localhost:7211/api/BlogType/GetBlogTypeByID' + id;
         return axios.get(url);
     }
 }
 
-export default new Decentralization();
+export default new BlogType();

@@ -14,6 +14,7 @@ import Checkout from '~/pages/Client/Checkout';
 import Confirm from '~/pages/Client/Confirm';
 import Order from '~/pages/Client/Order';
 import Account from '~/pages/Client/Account';
+import Staff from '~/pages/Client/Staff';
 
 // Admin
 import _Home from '~/pages/Admin/Home';
@@ -33,6 +34,7 @@ const publicRoutes = [
     { path: '/product/:id', component: ProductDetail },
     { path: '/login', component: Login },
     { path: '/signup', component: Signup },
+    { path: '/staff', component: Staff },
 
     // { path: '/order', component: Order },
     // { path: '/checkout', component: Checkout },

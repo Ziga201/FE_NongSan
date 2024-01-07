@@ -4,37 +4,51 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import postService from '~/services/postService';
-import { faCircleCheck, faMedal, faSmile } from '@fortawesome/free-solid-svg-icons';
-
+import productService from '~/services/productService';
+import cartService from '~/services/cartService';
+import { faCircleCheck, faMedal } from '@fortawesome/free-solid-svg-icons';
+import { jwtDecode } from 'jwt-decode';
+import { toast, ToastContainer } from 'react-toastify';
 const cx = classNames.bind(style);
 function ProductDetail() {
-    // const { id } = useParams();
-    // const [post, setPost] = useState({});
-    // useEffect(() => {
-    //     axios
-    //         .get(`http://localhost:8000/api/get-post/${id}`)
-    //         .then((response) => {
-    //             console.log(response.data.data);
-    //             setPost(response.data.data);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // }, [id]);
-    // console.log(post);
-
     const { id } = useParams();
-    const [post, setPost] = useState({});
-
-    const fetchPosts = async () => {
-        setPost((await postService.getPostById(id)).data.data);
-    };
+    const [data, setData] = useState([]);
+    const [account, setAccount] = useState([]);
 
     useEffect(() => {
-        fetchPosts();
-    }, [id]);
+        const fetch = async () => {
+            const jwtToken = localStorage.getItem('jwtToken');
+            if (jwtToken) {
+                try {
+                    const response = await jwtDecode(jwtToken);
+                    if (response) {
+                        setAccount(response);
+                    }
+                } catch (error) {
+                    console.error('Error decoding JWT:', error);
+                }
+            }
+        };
+
+        fetch();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await productService.getProductByID(id);
+            setData(response.data.data);
+        };
+        fetchData();
+    }, []);
+
+    const addToCart = async (item) => {
+        const formData = new FormData();
+
+        formData.append('accountID', account.Id);
+        formData.append('productID', item);
+
+        const response = await cartService.addToCart(formData);
+        toast.success(response.data.message);
+    };
 
     return (
         <>
@@ -42,13 +56,13 @@ function ProductDetail() {
                 <div className={cx('row')}>
                     <div className={cx('col-md-6')}>
                         <div className={cx('image')}>
-                            <img src={'http://localhost:8000/api/postImages/' + post.image} alt="product" />
+                            <img src={data.avatarImageProduct} alt="product" />
                         </div>
                     </div>
                     <div className={cx('info', 'col-md-6')}>
                         <div className={cx('stocking')}>Còn hàng</div>
-                        <div className={cx('name')}>{post.name}</div>
-                        <div className={cx('price')}>{parseInt(post.price).toLocaleString('vi-VN')} VND</div>
+                        <div className={cx('name')}>{data.nameProduct}</div>
+                        <div className={cx('price')}>{parseInt(data.price).toLocaleString('vi-VN')} VND</div>
                         <div className={cx('message')}>
                             <FontAwesomeIcon icon={faMedal} />
                             <span>
@@ -58,11 +72,13 @@ function ProductDetail() {
                             </span>
                         </div>
                         <div className={cx('category')}>
-                            Danh mục: <span>{post.category}</span>
+                            Danh mục: <span>{data.nameProductType}</span>
                         </div>
-                        {/* <div className={cx('desc')}>{post.data.desc}</div> */}
                         <div className={cx('add')}>
-                            <button className={cx('add-btn')}>Thêm giỏ hàng</button>
+                            <button onClick={() => addToCart(data.productID)} className={cx('add-btn')}>
+                                Thêm giỏ hàng
+                            </button>
+                            <ToastContainer position="bottom-right" />
                         </div>
                         <div className={cx('certify')}>
                             <div className={cx('certify-item')}>
@@ -80,7 +96,7 @@ function ProductDetail() {
 
                 <div className={cx('desc')}>
                     <div className={cx('heading')}>Mô tả</div>
-                    <div className={cx('desc-text')}>{post.desc}</div>
+                    {/* <div className={cx('desc-text')}>{data.desc}</div> */}
                 </div>
             </div>
         </>

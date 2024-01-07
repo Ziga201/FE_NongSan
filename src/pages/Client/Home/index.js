@@ -1,7 +1,5 @@
 import style from './Home.module.scss';
 import React, { useState, useEffect } from 'react';
-
-import postService from '~/services/postService';
 import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import brand1 from '~/assets/images/brand1.svg';
@@ -10,28 +8,38 @@ import brand3 from '~/assets/images/brand3.svg';
 import brand4 from '~/assets/images/brand4.svg';
 import brand5 from '~/assets/images/brand5.svg';
 import brand6 from '~/assets/images/brand6.svg';
-
 import { Link } from 'react-router-dom';
 import { faAnglesRight, faArrowRight, faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { Tab, TabList, TabPanel } from 'react-tabs';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import productService from '~/services/productService';
+import productTypeService from '~/services/productTypeService';
+import cartService from '~/services/cartService';
+
+import { jwtDecode } from 'jwt-decode';
 
 const cx = classNames.bind(style);
 
 function Home() {
     // console.log(brand);
 
-    const [posts, setPosts] = useState({});
-
-    const fetchPosts = async () => {
-        setPosts(await postService.getPosts());
-    };
+    const [data, setData] = useState({});
+    const [pageNumber, setPageNumber] = useState({
+        pageNumber: 1,
+        pageSize: 99,
+    });
+    const [account, setAccount] = useState([]);
+    const [typeData, setTypeData] = useState([]);
 
     useEffect(() => {
-        fetchPosts();
-    }, [posts]);
+        const fetchData = async () => {
+            const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
+
+            setData(response.data);
+        };
+        fetchData();
+    }, []);
 
     // Add to cart
     const [cartItems, setCartItems] = useState([]);
@@ -43,50 +51,48 @@ function Home() {
         }
     }, []);
 
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    function addToCart(item) {
-        if (user) {
-            toast.success('Thêm vào giỏ hàng thành công !');
-
-            // const newCartItems = [...cartItems, item];
-            // setCartItems(newCartItems);
-            // localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-            // const data = JSON.parse(localStorage.getItem('cartItems'));
-            const product = {
-                id: item._id,
-                name: item.name,
-                image: item.image,
-                price: item.price,
-                quantity: 1,
-            };
-            const itemIndex = cartItems.findIndex((i) => i.id === item._id);
-            console.log(itemIndex);
-            if (itemIndex >= 0) {
-                const newCartItems = [...cartItems];
-                newCartItems[itemIndex].quantity++;
-                setCartItems(newCartItems);
-                localStorage.setItem('cartItems', JSON.stringify(newCartItems));
-            } else {
-                // const newCartItem = { ...cartItems, quantity: 1 };
-                // product.quantity++;
-                const newCartItems = [...cartItems, product];
-                setCartItems(newCartItems);
-                localStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    useEffect(() => {
+        const fetch = async () => {
+            const jwtToken = localStorage.getItem('jwtToken');
+            if (jwtToken) {
+                try {
+                    // 2. Sử dụng try-catch cho jwtDecode
+                    const response = await jwtDecode(jwtToken);
+                    if (response) {
+                        setAccount(response);
+                    }
+                } catch (error) {
+                    console.error('Error decoding JWT:', error);
+                }
             }
-        } else {
-            window.location.href = '/login';
-        }
-    }
-    const handleClick = (productId) => {
-        // <Navigate to={`/product/${productId}`} />;
-        window.location.href = `/product/${productId}`;
-    };
+        };
+
+        fetch();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await productTypeService.getAll();
+            setTypeData(response);
+        };
+        fetchData();
+    }, []);
 
     // Filter item
     const [key, setKey] = useState('');
     const handleFilter = (key) => {
         setKey(key);
+    };
+    const handleClick = (key) => {};
+
+    const addToCart = async (item) => {
+        const formData = new FormData();
+
+        formData.append('accountID', account.Id);
+        formData.append('productID', item);
+
+        const response = await cartService.addToCart(formData);
+        toast.success(response.data.message);
     };
 
     return (
@@ -163,44 +169,34 @@ function Home() {
                     <div className={cx('tab-link', `${key === '' ? 'active' : ''}`)} onClick={() => handleFilter('')}>
                         Tất cả
                     </div>
-                    <div
-                        className={cx('tab-link', `${key === 'Trái cây & Rau củ' ? 'active' : ''}`)}
-                        onClick={() => handleFilter('Trái cây & Rau củ')}
-                    >
-                        Trái cây
-                    </div>
-                    <div
-                        className={cx('tab-link', `${key === 'Hạt giống & cây trồng' ? 'active' : ''}`)}
-                        onClick={() => handleFilter('Hạt giống & cây trồng')}
-                    >
-                        Hạt giống
-                    </div>
-                    <div
-                        className={cx('tab-link', `${key === 'Sản phẩm đóng gói' ? 'active' : ''}`)}
-                        onClick={() => handleFilter('Sản phẩm đóng gói')}
-                    >
-                        Đóng gói
-                    </div>
+
+                    {typeData.data !== undefined && (
+                        <>
+                            {typeData.data.map((item) => (
+                                <div
+                                    className={cx('tab-link', `${key === `${item.productTypeID}` ? 'active' : ''}`)}
+                                    onClick={() => handleFilter(`${item.productTypeID}`)}
+                                >
+                                    {item.nameProductType}
+                                </div>
+                            ))}
+                        </>
+                    )}
                 </div>
-                {posts.data !== undefined && posts.data.data.length > 0 && (
+                {data.data !== undefined && data.data.length > 0 && (
                     <div className={cx('row', 'wrapper')}>
-                        {posts.data.data
+                        {data.data
                             .filter((post) => {
-                                return key.toLowerCase() === ''
-                                    ? post
-                                    : post.category.toLowerCase().includes(key.toLowerCase());
+                                return key === '' ? post : post.productTypeID == key;
                             })
                             .slice(0, 10)
                             .map((post, index) => (
-                                <div key={post._id} className={cx('product-block', 'col-md-2dot4')}>
-                                    <div onClick={() => handleClick(post._id)}>
+                                <div key={post.productID} className={cx('product-block', 'col-md-2dot4')}>
+                                    <div onClick={() => handleClick(post.productID)}>
                                         <div className={cx('product-img')}>
-                                            <img
-                                                src={'http://localhost:8000/api/postImages/' + post.image}
-                                                alt="product"
-                                            />
+                                            <img src={post.avatarImageProduct} alt="product" />
                                         </div>
-                                        <div className={cx('product-name')}>{post.name}</div>
+                                        <div className={cx('product-name')}>{post.nameProduct}</div>
                                     </div>
                                     <div className={cx('product-price')}>
                                         {parseInt(post.price).toLocaleString('vi-VN')} VND

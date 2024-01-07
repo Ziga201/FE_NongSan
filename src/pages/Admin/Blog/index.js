@@ -1,76 +1,66 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
-
 import style from '~/pages/Admin/Page.module.scss';
-// import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-
 import { useState, useEffect } from 'react';
 import blogService from '~/services/blogService';
-
 import CreateComponent from './Create/CreateComponent';
 import UpdateComponent from './Update/UpdateComponent';
+import { format } from 'date-fns';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(style);
 
 function Blog() {
-    const [blogs, setBlogs] = useState({});
-
-    const fetchBlogs = async () => {
-        setBlogs(await blogService.getBlogs());
-    };
+    const [data, setData] = useState({});
+    const [update, setUpdate] = useState('');
 
     useEffect(() => {
-        fetchBlogs();
-    }, [blogs]);
+        const fetchData = async () => {
+            const response = await blogService.getAll();
+            setData(response);
+        };
+        fetchData();
+    }, [update]);
+    const formatDate = (date) => {
+        const dateObject = new Date(date);
 
-    const deleteBlog = async (id, e) => {
-        var response = await blogService.deleteBlog(id);
-        if (response.data.success === true) {
-            alert('Xoá thành công');
-            document.getElementById(id).parentElement.remove();
-        } else {
-            alert(response.data.msg);
-        }
+        const formattedDate = format(dateObject, 'dd-MM-yyyy');
+        return formattedDate;
     };
-    // Search item
+    const deleteBlog = async (id, e) => {
+        var response = await blogService.delete(id);
+        setUpdate(new Date());
+        toast.success(response.data.message);
+    };
     const [search, setSearch] = useState('');
 
     return (
         <div className={cx('hug')}>
             <div className={cx('heading')}>
-                <div className="col">
-                    <div className={cx('name_table')}>Danh mục bài viết</div>
+                <div className={cx('search')}>
+                    <input
+                        type="text"
+                        className={cx('search-input')}
+                        placeholder="Nhập tài khoản ..."
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
-                {/* <Link to="/create">
-                    <button className="btn btn-info" style={{ fontSize: '16px' }}>
-                        Thêm
-                    </button>
-                </Link> */}
-
-                <div>
-                    <CreateComponent />
-                </div>
-            </div>
-            <div className={cx('search')}>
-                <input
-                    type="text"
-                    className={cx('search-input')}
-                    placeholder="Nhập tiêu đề ..."
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
+                <ToastContainer position="bottom-right" />
+                <CreateComponent setUpdate={setUpdate} />
             </div>
 
-            {blogs.data !== undefined && blogs.data.data.length > 0 && (
+            {data.data !== undefined && data.data.length > 0 && (
                 <div className={cx('wrapper')}>
                     <table className={cx('table')} style={{ textAlign: 'center' }}>
                         <thead>
                             <tr>
                                 <th>STT</th>
+                                <th>Loại bài viết</th>
                                 <th>Tiêu đề</th>
                                 <th>Nội dung</th>
                                 <th>Ảnh</th>
@@ -80,7 +70,7 @@ function Blog() {
                             </tr>
                         </thead>
                         <tbody>
-                            {blogs.data.data
+                            {data.data
                                 .filter((blog) => {
                                     return search.toLowerCase() === ''
                                         ? blog
@@ -88,37 +78,35 @@ function Blog() {
                                 })
                                 .map((blog, index) => (
                                     <tr>
-                                        <td>{index}</td>
-                                        <td className={cx('content-fix')}>{blog.title}</td>
-                                        <td className={cx('content-fix')}>{blog.content}</td>
+                                        <td>{index + 1}</td>
+                                        <td>{blog.blogTypeName}</td>
+                                        <td>{blog.title}</td>
+                                        <td>{blog.content}</td>
                                         <td>
                                             <img
-                                                src={'http://localhost:8000/api/blogImages/' + blog.image}
+                                                src={blog.image}
                                                 style={{ width: '50px', height: '50px' }}
                                                 alt="blog"
                                             />
                                         </td>
-                                        <td>{blog.author}</td>
-                                        <td>{blog.createAt}</td>
+                                        <td>{blog.fullName}</td>
+                                        <td>{formatDate(blog.createAt)}</td>
 
                                         <td>
-                                            {/* <Link to={`/edit`}> */}
-                                            {/* <button className="btn btn-primary" style={{ 'margin-right': '10px' }}>
-                                                Sửa
-                                            </button> */}
                                             <UpdateComponent
-                                                id={blog._id}
+                                                id={blog.blogID}
+                                                blogTypeID={blog.blogTypeID}
+                                                accountID={blog.accountID}
                                                 title={blog.title}
                                                 content={blog.content}
-                                                author={blog.author}
+                                                image={blog.image}
                                                 createAt={blog.createAt}
+                                                setUpdate={setUpdate}
                                                 style={{ fontSize: '16px' }}
                                             />
-                                            {/* </Link> */}
                                             <button
                                                 style={{ marginLeft: '5px', fontSize: '16px' }}
-                                                id={blog._id}
-                                                onClick={(e) => deleteBlog(blog._id, e)}
+                                                onClick={(e) => deleteBlog(blog.blogID, e)}
                                                 className="btn btn-danger"
                                             >
                                                 Xoá

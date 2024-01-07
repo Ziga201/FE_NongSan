@@ -42,14 +42,7 @@ function Sidebar() {
                     <div className={cx('desc')}>Danh mục tài khoản</div>
                 </div>
             </NavLink>
-            <NavLink to="/admin/staff" className={cx('element')}>
-                <div className={cx('wrap')}>
-                    <div className={cx('logo')}>
-                        <FontAwesomeIcon icon={faClipboardUser} />
-                    </div>
-                    <div className={cx('desc')}>Danh mục nhân viên</div>
-                </div>
-            </NavLink>
+
             <NavLink to="/admin/blog" className={cx('element')}>
                 <div className={cx('wrap')}>
                     <div className={cx('logo')}>

@@ -2,35 +2,51 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 
 import style from '~/pages/Admin/Page.module.scss';
-// import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from 'react';
-import checkoutService from '~/services/orderService';
+import orderService from '~/services/orderService';
+import { format } from 'date-fns';
+import ListComponent from './List/ListComponent';
 
 const cx = classNames.bind(style);
 
 function Checkout() {
-    const [checkouts, setCheckouts] = useState({});
+    const [order, setOrder] = useState([]);
+    const [update, setUpdate] = useState();
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await orderService.getAll();
+            setOrder(response);
+        };
+        fetchData();
+    }, [update]);
 
-    const fetchCheckouts = async () => {
-        setCheckouts(await checkoutService.getCheckouts());
+    const formatDate = (date) => {
+        const dateObject = new Date(date);
+
+        const formattedDate = format(dateObject, 'dd-MM-yyyy');
+        return formattedDate;
     };
 
-    useEffect(() => {
-        fetchCheckouts();
-    }, []);
-
-    const deleteCheckout = async (id, e) => {
-        var response = await checkoutService.deleteCheckout(id);
-        if (response.data.success === true) {
-            alert('Xoá thành công');
-            document.getElementById(id).parentElement.parentElement.remove();
+    const cancelOrder = async (id) => {
+        const result = window.confirm('Bạn có chắc chắn muốn hủy đơn hàng?');
+        if (result) {
+            const response = await orderService.delete(id);
+            toast.success(response.data.message);
+            setUpdate(new Date());
         } else {
-            alert(response.data.msg);
+            toast.success('Bạn đã chọn Cancel!');
         }
+    };
+
+    const statusChange = async (id) => {
+        const response = await orderService.changeOrderStatus(id);
+        toast.success(response.data.message);
+        setUpdate(new Date());
     };
     // Search item
     const [search, setSearch] = useState('');
@@ -38,21 +54,18 @@ function Checkout() {
     return (
         <div className={cx('hug')}>
             <div className={cx('heading')}>
-                <div className="col">
-                    <div className={cx('name_table')}>Danh mục đơn đặt hàng</div>
+                <div className={cx('search')}>
+                    <input
+                        type="text"
+                        className={cx('search-input')}
+                        placeholder="Nhập tên khách hàng ..."
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
                 </div>
             </div>
-            <div className={cx('search')}>
-                <input
-                    type="text"
-                    className={cx('search-input')}
-                    placeholder="Nhập tên khách hàng ..."
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                <FontAwesomeIcon className={cx('search-icon')} icon={faMagnifyingGlass} />
-            </div>
 
-            {checkouts.data !== undefined && checkouts.data.data.length > 0 && (
+            {order.data !== undefined && order.data.length > 0 && (
                 <div className={cx('wrapper')}>
                     <table className="table" style={{ textAlign: 'center' }}>
                         <thead>
@@ -69,33 +82,43 @@ function Checkout() {
                             </tr>
                         </thead>
                         <tbody>
-                            {checkouts.data.data
+                            {order.data
                                 .filter((checkout) => {
                                     return search.toLowerCase() === ''
                                         ? checkout
-                                        : checkout.name.toLowerCase().includes(search.toLowerCase());
+                                        : checkout.fullName.toLowerCase().includes(search.toLowerCase());
                                 })
                                 .map((checkout, index) => (
                                     <tr>
-                                        <td>{index}</td>
-                                        <td>{checkout.product}</td>
-                                        <td>{checkout.name}</td>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <ListComponent orderDetailDTOs={checkout.orderDetailDTOs} />
+                                        </td>
+                                        <td>{checkout.fullName}</td>
 
                                         <td>{checkout.phone}</td>
                                         <td>{checkout.address}</td>
-                                        <td>{parseInt(checkout.total).toLocaleString('vi-VN')} VND</td>
-                                        <td>{checkout.orderdate}</td>
-                                        <td>{checkout.confirm}</td>
+                                        <td>{parseInt(checkout.actualPrice).toLocaleString('vi-VN')} VND</td>
+                                        <td>{formatDate(checkout.createdAt)}</td>
+                                        <td>{checkout.orderName}</td>
 
                                         <td>
                                             <button
                                                 style={{ marginLeft: '5px', fontSize: '16px' }}
-                                                id={checkout._id}
-                                                onClick={(e) => deleteCheckout(checkout._id, e)}
+                                                onClick={(e) => statusChange(checkout.orderID, e)}
+                                                className="btn btn-success"
+                                            >
+                                                Chuyển
+                                            </button>
+                                            <button
+                                                style={{ marginLeft: '5px', fontSize: '16px' }}
+                                                onClick={(e) => cancelOrder(checkout.orderID, e)}
                                                 className="btn btn-danger"
                                             >
                                                 Xoá
                                             </button>
+
+                                            <ToastContainer position="bottom-right" />
                                         </td>
                                     </tr>
                                 ))}

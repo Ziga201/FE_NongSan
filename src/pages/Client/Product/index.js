@@ -55,7 +55,6 @@ function Product() {
         fetchData();
     }, []);
 
-    // Add to cart
     useEffect(() => {
         const fetchData = async () => {
             const response = await productTypeService.getAll();
@@ -67,9 +66,9 @@ function Product() {
     function handleFilter(item) {
         setKey(item);
     }
-    function handleClick(id) {}
 
     // Search item
+    // Add to cart
 
     const addToCart = async (item) => {
         const formData = new FormData();
@@ -149,12 +148,12 @@ function Product() {
                                         })
                                         .map((item) => (
                                             <div key={item.productID} className={cx('product-block', 'col-md-3')}>
-                                                <div onClick={() => handleClick(item.productID)}>
+                                                <Link to={`/product/${item.productID}`}>
                                                     <div className={cx('product-img')}>
                                                         <img src={item.avatarImageProduct} alt="product" />
                                                     </div>
                                                     <div className={cx('product-name')}>{item.nameProduct}</div>
-                                                </div>
+                                                </Link>
 
                                                 <div className={cx('product-price')}>
                                                     {parseInt(item.price).toLocaleString('vi-VN')} VND

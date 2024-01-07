@@ -48,6 +48,11 @@ class Account {
         return axios.get(url);
     }
 
+    getAllStaff() {
+        const url = 'https://localhost:7211/api/Auth/GetAllStaff';
+        return axios.get(url);
+    }
+
     getAccountByID(id) {
         const url = 'https://localhost:7211/api/Auth/GetAccountByID/' + id;
         return axios.get(url);

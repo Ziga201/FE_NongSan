@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import BlogService from '~/services/blogService';
-// import classNames from 'classnames/bind';
-// import style from './Update.module.scss';
+import blogService from '~/services/blogService';
+import blogTypeService from '~/services/blogTypeService';
+import accountService from '~/services/accountService';
+import style from '~/pages/Admin/Page.module.scss';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import classNames from 'classnames/bind';
 
-// const cx = classNames.bind(style);
-
+const cx = classNames.bind(style);
 function UpdateComponent(props) {
     const [isShow, invokeModal] = useState(false);
 
@@ -13,41 +16,48 @@ function UpdateComponent(props) {
         return invokeModal(!isShow);
     };
 
+    const [id] = useState(props.id);
+    const [blogTypeID, setBlogTypeID] = useState(props.blogTypeID);
+    const [accountID, setAccountID] = useState(props.accountID);
     const [title, setTitle] = useState(props.title);
     const [content, setContent] = useState(props.content);
-    const [id, setId] = useState(props.id);
-    const [selectedFile, setSelectedFile] = useState('');
-    const [author, setAuthor] = useState(props.author);
-    // const [createAt, setCreateAt] = useState(props.createAt);
+    const [image, setImage] = useState(props.image);
+    const [typeData, setTypeData] = useState([]);
+    const [account, setAccount] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await blogTypeService.getAll();
+            setTypeData(response);
+        };
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await accountService.getAll();
+            setAccount(response);
+        };
+        fetchData();
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const today = new Date();
-        const day = today.getDate();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
-        const createAt = `${day}/${month}/${year}`;
-
         const formData = new FormData();
-        formData.append('id', id);
+
+        formData.append('blogID', id);
+        formData.append('blogTypeID', blogTypeID);
+        formData.append('accountID', accountID);
         formData.append('title', title);
         formData.append('content', content);
+        formData.append('image', image);
 
-        if (selectedFile !== '' && selectedFile.length !== 0) {
-            formData.append('image', selectedFile);
-        }
-        formData.append('author', author);
-        formData.append('createAt', createAt);
+        const response = await blogService.update(formData);
 
-        const response = await BlogService.update(formData);
+        props.setUpdate(new Date());
+        toast.success(response.data.message);
 
-        if (response.data.success === true) {
-            alert(response.data.msg);
-        } else {
-            alert(response.data.msg);
-        }
-
+        event.target.reset();
         initModal();
     };
 
@@ -62,12 +72,40 @@ function UpdateComponent(props) {
                 </Modal.Header>
                 <form onSubmit={handleSubmit}>
                     <Modal.Body>
+                        {typeData.data !== undefined && typeData.data.length > 0 && (
+                            <select
+                                value={blogTypeID}
+                                className={cx('modal-input')}
+                                onChange={(event) => setBlogTypeID(event.target.value)}
+                            >
+                                {typeData.data.map((item) => (
+                                    <option key={item.blogTypeID} value={item.blogTypeID}>
+                                        {item.blogTypeName}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+
+                        {account.data !== undefined && account.data.length > 0 && (
+                            <select
+                                value={accountID}
+                                className={cx('modal-input')}
+                                onChange={(event) => setAccountID(event.target.value)}
+                            >
+                                {account.data.map((item) => (
+                                    <option key={item.accountID} value={item.accountID}>
+                                        {item.fullName}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                         <input
                             type="text"
                             name="title"
                             placeholder="Nhập tiêu đề bài viết"
                             value={title}
                             onChange={(event) => setTitle(event.target.value)}
+                            className={cx('modal-input')}
                             required
                         />
                         <textarea
@@ -76,21 +114,15 @@ function UpdateComponent(props) {
                             placeholder="Nhập nội dung"
                             value={content}
                             onChange={(event) => setContent(event.target.value)}
+                            className={cx('modal-input')}
                             required
                         />
-                        <input type="file" name="file" onChange={(event) => setSelectedFile(event.target.files[0])} />
-                        <input
-                            type="text"
-                            name="author"
-                            placeholder="Nhập tên tác giả"
-                            value={author}
-                            onChange={(event) => setAuthor(event.target.value)}
-                            required
-                        />
+                        <input type="file" name="file" onChange={(event) => setImage(event.target.files[0])} />
+                        <ToastContainer position="bottom-right" />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="submit" variant="dark">
-                            Sửa
+                            Thêm
                         </Button>
                     </Modal.Footer>
                 </form>

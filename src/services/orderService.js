@@ -44,10 +44,10 @@ class Order {
         const url = 'https://localhost:7211/api/Order/DeleteOrder/' + id;
         return axios.delete(url);
     }
-    // changeOrderStatus(id) {
-    //     const url = 'https://localhost:7211/api/Order/changeOrderStatus/' + id;
-    //     return axios.put(url);
-    // }
+    changeOrderStatus(id) {
+        const url = 'https://localhost:7211/api/Order/changeOrderStatus/' + id;
+        return axios.put(url);
+    }
 }
 
 export default new Order();

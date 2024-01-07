@@ -37,14 +37,6 @@ function Product() {
         fetchData();
     }, [update]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await productTypeService.getAll();
-            setTypeData(response);
-        };
-        fetchData();
-    }, []);
-
     const handlePageClick = (event, value) => {
         setPageNumber({ pageNumber: value, pageSize: 6 });
     };
@@ -100,15 +92,7 @@ function Product() {
                                 .map((item, index) => (
                                     <tr key={item.productID}>
                                         <td>{index + 1}</td>
-                                        {typeData.data !== undefined && (
-                                            <td>
-                                                {
-                                                    typeData.data
-                                                        .filter((x) => x.productTypeID === item.productTypeID)
-                                                        .map((filteredItem) => filteredItem.nameProductType)[0]
-                                                }
-                                            </td>
-                                        )}
+                                        <td>{item.nameProductType}</td>
                                         <td>{item.nameProduct}</td>
                                         <td>{item.price}</td>
                                         <td>

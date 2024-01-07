@@ -4,23 +4,24 @@ import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faHandsHoldingCircle } from '@fortawesome/free-solid-svg-icons';
-import brand7 from '~/assets/images/brand7.svg';
+import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { Slide } from 'react-slideshow-image';
 import '../../../../node_modules/react-slideshow-image/dist/styles.css';
-import staffService from '~/services/staffService';
+import accountService from '~/services/accountService';
 const cx = classNames.bind(style);
 
 function Staff() {
-    const [staffs, setStaffs] = useState({});
-
-    const fetchStaffs = async () => {
-        setStaffs(await staffService.getStaffs());
-    };
+    const [data, setData] = useState({});
 
     useEffect(() => {
-        fetchStaffs();
+        const fetchData = async () => {
+            const response = await accountService.getAllStaff();
+            setData(response);
+        };
+        fetchData();
     }, []);
+
+    console.log(data);
     return (
         <>
             <div className={cx('banner')}>
@@ -76,20 +77,6 @@ function Staff() {
                             </div>
                         </div>
                     </div>
-                    <div className={cx('quanlity')}>
-                        {/* <div className={cx('row')}>
-                                <div className={cx('col-md-3')}>
-                                    <div className={cx('logo')}>
-                                        <div className={cx('logo-icon')}>
-                                            <FontAwesomeIcon icon={faHandsHoldingCircle} />
-                                            <img src={brand7} alt="brand1" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={cx('col-md-6')}></div>
-                                <div className={cx('col-md-3')}></div>
-                            </div> */}
-                    </div>
                 </div>
                 <div className={cx('feedback')}>
                     <div className={cx('wrapper')}>
@@ -127,19 +114,16 @@ function Staff() {
                             <div className={cx('text-heading')}>Chúng tôi là đội tốt nhất</div>
                         </div>
                         <div className={cx('info')}>
-                            {staffs.data !== undefined && staffs.data.data.length > 0 && (
+                            {data.data !== undefined && data.data.length > 0 && (
                                 <div className={cx('row')}>
-                                    {staffs.data.data.slice(0, 4).map((staff) => (
+                                    {data.data.slice(0, 4).map((staff) => (
                                         <div className={cx('col-md-3')}>
                                             <div className={cx('info-item')}>
                                                 <div className={cx('info-img')}>
-                                                    <img
-                                                        src={'http://localhost:8000/api/staffImages/' + staff.image}
-                                                        alt="staff"
-                                                    />
+                                                    <img src={staff.avatar} alt="staff" />
                                                 </div>
-                                                <div className={cx('info-name')}>{staff.name}</div>
-                                                <div className={cx('info-position')}>{staff.position}</div>
+                                                <div className={cx('info-name')}>{staff.fullName}</div>
+                                                <div className={cx('info-position')}>{staff.phone}</div>
                                             </div>
                                         </div>
                                     ))}

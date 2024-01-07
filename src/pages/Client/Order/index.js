@@ -17,7 +17,7 @@ function Order() {
     const responseJWT = jwtDecode(jwtToken);
     useEffect(() => {
         const fetchData = async () => {
-            const response = await orderService.getAllOrderByID(2);
+            const response = await orderService.getAllOrderByID(responseJWT.Id);
             setOrder(response);
         };
         fetchData();
@@ -29,8 +29,6 @@ function Order() {
         const formattedDate = format(dateObject, 'dd-MM-yyyy');
         return formattedDate;
     };
-
-    console.log(order);
     const cancelOrder = async (id) => {
         const result = window.confirm('Bạn có chắc chắn muốn hủy đơn hàng?');
         if (result) {
@@ -53,9 +51,9 @@ function Order() {
                                 <div className={cx('product')}>
                                     <img src={itemDetail.avatarImageProduct} alt="Product Image" />
                                     <div className={cx('product-info')}>
-                                        <h5>{itemDetail.nameProduct}</h5>
+                                        <div>{itemDetail.nameProduct}</div>
                                         <span>x{itemDetail.quantity}</span>
-                                        <p>Giá: {itemDetail.priceTotal}</p>
+                                        <div>Giá: {itemDetail.priceTotal}</div>
                                     </div>
                                 </div>
                             ))}

@@ -12,100 +12,171 @@ const cx = classNames.bind(style);
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [image, setImage] = useState('');
-    // const [decentralization, setDecentralization] = useState('');
-
-    const [message, setMessage] = useState('');
-
+    const [code, setCode] = useState('');
+    const [showSignup, setShowSignup] = useState(true);
+    const [showComfirm, setShowComfirm] = useState(false);
+    const [countdown, setCountdown] = useState(120);
+    const [expired, setExpired] = useState(false);
+    const [update, setUpdate] = useState();
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData();
-        const decentralization = 'User';
-
-        formData.append('username', username);
+        formData.append('userName', username);
         formData.append('password', password);
-        formData.append('name', name);
         formData.append('email', email);
-        formData.append('image', image);
-        formData.append('decentralization', decentralization);
 
-        const response = await accountService.create(formData);
-        if (response.data.success === true) {
-            setMessage('Tạo tài khoản thành công');
-            toast.success('Đăng ký tài khoản thành công !');
+        // for (let entry of formData.entries()) {
+        //     console.log(entry[0], entry[1]);
+        // }
+        toast.success('Vui lòng chờ...');
+
+        const response = await accountService.register(formData);
+
+        if (response.data.status == 200) {
+            toast.success(response.data.message);
+            setEmail(response.data.data.email);
+            setShowSignup(false);
+            setCountdown(120);
+            setExpired(false);
+            setShowComfirm(true);
+            setUpdate(new Date());
         } else {
-            setMessage('Tạo tài khoản thất bại');
-            toast.success('Đăng ký tài khoản thất bại !');
+            toast.error(response.data.message);
         }
 
-        setTimeout(() => {
-            setMessage('');
-        }, 2000);
-
         event.target.reset();
-        // initModal();
+    };
+
+    useEffect(() => {
+        let timer;
+
+        if (showComfirm) {
+            timer = setInterval(() => {
+                setCountdown((prevCountdown) => {
+                    if (prevCountdown > 0) {
+                        return prevCountdown - 1;
+                    } else {
+                        setExpired(true);
+                        clearInterval(timer);
+                        return 0;
+                    }
+                });
+            }, 1000);
+        }
+
+        return () => clearInterval(timer);
+    }, [update]);
+
+    const handleSubmitCode = async (event) => {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('codeActive', code);
+
+        const response = await accountService.active(formData);
+        if (response.data.status == 200) {
+            toast.success(response.data.message);
+
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 3000);
+        } else {
+            toast.error(response.data.message);
+        }
+        event.target.reset();
+    };
+
+    const handleResend = async () => {
+        const formData = new FormData();
+        formData.append('email', email);
+        const response = await accountService.sendCode(formData);
+        toast.success(response.data.message);
+        setCountdown(120);
+        setExpired(false);
+        setUpdate(new Date());
     };
 
     return (
         <>
             <div className={cx('login-wrap')}>
-                <div className={cx('login-text')}>Đăng nhập</div>
+                <div className={cx('login-text')}>Đăng ký</div>
 
-                <form className={cx('form')} onSubmit={handleSubmit}>
-                    <label>Tên tài khoản</label>
-                    <input
-                        id="user"
-                        type="text"
-                        name="username"
-                        value={username}
-                        onChange={(event) => setUsername(event.target.value)}
-                        required
-                        className={cx('input')}
-                    />
-                    <br />
-                    <label>Mật khẩu</label>
+                {showSignup && (
+                    <form className={cx('form')} onSubmit={handleSubmit}>
+                        <label>Tên tài khoản</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(event) => setUsername(event.target.value)}
+                            required
+                            className={cx('input')}
+                        />
+                        <br />
+                        <label>Mật khẩu</label>
 
-                    <input
-                        id="pass"
-                        name="password"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        required
-                        className={cx('input')}
-                        data-type="password"
-                    />
-                    <br />
-                    <label>Tên khách hàng</label>
-                    <input
-                        id="name"
-                        type="text"
-                        name="name"
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
-                        required
-                        className={cx('input')}
-                    />
-                    <br />
-                    <label>Email</label>
-                    <input
-                        id="pass"
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        required
-                        className={cx('input')}
-                    />
-                    <br />
-                    <input type="file" name="file" onChange={(event) => setImage(event.target.files[0])} />
+                        <input
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            required
+                            className={cx('input')}
+                            data-type="password"
+                        />
+                        <br />
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            required
+                            className={cx('input')}
+                        />
+                        <br />
 
-                    <button className={cx('button')} type="submit">
-                        Đăng ký
-                    </button>
-                </form>
+                        <button className={cx('button')} type="submit">
+                            Đăng ký
+                        </button>
+                    </form>
+                )}
+                {showComfirm && (
+                    <form className={cx('form')} onSubmit={handleSubmitCode}>
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            required
+                            className={cx('input')}
+                        />
+                        <br />
+                        <label>Nhập mã xác thực</label>
+                        <div className={cx('form-countdown')}>
+                            <input
+                                type="text"
+                                value={code}
+                                onChange={(event) => setCode(event.target.value)}
+                                required
+                                className={cx('input')}
+                            />
+                            <div className={cx('countdown')}>
+                                <span>{countdown}s</span>
+                                {expired && (
+                                    <span onClick={handleResend} className={cx('countdown-span')}>
+                                        {' '}
+                                        Gửi lại
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        <br />
+                        <button className={cx('button')} type="submit">
+                            Xác nhận
+                        </button>
+                    </form>
+                )}
+
                 <p className={cx('p')}>
                     Bạn đã có tài khoản ?{' '}
                     <Link to="/login">
@@ -114,93 +185,6 @@ function Login() {
                 </p>
                 <ToastContainer position="bottom-right" />
             </div>
-
-            {/* <div className={cx('login-wrap')}>
-                <div className={cx('login-html')}>
-                    <input id="tab-1" type="radio" name="tab" className={cx('sign-in')} checked />
-                    <label for="tab-1" className={cx('tab')}>
-                        Đăng ký
-                    </label>
-                    <input id="tab-2" type="radio" name="tab" className={cx('sign-up')} />
-                    <label for="tab-2" className={cx('tab')}>
-                        <Link to="/login">Đăng nhập</Link>
-                    </label>
-                    <form onSubmit={handleSubmit} className={cx('login-form')}>
-                        <div className={cx('foot-lnk')}>
-                            <div className={cx('group')}>
-                                <label for="user" className={cx('label')}>
-                                    Tài khoản
-                                </label>
-                                <input
-                                    id="user"
-                                    type="text"
-                                    name="username"
-                                    placeholder="Nhập tài khoản"
-                                    value={username}
-                                    onChange={(event) => setUsername(event.target.value)}
-                                    required
-                                    className={cx('input')}
-                                />
-                            </div>
-                            <div className={cx('group')}>
-                                <label for="pass" className={cx('label')}>
-                                    Mật khẩu
-                                </label>
-                                <input
-                                    id="pass"
-                                    name="password"
-                                    placeholder="Nhập mật khẩu"
-                                    value={password}
-                                    onChange={(event) => setPassword(event.target.value)}
-                                    required
-                                    className={cx('input')}
-                                    data-type="password"
-                                />
-                            </div>
-                            
-                            <div className={cx('group')}>
-                                <label for="pass" className={cx('label')}>
-                                    Tên khách hàng
-                                </label>
-                                <input
-                                    id="name"
-                                    type="text"
-                                    name="name"
-                                    placeholder="Nhập tên"
-                                    value={name}
-                                    onChange={(event) => setName(event.target.value)}
-                                    required
-                                    className={cx('input')}
-                                />
-                            </div>
-                            <div className={cx('group')}>
-                                <label for="pass" className={cx('label')}>
-                                    Email
-                                </label>
-                                <input
-                                    id="pass"
-                                    type="email"
-                                    name="email"
-                                    placeholder="Nhập email"
-                                    value={email}
-                                    onChange={(event) => setEmail(event.target.value)}
-                                    required
-                                    className={cx('input')}
-                                />
-                            </div>
-
-                            <div className={cx('group')}>
-                                <input type="file" name="file" onChange={(event) => setImage(event.target.files[0])} />
-                            </div>
-                            <div className={cx('group')}>
-                                <input type="submit" className={cx('button')} value="Đăng ký" />
-                            </div>
-                            
-                        </div>
-                    </form>
-                </div>
-                
-            </div> */}
         </>
     );
 }

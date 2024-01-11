@@ -1,20 +1,21 @@
-import style from './Blog.module.scss';
+import style from '~/pages/Client/Blog/Blog.module.scss';
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faCalendarDays, faComments, faUser } from '@fortawesome/free-solid-svg-icons';
 import blogService from '~/services/blogService';
 
 const cx = classNames.bind(style);
 
-function Blog() {
+function BlogFilter() {
     const [data, setData] = useState({});
+    const { id } = useParams();
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await blogService.getAll();
+            const response = await blogService.getAllByBlogTypeID(id);
             setData(response);
         };
         fetchData();
@@ -61,4 +62,4 @@ function Blog() {
     );
 }
 
-export default Blog;
+export default BlogFilter;

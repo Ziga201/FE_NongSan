@@ -35,6 +35,7 @@ function BlogDetail() {
         const formattedDate = format(dateObject, 'dd-MM-yyyy');
         return formattedDate;
     };
+    console.log(typeData);
     return (
         <>
             <div className={cx('path')}>
@@ -73,10 +74,10 @@ function BlogDetail() {
                                 <div>
                                     {typeData.data.map((item, index) => (
                                         <div className={cx('item')}>
-                                            <>
+                                            <Link to={`/blog/blogfilter/${item.blogTypeID}`}>
                                                 <FontAwesomeIcon icon={faAngleRight} className={cx('item-icon')} />
-                                                <div className={cx('item-text')}>{item.blogTypeName}</div>
-                                            </>
+                                                <span className={cx('item-text')}>{item.blogTypeName}</span>
+                                            </Link>
                                         </div>
                                     ))}
                                 </div>

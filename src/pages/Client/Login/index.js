@@ -22,7 +22,6 @@ function Login() {
         formData.append('password', password);
 
         const response = await accountService.login(formData);
-        console.log(response);
         if (response.data.status === 200) {
             localStorage.setItem('jwtToken', response.data.data.accessToken);
             toast.success(response.data.message);
@@ -46,7 +45,12 @@ function Login() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <br />
-                    <label>Mật khẩu</label>
+                    <div className={cx('password')}>
+                        <label>Mật khẩu</label>
+                        <Link to="/forgotpassword" className={cx('fotgot-password')}>
+                            Quên mật khẩu ?
+                        </Link>
+                    </div>
 
                     <input
                         type="password"

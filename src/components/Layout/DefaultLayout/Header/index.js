@@ -7,27 +7,37 @@ import logo from '~/assets/images/logo.svg';
 import { NavLink, Link } from 'react-router-dom';
 import { faCartShopping, faMailBulk, faTruck, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import cartService from '~/services/cartService';
+import { jwtDecode } from 'jwt-decode';
 const cx = classNames.bind(style);
 
 function Header() {
-    // const [cartCount, setCartCount] = useState(0);
+    // const [cart, setCart] = useState([]);
+    // const [update, setUpdate] = useState(1);
+    // const [cartTotal, setCartTotal] = useState(0);
+
+    const jwtToken = localStorage.getItem('jwtToken');
+
+    const handleLogin = () => {
+        if (jwtToken != null) {
+            window.location.href = '/account';
+        } else {
+            window.location.href = '/login';
+        }
+    };
+    // const jwt = jwtDecode(jwtToken);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const response = await cartService.getAll(jwt.Id);
+    //         setCart(response);
+    //     };
+    //     fetchData();
+    // }, []);
 
     // useEffect(() => {
-    //     const items = JSON.parse(localStorage.getItem('cartItems'));
-    //     setCartCount(items.length);
-    // }, [cartCount]);
-
-    // Quantity cart
-    const [cartItems, setCartItems] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
-
-    useEffect(() => {
-        const items = JSON.parse(localStorage.getItem('cartItems'));
-        setCartItems(items);
-        setCartCount(items ? items.length : 0);
-    }, [cartItems]);
-
+    //     cart.data !== undefined && cart.data.length > 0 && setCartTotal(cart.data.length);
+    //     setUpdate(new Date());
+    // }, [update]);
     return (
         <header className={cx('header-wrap')}>
             <div className={cx('ship')}>
@@ -67,7 +77,7 @@ function Header() {
                                 <FontAwesomeIcon icon={faMailBulk} />
                             </div>
                         </div>
-                        <Link to="/account">
+                        <Link onClick={() => handleLogin()}>
                             <div className={cx('user')}>
                                 <FontAwesomeIcon icon={faUser} />
                             </div>
@@ -85,7 +95,7 @@ function Header() {
                                 <div className={cx('cart')}>
                                     <FontAwesomeIcon icon={faCartShopping} />
                                 </div>
-                                <span className={cx('count')}>{cartCount}</span>
+                                {/* <span className={cx('count')}>{cartTotal}</span> */}
                             </div>
 
                             {/* <span className={cx('total')}>{totalPrice} VND</span> */}

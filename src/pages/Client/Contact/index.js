@@ -5,30 +5,55 @@ import classNames from 'classnames/bind';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
-
+import accountService from '~/services/accountService';
+import otherService from '~/services/otherService';
+import { jwtDecode } from 'jwt-decode';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const cx = classNames.bind(style);
 
 function Contact() {
+    const [accountID, setAccountID] = useState('');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [topic, setTopic] = useState('');
-    const [message, setMessage] = useState('');
+    const [content, setContent] = useState('');
+    const [user, setUser] = useState([]);
+
+    const jwtToken = localStorage.getItem('jwtToken');
+    const jwtDecoded = jwtDecode(jwtToken);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await accountService.getAccountByID(jwtDecoded.Id);
+            setUser(response.data);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            setAccountID(user.accountID);
+            setName(user.fullName);
+            setEmail(user.email);
+        }
+    }, [user]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData();
 
+        formData.append('accountID', accountID);
         formData.append('name', name);
         formData.append('email', email);
         formData.append('topic', topic);
-        formData.append('message', message);
+        formData.append('content', content);
 
-        // const response = await messageService.create(formData);
+        const response = await otherService.sendMessage(formData);
 
+        toast.success(response.data.message);
         event.target.reset();
     };
 
@@ -95,7 +120,6 @@ function Contact() {
                                 <input
                                     className={cx('message-input')}
                                     type="text"
-                                    name="name"
                                     value={name}
                                     onChange={(event) => setName(event.target.value)}
                                     required
@@ -104,7 +128,6 @@ function Contact() {
                                 <input
                                     className={cx('message-input')}
                                     type="email"
-                                    name="email"
                                     value={email}
                                     onChange={(event) => setEmail(event.target.value)}
                                     required
@@ -113,7 +136,6 @@ function Contact() {
                                 <input
                                     className={cx('message-input')}
                                     type="text"
-                                    name="topic"
                                     value={topic}
                                     onChange={(event) => setTopic(event.target.value)}
                                     required
@@ -122,9 +144,8 @@ function Contact() {
                                 <textarea
                                     className={cx('message-input')}
                                     type="text"
-                                    name="message"
-                                    value={message}
-                                    onChange={(event) => setMessage(event.target.value)}
+                                    value={content}
+                                    onChange={(event) => setContent(event.target.value)}
                                     required
                                     placeholder="Lời nhắn"
                                 ></textarea>

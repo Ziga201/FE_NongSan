@@ -18,6 +18,8 @@
     margin-top: 7px;
     border: 1px;
     border: #60da64 1px dotted;
+    display: flex;
+    align-items: center;
 }
 
 .button {
@@ -44,9 +46,41 @@
 }
 
 .sign {
-    color: rgba(255, 0, 0, 0.616);
+    color: rgba(26, 117, 73, 0.753);
     font-weight: 600;
     &:hover {
-        color: rgba(233, 95, 95, 0.616);
+        color: rgba(66, 148, 108, 0.616);
+    }
+}
+
+.password {
+    display: flex;
+    justify-content: space-between;
+}
+.password .fotgot-password {
+    color: #3a7e3c;
+    &:hover {
+        color: #68b46b;
+    }
+}
+
+.form-countdown {
+    position: relative;
+    margin-bottom: 2px;
+}
+
+.countdown {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+}
+
+.countdown-span {
+    color: #3a7e3c;
+    cursor: pointer;
+    font-weight: 600;
+    &:hover {
+        color: rgba(19, 104, 63, 0.616);
     }
 }

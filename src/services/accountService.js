@@ -10,15 +10,30 @@ class Account {
         };
         return axios.put(url, formData, config);
     }
-    // create(formData) {
-    //     const url = 'https://localhost:7211/api/Auth/Register';
-    //     const config = {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //         },
-    //     };
-    //     return axios.post(url, formData, config);
-    // }
+    register(formData) {
+        const url = 'https://localhost:7211/api/Auth/Register';
+        const config = {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        };
+        return axios.post(url, formData, config);
+    }
+
+    active(formData) {
+        const url = 'https://localhost:7211/api/Auth/ActiveAccount';
+        return axios.put(url, formData);
+    }
+
+    sendCode(formData) {
+        const url = 'https://localhost:7211/api/Auth/SendCode';
+        return axios.post(url, formData);
+    }
+
+    forgotPassword(formData) {
+        const url = 'https://localhost:7211/api/Auth/ForgotPassword';
+        return axios.put(url, formData);
+    }
 
     create(formData) {
         const url = 'https://localhost:7211/api/Auth/AddAccount';

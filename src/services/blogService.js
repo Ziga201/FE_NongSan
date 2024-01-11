@@ -27,6 +27,10 @@ class Blog {
         const url = 'https://localhost:7211/api/Blog/GetAll';
         return axios.get(url);
     }
+    getAllByBlogTypeID(id) {
+        const url = 'https://localhost:7211/api/Blog/GetAllByBlogTypeID/' + id;
+        return axios.get(url);
+    }
 
     getBlogById(id) {
         const url = 'https://localhost:7211/api/Blog/GetBlogByID/' + id;

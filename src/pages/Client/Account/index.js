@@ -22,6 +22,8 @@ function Account() {
         fetchData();
     }, [update]);
 
+    console.log(data);
+
     const signOut = () => {
         window.location.href = '/login';
         localStorage.removeItem('jwtToken');

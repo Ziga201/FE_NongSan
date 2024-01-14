@@ -12,6 +12,7 @@ import UpdateComponent from './Update/UpdateComponent';
 import CreateComponent from './Create/CreateComponent';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { format } from 'date-fns';
 import * as React from 'react';
 
 const cx = classNames.bind(style);
@@ -31,6 +32,13 @@ function ProductType() {
     const deleteProductType = async (id, e) => {
         var response = await productTypeService.delete(id);
         toast.success(response.data.message);
+    };
+
+    const formatDate = (date) => {
+        const dateObject = new Date(date);
+
+        const formattedDate = format(dateObject, 'HH:mm dd-MM-yyyy');
+        return formattedDate;
     };
     // Search item
     const [search, setSearch] = useState('');
@@ -74,8 +82,8 @@ function ProductType() {
                                     <tr key={item.productTypeID}>
                                         <td>{index + 1}</td>
                                         <td>{item.nameProductType}</td>
-                                        <td>{item.createdAt}</td>
-                                        <td>{item.updateAt}</td>
+                                        <td>{formatDate(item.createdAt)}</td>
+                                        <td>{formatDate(item.updateAt)}</td>
                                         <td>
                                             <UpdateComponent
                                                 productTypeID={item.productTypeID}

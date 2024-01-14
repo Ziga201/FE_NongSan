@@ -12,11 +12,13 @@ import '@fontsource/source-sans-pro'; // Defaults to weight 400
 import '@fontsource/source-sans-pro/400.css'; // Specify weight
 import '@fontsource/source-sans-pro/400-italic.css'; // Specify weight and style
 
-import checkoutService from '~/services/orderService';
 import accountService from '~/services/accountService';
+import orderService from '~/services/orderService';
+import productService from '~/services/productService';
 
 import React, { Component } from 'react';
 import CanvasJSReact from '@canvasjs/react-charts';
+import Product from '../Product';
 //var CanvasJSReact = require('@canvasjs/react-charts');
 
 var CanvasJS = CanvasJSReact.CanvasJS;
@@ -24,24 +26,37 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const cx = classNames.bind(style);
 
 function Home() {
-    const [checkouts, setCheckouts] = useState({});
-    const [accounts, setAccounts] = useState({});
+    const [order, setOrder] = useState([]);
+    const [product, setProduct] = useState([]);
+    const [account, setAccount] = useState([]);
 
-    // const fetchCheckouts = async () => {
-    //     setCheckouts((await checkoutService.getCheckouts()).data.data);
-    // };
-    // useEffect(() => {
-    //     fetchCheckouts();
-    // }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await orderService.getAll();
+            setOrder(response);
+        };
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await productService.getAll();
+            setProduct(response);
+        };
+        fetchData();
+    }, []);
 
-    // const fetchAccounts = async () => {
-    //     setAccounts((await accountService.getAccounts()).data.data);
-    // };
-    // useEffect(() => {
-    //     fetchAccounts();
-    // }, []);
+    console.log(product);
 
-    // const totalSales = Object.values(checkouts).reduce((acc, item) => acc + parseInt(item.total), 0);
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await accountService.getAll();
+            setAccount(response);
+        };
+        fetchData();
+    }, []);
+
+    const result = order.data != undefined ? order.data.reduce((acc, item) => acc + item.actualPrice, 0) : 0;
+    const totalUser = account.data != undefined ? account.data.filter((x) => x.decentralizationID == 1).length : 0;
 
     const options = {
         animationEnabled: true,
@@ -77,13 +92,15 @@ function Home() {
     return (
         <>
             <div className={cx('hug')}>
-                <div className={cx('wrapper')}>
+                <div className={cx('wrapper')} style={{ margin: '0' }}>
                     <div className={cx('row')}>
                         <div className={cx('col-md-3')}>
                             <div className={cx('item', 'bg-1')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        {/* <div className={cx('number')}>{checkouts.length}</div> */}
+                                        <div className={cx('number')}>
+                                            {order.data != undefined ? order.data.length : 0}
+                                        </div>
                                         <div className={cx('text')}>Tổng đơn hàng</div>
                                     </div>
                                     <div className={cx('icon')}>
@@ -101,7 +118,7 @@ function Home() {
                             <div className={cx('item', 'bg-2')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        {/* <div className={cx('number')}>{accounts.length}</div> */}
+                                        <div className={cx('number')}>{totalUser}</div>
                                         <div className={cx('text')}>Khách hàng mới</div>
                                     </div>
                                     <div className={cx('icon')}>
@@ -119,7 +136,7 @@ function Home() {
                             <div className={cx('item', 'bg-3')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        {/* <div className={cx('number')}>{totalSales.toLocaleString('vi-VN')} VND</div> */}
+                                        <div className={cx('number')}>{result.toLocaleString('vi-VN')} VND</div>
                                         <div className={cx('text')}>Tổng danh số</div>
                                     </div>
                                     <div className={cx('icon')}>
@@ -137,8 +154,10 @@ function Home() {
                             <div className={cx('item', 'bg-4')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        <div className={cx('number')}>150</div>
-                                        <div className={cx('text')}>Tổng lợi nhuận</div>
+                                        <div className={cx('number')}>
+                                            {product.data != undefined ? product.data.data.length : 0}
+                                        </div>
+                                        <div className={cx('text')}>Tổng sản phẩm</div>
                                     </div>
                                     <div className={cx('icon')}>
                                         <FontAwesomeIcon className={cx('icon-item')} icon={faChartPie} />

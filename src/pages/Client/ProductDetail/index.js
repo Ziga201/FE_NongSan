@@ -17,6 +17,7 @@ function ProductDetail() {
     const [relate, setRelate] = useState([]);
     const [review, setReview] = useState([]);
     const [account, setAccount] = useState([]);
+    const [average, setAverage] = useState(0);
 
     useEffect(() => {
         const fetch = async () => {
@@ -59,6 +60,14 @@ function ProductDetail() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const averages =
+            review.data != undefined && review.data.length > 0
+                ? review.data.reduce((a, b) => a + b.pointEvaluation, 0) / review.data.length
+                : 0;
+        setAverage(averages);
+    }, [review]);
+
     const addToCart = async (item) => {
         const formData = new FormData();
 
@@ -66,7 +75,8 @@ function ProductDetail() {
         formData.append('productID', item);
 
         const response = await cartService.addToCart(formData);
-        toast.success(response.data.message);
+        if (response.data.status == 200) toast.success(response.data.message);
+        else toast.error(response.data.message);
     };
 
     const handleStar = (rate) => {
@@ -91,6 +101,15 @@ function ProductDetail() {
                     </div>
                     <div className={cx('info', 'col-md-6')}>
                         <div className={cx('name')}>{data.nameProduct}</div>
+                        <div className={cx('info-review')}>
+                            <a href="#review">
+                                <span style={{ color: '#ff7b00' }}>{average}</span>{' '}
+                                <FontAwesomeIcon className={cx('review-icon')} icon={regularStar} />
+                                <span className={cx('line')}>|</span>{' '}
+                                {review.data != undefined ? review.data.length : 0} <p>Đánh giá</p>
+                            </a>
+                            <span className={cx('line')}>|</span> {data.purchases} <p>Đã bán</p>
+                        </div>
                         <div className={cx('price')}>{parseInt(data.price).toLocaleString('vi-VN')} VND</div>
                         <div className={cx('message')}>
                             {/* <FontAwesomeIcon icon={faMedal} /> */}
@@ -110,6 +129,9 @@ function ProductDetail() {
                         <div className={cx('category')}>
                             Danh mục: <span>{data.nameProductType}</span>
                         </div>
+                        <div className={cx('category')}>
+                            Số lượng: <span>{data.quantity} sản phẩm sẵn có</span>
+                        </div>
                         <div className={cx('add')}>
                             {data.quantity > 0 ? (
                                 <button onClick={() => addToCart(data.productID)} className={cx('add-btn')}>
@@ -123,9 +145,14 @@ function ProductDetail() {
 
                             <ToastContainer position="bottom-right" />
                         </div>
-                        <div className={cx('desc')}>
-                            <div className={cx('describe')}>Mô tả</div>
-                        </div>
+                        <p className={cx('note')}>* Số lượng được tính theo kg</p>
+                    </div>
+                </div>
+
+                <div className={cx('product', 'row')}>
+                    <div className={cx('desc')}>
+                        <div className={cx('describe')}>Mô tả</div>
+                        <p className={cx('')}>{data.describe}</p>
                     </div>
                 </div>
 
@@ -160,7 +187,7 @@ function ProductDetail() {
                     )}
                 </div>
 
-                <div className={cx('product', 'row')}>
+                <div id="review" className={cx('product', 'row')}>
                     <div className={cx('heading')}>Đánh giá sản phẩm</div>
                     {review.data !== undefined && review.data.length > 0 && (
                         <div className={cx('wrapper')}>

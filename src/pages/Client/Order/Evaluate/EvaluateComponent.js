@@ -47,7 +47,7 @@ function EvaluateComponent(props) {
             </Button>
             <Modal show={isShow}>
                 <Modal.Header closeButton onClick={initModal}>
-                    <Modal.Title>Thêm</Modal.Title>
+                    <Modal.Title>Đánh giá</Modal.Title>
                 </Modal.Header>
                 <form onSubmit={handleSubmit}>
                     <Modal.Body>

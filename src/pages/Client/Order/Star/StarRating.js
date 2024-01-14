@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
 const StarRating = (props) => {
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(5);
 
     const handleClick = (star) => {
         props.setPointEvaluation(star);
@@ -20,7 +20,6 @@ const StarRating = (props) => {
                     style={{ cursor: 'pointer' }}
                 />
             ))}
-            <p>{rating} stars</p>
         </div>
     );
 };

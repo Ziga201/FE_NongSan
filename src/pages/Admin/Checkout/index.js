@@ -28,7 +28,7 @@ function Checkout() {
     const formatDate = (date) => {
         const dateObject = new Date(date);
 
-        const formattedDate = format(dateObject, 'dd-MM-yyyy');
+        const formattedDate = format(dateObject, 'HH:mm dd-MM-yyyy');
         return formattedDate;
     };
 

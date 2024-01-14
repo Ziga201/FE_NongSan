@@ -11,6 +11,12 @@ class Cart {
         return axios.post(url, formData, config);
     }
 
+    handleQuantity(formData) {
+        const url = 'https://localhost:7211/api/Cart/HandleQuantity';
+
+        return axios.put(url, formData);
+    }
+
     getAll(id) {
         const url = 'https://localhost:7211/api/Cart/GetAll/' + id;
 

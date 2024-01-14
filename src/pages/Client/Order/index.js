@@ -44,8 +44,6 @@ function Order() {
         fetchData();
     }, [review]);
 
-    console.log(listProductID);
-
     const isProductIDExist = (productID) => {
         return listProductID.includes(productID);
     };
@@ -53,7 +51,7 @@ function Order() {
     const formatDate = (date) => {
         const dateObject = new Date(date);
 
-        const formattedDate = format(dateObject, 'dd-MM-yyyy');
+        const formattedDate = format(dateObject, 'HH:mm dd-MM-yyyy');
         return formattedDate;
     };
     const cancelOrder = async (id) => {
@@ -126,9 +124,25 @@ function Order() {
                                 </div>
                             </div>
                             <div className={cx('cancel')}>
-                                <button className={cx('cancel-btn')} onClick={() => cancelOrder(item.orderID)}>
-                                    Hủy Đơn Hàng
-                                </button>
+                                {item.orderStatusID == 1 && (
+                                    <button className={cx('btn btn-danger')} onClick={() => cancelOrder(item.orderID)}>
+                                        Hủy Đơn Hàng
+                                    </button>
+                                )}
+                                {item.orderStatusID == 2 && (
+                                    <button
+                                        className={cx('btn btn-secondary')}
+                                        disabled
+                                        onClick={() => cancelOrder(item.orderID)}
+                                    >
+                                        Hủy Đơn Hàng
+                                    </button>
+                                )}
+                                {item.orderStatusID == 3 && (
+                                    <button className={cx('btn btn-primary')} disabled>
+                                        Hoàn thành đơn hàng
+                                    </button>
+                                )}
                                 <ToastContainer position="bottom-right" />
                             </div>
                         </div>

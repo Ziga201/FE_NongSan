@@ -53,7 +53,6 @@ function UpdateComponent(props) {
         formData.append('image', image);
 
         const response = await blogService.update(formData);
-
         props.setUpdate(new Date());
         toast.success(response.data.message);
 

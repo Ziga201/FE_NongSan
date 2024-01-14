@@ -25,7 +25,10 @@ class Decentralization {
     }
 
     getAll(pageSize, pageNumber) {
-        const url = `https://localhost:7211/api/Product/GetProduct?PageSize=${pageSize}&PageNumber=${pageNumber}`;
+        const url =
+            pageSize != null && pageNumber != null
+                ? `https://localhost:7211/api/Product/GetProduct?PageSize=${pageSize}&PageNumber=${pageNumber}`
+                : 'https://localhost:7211/api/Product/GetProduct';
         return axios.get(url);
     }
     getProductByID(id) {

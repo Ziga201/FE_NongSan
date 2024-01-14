@@ -6,6 +6,8 @@ import cartService from '~/services/cartService';
 import { jwtDecode } from 'jwt-decode';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const cx = classNames.bind(style);
 
 function Cart() {
@@ -36,6 +38,17 @@ function Cart() {
             window.location.href = 'http://localhost:3000/checkout';
         }
     };
+
+    const handleQuantity = async (number, productID) => {
+        const formData = new FormData();
+
+        formData.append('number', number);
+        formData.append('accountID', jwt.Id);
+        formData.append('productID', productID);
+
+        const response = await cartService.handleQuantity(formData);
+        setUpdate(new Date());
+    };
     return (
         <>
             <ToastContainer position="bottom-right" />
@@ -61,7 +74,16 @@ function Cart() {
                                         <img style={{ width: '100px' }} src={item.avatarImageProduct} alt="product" />
                                     </td>
                                     <td className={cx('td')}>{parseInt(item.price).toLocaleString('vi-VN')}</td>
-                                    <td className={cx('td')}>{item.quantity}</td>
+                                    <td className={cx('td')}>
+                                        <span onClick={() => handleQuantity(0, item.productID)}>
+                                            <FontAwesomeIcon icon={faMinus} />
+                                        </span>
+                                        <span>{item.quantity}</span>
+
+                                        <span onClick={() => handleQuantity(1, item.productID)}>
+                                            <FontAwesomeIcon icon={faPlus} />
+                                        </span>
+                                    </td>
                                     <td className={cx('td')}>
                                         {(parseInt(item.price) * item.quantity).toLocaleString('vi-VN')}
                                     </td>

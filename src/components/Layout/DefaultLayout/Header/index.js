@@ -20,9 +20,9 @@ function Header() {
 
     const handleLogin = () => {
         if (jwtToken != null) {
-            window.location.href = '/account';
+            return '/account';
         } else {
-            window.location.href = '/login';
+            return '/login';
         }
     };
     // const jwt = jwtDecode(jwtToken);
@@ -77,7 +77,7 @@ function Header() {
                                 <FontAwesomeIcon icon={faMailBulk} />
                             </div>
                         </div>
-                        <Link onClick={() => handleLogin()}>
+                        <Link to={handleLogin()}>
                             <div className={cx('user')}>
                                 <FontAwesomeIcon icon={faUser} />
                             </div>

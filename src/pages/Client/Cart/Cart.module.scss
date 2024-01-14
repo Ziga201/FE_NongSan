@@ -9,8 +9,10 @@
 }
 
 .heading {
-    font-size: 2em;
     margin-bottom: 20px;
+    font-size: 35px;
+    color: var(--light-green);
+    font-weight: 700;
 }
 
 .table {
@@ -23,9 +25,17 @@
 .td {
     padding: 10px;
     text-align: left;
+    font-size: 16px;
 }
 
 .td img {
+}
+
+.td span {
+    padding: 5px 10px;
+    color: #555;
+    border: 1px solid #d4d1d1;
+    cursor: pointer;
 }
 
 .th {

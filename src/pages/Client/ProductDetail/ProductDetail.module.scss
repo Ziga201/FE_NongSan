@@ -31,14 +31,24 @@
     font-size: 30px;
     color: var(--dark-green);
     font-weight: 800;
-    margin: 15px 0 12px;
+    margin: 15px 0 4px;
+}
+
+.info-review .line {
+    color: #c9c7c7;
+    margin: 0 12px;
+}
+
+.info-review p {
+    display: inline;
+    color: #999;
 }
 
 .price {
     font-size: 24px;
     color: var(--light-green);
     font-weight: 800;
-    margin-bottom: 14px;
+    margin: 15px 0;
 }
 
 .desc {
@@ -75,7 +85,7 @@
     background-color: var(--light-green);
     font-weight: 700;
     color: #fff;
-    margin: 20px 0 0;
+    margin: 30px 0 0;
     padding: 5px 40px;
     line-height: 2.5;
     border-radius: 50px;
@@ -83,6 +93,11 @@
 
 .add-btn.add-btn-disabled {
     background-color: #555;
+}
+.note {
+    margin-top: 10px;
+    font-style: italic;
+    color: #777;
 }
 
 .certify {
@@ -95,7 +110,7 @@
 }
 
 .describe {
-    text-align: center;
+    text-align: start;
     font-size: 25px;
     color: var(--dark-green);
     font-weight: 600;
@@ -166,6 +181,7 @@
 
 .review-product {
     display: flex;
+    margin-bottom: 20px;
 }
 
 .avatar {
@@ -186,7 +202,7 @@
 .star {
 }
 .review-icon {
-    color: rgb(255, 123, 0);
+    color: #ff7b00;
 }
 .createdAt {
     color: #999;

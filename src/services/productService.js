@@ -32,6 +32,28 @@ class Decentralization {
         const url = 'https://localhost:7211/api/Product/GetProductByID/' + id;
         return axios.get(url);
     }
+
+    updateView(id) {
+        const url = 'https://localhost:7211/api/Product/UpdateView?id=' + id;
+        return axios.put(url);
+    }
+
+    getRelatedProduct(id) {
+        const url = 'https://localhost:7211/api/Product/GetRelatedProduct?productTypeID=' + id;
+        return axios.get(url);
+    }
+    addProductReview(formData) {
+        const url = 'https://localhost:7211/api/Product/AddProductReview';
+        return axios.post(url, formData);
+    }
+    getProductReview(id) {
+        const url = 'https://localhost:7211/api/Product/GetProductReview?productID=' + id;
+        return axios.get(url);
+    }
+    getProductReviewByAccountID(id) {
+        const url = 'https://localhost:7211/api/Product/GetProductReviewByAccountID/' + id;
+        return axios.get(url);
+    }
 }
 
 export default new Decentralization();

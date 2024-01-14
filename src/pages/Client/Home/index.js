@@ -189,15 +189,18 @@ function Home() {
                             .filter((post) => {
                                 return key === '' ? post : post.productTypeID == key;
                             })
+                            .filter((item) => {
+                                return item.status == 'ACTIVE';
+                            })
                             .slice(0, 10)
                             .map((post, index) => (
                                 <div key={post.productID} className={cx('product-block', 'col-md-2dot4')}>
-                                    <div onClick={() => handleClick(post.productID)}>
+                                    <Link to={`/product/${post.productID}`}>
                                         <div className={cx('product-img')}>
                                             <img src={post.avatarImageProduct} alt="product" />
                                         </div>
                                         <div className={cx('product-name')}>{post.nameProduct}</div>
-                                    </div>
+                                    </Link>
                                     <div className={cx('product-price')}>
                                         {parseInt(post.price).toLocaleString('vi-VN')} VND
                                     </div>

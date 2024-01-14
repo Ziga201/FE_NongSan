@@ -20,9 +20,10 @@ function CreateComponent(props) {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState('');
-    const [title, setTitle] = useState('');
+    const [describe, setDescribe] = useState('');
     const [status, setStatus] = useState('ACTIVE');
     const [discount, setDiscount] = useState('');
+    const [quantity, setQuantity] = useState('');
     const [productTypeID, setProductTypeID] = useState(1);
     const [typeData, setTypeData] = useState('');
 
@@ -43,9 +44,10 @@ function CreateComponent(props) {
         formData.append('nameProduct', name);
         formData.append('price', price);
         formData.append('avatarImageProduct', image);
-        formData.append('title', title);
+        formData.append('describe', describe);
         formData.append('discount', discount);
         formData.append('status', status);
+        formData.append('quantity', quantity);
 
         const response = await productService.create(formData);
 
@@ -105,10 +107,10 @@ function CreateComponent(props) {
 
                         <input
                             type="text"
-                            placeholder="Nhập tiêu đề"
-                            value={title}
+                            placeholder="Nhập mô tả"
+                            value={describe}
                             className={cx('modal-input')}
-                            onChange={(event) => setTitle(event.target.value)}
+                            onChange={(event) => setDescribe(event.target.value)}
                             required
                         />
                         <input
@@ -118,6 +120,13 @@ function CreateComponent(props) {
                             className={cx('modal-input')}
                             onChange={(event) => setDiscount(event.target.value)}
                             required
+                        />
+                        <input
+                            type="number"
+                            placeholder="Nhập số lượng"
+                            value={quantity}
+                            className={cx('modal-input')}
+                            onChange={(event) => setQuantity(event.target.value)}
                         />
                         <select
                             value={status}

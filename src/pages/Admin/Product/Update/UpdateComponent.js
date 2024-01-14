@@ -19,8 +19,9 @@ function UpdateComponent(props) {
     const [nameProduct, setNameProduct] = useState(props.nameProduct);
     const [price, setPrice] = useState(props.price);
     const [avatarImageProduct, setAvatarImageProduct] = useState(props.avatarImageProduct);
-    const [title, setTitle] = useState(props.title);
+    const [describe, setDescribe] = useState(props.describe);
     const [discount, setDiscount] = useState(props.discount);
+    const [quantity, setQuantity] = useState(props.quantity);
     const [status, setStatus] = useState(props.status);
     const [typeData, setTypeData] = useState([]);
 
@@ -41,9 +42,10 @@ function UpdateComponent(props) {
         formData.append('nameProduct', nameProduct);
         formData.append('price', price);
         formData.append('avatarImageProduct', avatarImageProduct);
-        formData.append('title', title);
+        formData.append('describe', describe);
         formData.append('discount', discount);
         formData.append('status', status);
+        formData.append('quantity', quantity);
 
         const response = await productService.update(formData);
         props.setUpdate(new Date());
@@ -99,10 +101,10 @@ function UpdateComponent(props) {
                         />
                         <input
                             type="text"
-                            placeholder="Nhập tiêu đề"
-                            value={title}
+                            placeholder="Nhập mô tả"
+                            value={describe}
                             className={cx('modal-input')}
-                            onChange={(event) => setTitle(event.target.value)}
+                            onChange={(event) => setDescribe(event.target.value)}
                             required
                         />
                         <input
@@ -112,6 +114,13 @@ function UpdateComponent(props) {
                             className={cx('modal-input')}
                             onChange={(event) => setDiscount(event.target.value)}
                             required
+                        />
+                        <input
+                            type="number"
+                            placeholder="Nhập số lượng"
+                            value={quantity}
+                            className={cx('modal-input')}
+                            onChange={(event) => setQuantity(event.target.value)}
                         />
                         <select
                             value={status}

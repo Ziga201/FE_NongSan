@@ -75,10 +75,10 @@ function Product() {
                                 <th>Tên sản phẩm</th>
                                 <th>Giá</th>
                                 <th>Ảnh</th>
-                                <th>Tiêu đề</th>
+                                <th>Mô tả</th>
                                 <th>Giảm giá</th>
                                 <th>Trạng thái</th>
-                                <th>Lượt xem</th>
+                                <th>Số lượng</th>
                                 <th>Chức năng</th>
                             </tr>
                         </thead>
@@ -102,10 +102,10 @@ function Product() {
                                                 alt="product"
                                             />
                                         </td>
-                                        <td>{item.title}</td>
+                                        <td>{item.describe}</td>
                                         <td>{item.discount}%</td>
                                         <td>{item.status}</td>
-                                        <td>{item.numberOfViews}</td>
+                                        <td>{item.quantity}</td>
                                         <td>
                                             <UpdateComponent
                                                 productID={item.productID}
@@ -113,9 +113,10 @@ function Product() {
                                                 nameProduct={item.nameProduct}
                                                 price={item.price}
                                                 avatarImageProduct={item.avatarImageProduct}
-                                                title={item.title}
+                                                describe={item.describe}
                                                 discount={item.discount}
                                                 status={item.status}
+                                                quantity={item.quantity}
                                                 style={{ fontSize: '16px' }}
                                                 setUpdate={setUpdate}
                                             />

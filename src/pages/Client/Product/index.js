@@ -146,6 +146,9 @@ function Product() {
                                                 ? item
                                                 : item.nameProduct.toLowerCase().includes(search.toLowerCase());
                                         })
+                                        .filter((item) => {
+                                            return item.status == 'ACTIVE';
+                                        })
                                         .map((item) => (
                                             <div key={item.productID} className={cx('product-block', 'col-md-3')}>
                                                 <Link to={`/product/${item.productID}`}>

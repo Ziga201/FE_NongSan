@@ -4,15 +4,20 @@ import classNames from 'classnames/bind';
 import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from 'react';
 import orderService from '~/services/orderService';
+import productService from '~/services/productService';
 import { format } from 'date-fns';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EvaluateComponent from './Evaluate/EvaluateComponent';
+import { Link } from 'react-router-dom';
 const cx = classNames.bind(style);
 
 function Order() {
     const [order, setOrder] = useState([]);
-    const [update, setUpdate] = useState();
+    const [review, setReview] = useState([]);
 
+    const [update, setUpdate] = useState();
+    const [listProductID, setListProductID] = useState([]);
     const jwtToken = localStorage.getItem('jwtToken');
     const responseJWT = jwtDecode(jwtToken);
     useEffect(() => {
@@ -22,6 +27,28 @@ function Order() {
         };
         fetchData();
     }, [update]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await productService.getProductReviewByAccountID(responseJWT.Id);
+            setReview(response);
+        };
+        fetchData();
+    }, [update]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const newListProductID = review.data !== undefined ? review.data.map((x) => x.productID) : [];
+            setListProductID(newListProductID);
+        };
+        fetchData();
+    }, [review]);
+
+    console.log(listProductID);
+
+    const isProductIDExist = (productID) => {
+        return listProductID.includes(productID);
+    };
 
     const formatDate = (date) => {
         const dateObject = new Date(date);
@@ -48,12 +75,38 @@ function Order() {
                     {order.data.map((item) => (
                         <div className={cx('order-details')}>
                             {item.orderDetailDTOs.map((itemDetail) => (
-                                <div className={cx('product')}>
-                                    <img src={itemDetail.avatarImageProduct} alt="Product Image" />
-                                    <div className={cx('product-info')}>
-                                        <div>{itemDetail.nameProduct}</div>
-                                        <span>x{itemDetail.quantity}</span>
-                                        <div>Giá: {itemDetail.priceTotal}</div>
+                                <div className={cx('order-details-info')}>
+                                    <Link
+                                        to={`/product/${itemDetail.productID}`}
+                                        className={cx('product', 'col-md-10')}
+                                    >
+                                        <img src={itemDetail.avatarImageProduct} alt="Product Image" />
+                                        <div className={cx('product-info')}>
+                                            <div>{itemDetail.nameProduct}</div>
+                                            <span>x{itemDetail.quantity}</span>
+                                            <div>Giá: {itemDetail.priceTotal}</div>
+                                        </div>
+                                    </Link>
+                                    <div className={cx('evaluate', 'col-md-2')}>
+                                        {item.orderStatusID != 3 && (
+                                            <button className="btn btn-secondary" disabled>
+                                                Chờ đánh giá
+                                            </button>
+                                        )}
+                                        {item.orderStatusID === 3 && !isProductIDExist(itemDetail.productID) && (
+                                            <EvaluateComponent
+                                                productID={itemDetail.productID}
+                                                accountID={responseJWT.Id}
+                                                setUpdate={setUpdate}
+                                            />
+                                        )}
+                                        {item.orderStatusID === 3 && isProductIDExist(itemDetail.productID) && (
+                                            <button className="btn btn-success" disabled>
+                                                Đã đánh giá
+                                            </button>
+                                        )}
+
+                                        <ToastContainer position="bottom-right" />
                                     </div>
                                 </div>
                             ))}

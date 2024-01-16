@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faCalendarDays, faComments, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faCalendarDays, faComments, faEye, faUser } from '@fortawesome/free-solid-svg-icons';
 import blogService from '~/services/blogService';
 
 const cx = classNames.bind(style);
@@ -48,7 +48,7 @@ function BlogFilter() {
                                     <div className={cx('info')}>
                                         <FontAwesomeIcon icon={faCalendarDays} /> {blog.createdAt} /{' '}
                                         <FontAwesomeIcon icon={faUser} /> bởi {blog.fullName} /{' '}
-                                        <FontAwesomeIcon icon={faComments} />
+                                        <FontAwesomeIcon icon={faEye} /> {blog.view}
                                     </div>
                                     <div className={cx('title')}>{blog.title}</div>
                                     <div className={cx('desc')}>{blog.content}</div>

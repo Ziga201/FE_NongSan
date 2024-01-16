@@ -39,6 +39,7 @@ function Product() {
 
     const handlePageClick = (event, value) => {
         setPageNumber({ pageNumber: value, pageSize: 6 });
+        setUpdate(new Date());
     };
 
     const deleteProduct = async (id, e) => {

@@ -45,6 +45,9 @@
 
 .element img {
     border-radius: 50%;
+    object-fit: cover;
+    width: 35px;
+    height: 35px;
 }
 
 .element:hover {

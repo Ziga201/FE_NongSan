@@ -3,7 +3,6 @@ import 'bootstrap/dist/js/bootstrap.bundle';
 import '../../../../node_modules/bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import { useState, useEffect } from 'react';
-// import React from 'react';
 import { faCartPlus, faChartPie, faChartSimple, faCircleRight, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import style from '~/pages/Admin/Home/Home.module.scss';
@@ -55,8 +54,10 @@ function Home() {
         fetchData();
     }, []);
 
-    const result = order.data != undefined ? order.data.reduce((acc, item) => acc + item.actualPrice, 0) : 0;
+    const result = order.data != undefined ? order.data.reduce((acc, item) => acc + item.totalPrice, 0) : 0;
     const totalUser = account.data != undefined ? account.data.filter((x) => x.decentralizationID == 1).length : 0;
+    const totalProduct =
+        product.data != undefined ? product.data.data.reduce((acc, item) => acc + item.purchases, 0) : 0;
 
     const options = {
         animationEnabled: true,
@@ -154,10 +155,8 @@ function Home() {
                             <div className={cx('item', 'bg-4')}>
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
-                                        <div className={cx('number')}>
-                                            {product.data != undefined ? product.data.data.length : 0}
-                                        </div>
-                                        <div className={cx('text')}>Tổng sản phẩm</div>
+                                        <div className={cx('number')}>{totalProduct}</div>
+                                        <div className={cx('text')}>Tổng sản phẩm đã bán</div>
                                     </div>
                                     <div className={cx('icon')}>
                                         <FontAwesomeIcon className={cx('icon-item')} icon={faChartPie} />

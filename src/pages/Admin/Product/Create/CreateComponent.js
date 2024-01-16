@@ -48,6 +48,7 @@ function CreateComponent(props) {
         formData.append('discount', discount);
         formData.append('status', status);
         formData.append('quantity', quantity);
+        toast.success('Vui lòng chờ !');
 
         const response = await productService.create(formData);
 

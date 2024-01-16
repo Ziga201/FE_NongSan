@@ -49,7 +49,7 @@ function Header() {
                         <FontAwesomeIcon icon={faSignOut} />
                     </div>
                     <div className={cx('element')}>
-                        <img src={data.avatar} width="35px" />
+                        <img src={data.avatar} />
                     </div>
                 </div>
             </div>

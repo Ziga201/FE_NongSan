@@ -9,9 +9,10 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAnglesRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { jwtDecode } from 'jwt-decode';
-
+import Pagination from '@mui/material/Pagination';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PriceFilterSlider from './PriceFilter/PriceFilterSlider';
 
 const cx = classNames.bind(style);
 
@@ -19,12 +20,13 @@ function Product() {
     const [data, setData] = useState({});
     const [pageNumber, setPageNumber] = useState({
         pageNumber: 1,
-        pageSize: 99,
+        pageSize: 20,
     });
+    const [totalPages, setTotalPages] = useState();
     const [typeData, setTypeData] = useState([]);
     const [key, setKey] = useState('');
     const [search, setSearch] = useState('');
-
+    const [priceRange, setPriceRange] = useState([0, 100000]);
     const [account, setAccount] = useState([]);
 
     useEffect(() => {
@@ -32,7 +34,6 @@ function Product() {
             const jwtToken = localStorage.getItem('jwtToken');
             if (jwtToken) {
                 try {
-                    // 2. Sử dụng try-catch cho jwtDecode
                     const response = await jwtDecode(jwtToken);
                     if (response) {
                         setAccount(response);
@@ -48,12 +49,15 @@ function Product() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
-
+            const response = await productService.getAll();
             setData(response.data);
+            // setTotalPages(response.data.pagination.totalPage);
         };
         fetchData();
-    }, []);
+    }, [pageNumber]);
+    const handlePageClick = (event, value) => {
+        setPageNumber({ pageNumber: value, pageSize: 20 });
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,8 +71,9 @@ function Product() {
         setKey(item);
     }
 
-    // Search item
-    // Add to cart
+    const handlePriceChange = (newRange) => {
+        setPriceRange(newRange);
+    };
 
     const addToCart = async (item) => {
         const formData = new FormData();
@@ -132,6 +137,11 @@ function Product() {
                                         ))}
                                     </div>
                                 )}
+
+                                <div style={{ marginTop: '30px' }} className={cx('title')}>
+                                    Giá
+                                </div>
+                                <PriceFilterSlider step={1000} min={0} max={100000} onChange={handlePriceChange} />
                             </div>
                         </div>
                         <div className={cx('col-md-10')}>
@@ -140,6 +150,12 @@ function Product() {
                                     {data.data
                                         .filter((item) => {
                                             return key === '' ? item : item.productTypeID == key;
+                                        })
+                                        .filter((item) => {
+                                            return (
+                                                parseInt(item.price) >= priceRange[0] &&
+                                                parseInt(item.price) <= priceRange[1]
+                                            );
                                         })
                                         .filter((item) => {
                                             return search.toLowerCase() === ''
@@ -151,7 +167,7 @@ function Product() {
                                         })
                                         .map((item) => (
                                             <div key={item.productID} className={cx('product-block', 'col-md-3')}>
-                                                <Link to={`/product/${item.productID}`}>
+                                                <Link to={`/product/${item.productID}`} className={cx('product-link')}>
                                                     <div className={cx('product-img')}>
                                                         <img src={item.avatarImageProduct} alt="product" />
                                                     </div>
@@ -161,18 +177,27 @@ function Product() {
                                                 <div className={cx('product-price')}>
                                                     {parseInt(item.price).toLocaleString('vi-VN')} VND
                                                 </div>
-                                                <button
-                                                    onClick={() => addToCart(item.productID)}
-                                                    className={cx('product-add')}
-                                                >
-                                                    Thêm giỏ hàng
-                                                    <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
-                                                </button>
+                                                <div>
+                                                    <button
+                                                        onClick={() => addToCart(item.productID)}
+                                                        className={cx('product-add')}
+                                                    >
+                                                        Thêm giỏ hàng
+                                                        <FontAwesomeIcon
+                                                            className={cx('add-icon')}
+                                                            icon={faAnglesRight}
+                                                        />
+                                                    </button>
+                                                </div>
                                                 <ToastContainer position="bottom-right" />
                                             </div>
                                         ))}
                                 </div>
                             )}
+
+                            {/* <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
+                                <Pagination count={totalPages} onChange={handlePageClick} color="success" />
+                            </div> */}
                         </div>
                     </div>
                 </div>

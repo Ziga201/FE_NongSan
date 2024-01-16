@@ -10,6 +10,8 @@ import { faAnglesRight, faCircleCheck, faMedal, faStar as regularStar } from '@f
 import { jwtDecode } from 'jwt-decode';
 import { toast, ToastContainer } from 'react-toastify';
 import { faStar } from '@fortawesome/free-regular-svg-icons';
+import { format } from 'date-fns';
+
 const cx = classNames.bind(style);
 function ProductDetail() {
     const { id } = useParams();
@@ -68,6 +70,13 @@ function ProductDetail() {
         setAverage(averages);
     }, [review]);
 
+    const formatDate = (date) => {
+        const dateObject = new Date(date);
+
+        const formattedDate = format(dateObject, 'HH:mm dd-MM-yyyy');
+        return formattedDate;
+    };
+
     const addToCart = async (item) => {
         const formData = new FormData();
 
@@ -110,7 +119,23 @@ function ProductDetail() {
                             </a>
                             <span className={cx('line')}>|</span> {data.purchases} <p>Đã bán</p>
                         </div>
-                        <div className={cx('price')}>{parseInt(data.price).toLocaleString('vi-VN')} VND</div>
+                        <div className={cx('price')}>
+                            {data.discount > 0 ? (
+                                <>
+                                    <span className={cx('original-price')}>
+                                        {parseInt(data.price).toLocaleString('vi-VN')}
+                                    </span>
+                                    <span className={cx('discounted-price')}>
+                                        {parseInt(data.discountedPrice).toLocaleString('vi-VN')} VND
+                                    </span>
+                                    <span className={cx('discount')}>GIẢM {data.discount}%</span>
+                                </>
+                            ) : (
+                                <span className={cx('discounted-price')}>
+                                    {parseInt(data.discountedPrice).toLocaleString('vi-VN')} VND
+                                </span>
+                            )}
+                        </div>
                         <div className={cx('message')}>
                             {/* <FontAwesomeIcon icon={faMedal} /> */}
                             <div className={cx('certify')}>
@@ -145,7 +170,11 @@ function ProductDetail() {
 
                             <ToastContainer position="bottom-right" />
                         </div>
-                        <p className={cx('note')}>* Số lượng được tính theo kg</p>
+                        <p className={cx('note')}>
+                            * Số lượng được tính theo {data.productTypeID == 1 && <span>x1 kg</span>}{' '}
+                            {(data.productTypeID == 2 || data.productTypeID == 4) && <span>x100 gram</span>}{' '}
+                            {data.productTypeID == 3 && <span>x1 lít</span>}
+                        </p>
                     </div>
                 </div>
 
@@ -167,19 +196,25 @@ function ProductDetail() {
                                 .slice(0, 5)
                                 .map((item, index) => (
                                     <div key={item.productID} className={cx('product-block', 'col-md-2dot4')}>
-                                        <Link to={`/product/${item.productID}`}>
+                                        <a href={`/product/${item.productID}`} className={cx('product-link')}>
                                             <div className={cx('product-img')}>
                                                 <img src={item.avatarImageProduct} alt="product" />
                                             </div>
                                             <div className={cx('product-name')}>{item.nameProduct}</div>
-                                        </Link>
+                                        </a>
+
                                         <div className={cx('product-price')}>
                                             {parseInt(item.price).toLocaleString('vi-VN')} VND
                                         </div>
-                                        <button onClick={() => addToCart(item)} className={cx('product-add')}>
-                                            Thêm giỏ hàng
-                                            <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
-                                        </button>
+                                        <div>
+                                            <button
+                                                onClick={() => addToCart(item.productID)}
+                                                className={cx('product-add')}
+                                            >
+                                                Thêm giỏ hàng
+                                                <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
+                                            </button>
+                                        </div>
                                         <ToastContainer position="bottom-right" />
                                     </div>
                                 ))}
@@ -199,7 +234,7 @@ function ProductDetail() {
                                     <div className={cx('review', 'col-md-11')}>
                                         <div className={cx('username')}>{item.userName}</div>
                                         <div className={cx('star')}>{handleStar(item.pointEvaluation)}</div>
-                                        <div className={cx('createdAt')}>{item.createdAt}</div>
+                                        <div className={cx('createdAt')}>{formatDate(item.createdAt)}</div>
                                         <div className={cx('content')}>{item.content}</div>
                                         <div className={cx('image-review')}>
                                             <img src={item.image} />

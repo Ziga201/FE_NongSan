@@ -52,6 +52,7 @@ function UpdateComponent(props) {
         // for (let pair of formData.entries()) {
         //     console.log(pair[0] + ': ' + pair[1]);
         // }
+        toast.success('Vui lòng chờ !');
 
         const response = await accountService.update(formData);
 

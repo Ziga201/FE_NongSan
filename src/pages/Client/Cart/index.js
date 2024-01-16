@@ -16,6 +16,8 @@ function Cart() {
     const jwtToken = localStorage.getItem('jwtToken');
     const jwt = jwtDecode(jwtToken);
 
+    console.log(jwt);
+
     useEffect(() => {
         const fetchData = async () => {
             const response = await cartService.getAll(jwt.Id);
@@ -30,7 +32,9 @@ function Cart() {
         setUpdate(new Date());
     };
     const totalPrice =
-        cart.length == 0 || cart.data == '' ? 0 : cart.data.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        cart.length == 0 || cart.data == ''
+            ? 0
+            : cart.data.reduce((acc, item) => acc + item.discountedPrice * item.quantity, 0);
 
     const handleSubmit = () => {
         if (cart.data == '') toast.error('Chưa có sản phẩm trong giỏ hàng !');
@@ -73,19 +77,31 @@ function Cart() {
                                     <td className={cx('td')}>
                                         <img style={{ width: '100px' }} src={item.avatarImageProduct} alt="product" />
                                     </td>
-                                    <td className={cx('td')}>{parseInt(item.price).toLocaleString('vi-VN')}</td>
                                     <td className={cx('td')}>
-                                        <span onClick={() => handleQuantity(0, item.productID)}>
+                                        <span className={cx('original-price')}>
+                                            {parseInt(item.price).toLocaleString('vi-VN')}
+                                        </span>
+                                        <span>{parseInt(item.discountedPrice).toLocaleString('vi-VN')}</span>
+                                    </td>
+
+                                    <td className={cx('td')}>
+                                        <span
+                                            className={cx('border')}
+                                            onClick={() => handleQuantity(0, item.productID)}
+                                        >
                                             <FontAwesomeIcon icon={faMinus} />
                                         </span>
-                                        <span>{item.quantity}</span>
+                                        <span className={cx('border')}>{item.quantity}</span>
 
-                                        <span onClick={() => handleQuantity(1, item.productID)}>
+                                        <span
+                                            className={cx('border')}
+                                            onClick={() => handleQuantity(1, item.productID)}
+                                        >
                                             <FontAwesomeIcon icon={faPlus} />
                                         </span>
                                     </td>
                                     <td className={cx('td')}>
-                                        {(parseInt(item.price) * item.quantity).toLocaleString('vi-VN')}
+                                        {(parseInt(item.discountedPrice) * item.quantity).toLocaleString('vi-VN')}
                                     </td>
 
                                     <td className={cx('td')}>

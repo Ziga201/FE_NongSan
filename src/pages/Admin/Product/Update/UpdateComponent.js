@@ -46,6 +46,7 @@ function UpdateComponent(props) {
         formData.append('discount', discount);
         formData.append('status', status);
         formData.append('quantity', quantity);
+        toast.success('Vui lòng chờ !');
 
         const response = await productService.update(formData);
         props.setUpdate(new Date());

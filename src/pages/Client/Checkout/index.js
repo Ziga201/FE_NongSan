@@ -25,8 +25,6 @@ function Checkout() {
         fetchData();
     }, []);
 
-    console.log(user);
-
     useEffect(() => {
         if (user) {
             setAccountID(user.accountID);
@@ -59,7 +57,8 @@ function Checkout() {
         };
         fetchData();
     }, []);
-    const totalPrice = cart.length == 0 ? 0 : cart.data.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalPrice =
+        cart.length == 0 ? 0 : cart.data.reduce((acc, item) => acc + item.discountedPrice * item.quantity, 0);
 
     // ADD
 
@@ -182,7 +181,7 @@ function Checkout() {
                                                         {item.nameProduct} x {item.quantity}{' '}
                                                     </div>
                                                     <div className={cx('order-heading')}>
-                                                        {item.price.toLocaleString('vi-VN')}
+                                                        {(item.discountedPrice * item.quantity).toLocaleString('vi-VN')}
                                                     </div>
                                                 </div>
                                             ))}

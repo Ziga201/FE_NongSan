@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const jwtToken = localStorage.getItem('jwtToken');
+
 class Account {
     login(formData) {
         const url = 'https://localhost:7211/api/Auth/Login';
@@ -60,6 +62,11 @@ class Account {
     }
     getAll() {
         const url = 'https://localhost:7211/api/Auth/GetAll';
+        // const config = {
+        //     headers: {
+        //         Authorization: 'Bearer ' + jwtToken,
+        //     },
+        // };
         return axios.get(url);
     }
 

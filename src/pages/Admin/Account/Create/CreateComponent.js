@@ -48,6 +48,7 @@ function CreateComponent(props) {
         formData.append('fullName', fullName);
         formData.append('phone', phone);
         formData.append('address', address);
+        toast.success('Vui lòng chờ !');
 
         const response = await accountService.create(formData);
         props.setUpdate(new Date());

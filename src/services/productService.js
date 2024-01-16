@@ -31,6 +31,11 @@ class Decentralization {
                 : 'https://localhost:7211/api/Product/GetProduct';
         return axios.get(url);
     }
+
+    getAllProduct() {
+        const url = 'https://localhost:7211/api/Product/GetAll';
+        return axios.get(url);
+    }
     getProductByID(id) {
         const url = 'https://localhost:7211/api/Product/GetProductByID/' + id;
         return axios.get(url);

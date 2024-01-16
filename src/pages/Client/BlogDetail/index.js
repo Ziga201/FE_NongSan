@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import blogService from '~/services/blogService';
 import blogTypeService from '~/services/blogTypeService';
-import { faCalendarDays, faComments, faUser, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDays, faComments, faUser, faAngleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
 const cx = classNames.bind(style);
 function BlogDetail() {
@@ -17,6 +17,7 @@ function BlogDetail() {
     useEffect(() => {
         const fetchData = async () => {
             const response = await blogService.getBlogById(id);
+            const updateView = blogService.updateView(id);
             setData(response.data.data);
         };
         fetchData();
@@ -32,10 +33,9 @@ function BlogDetail() {
     const formatDate = (date) => {
         const dateObject = new Date(date);
 
-        const formattedDate = format(dateObject, 'dd-MM-yyyy');
+        const formattedDate = format(dateObject, 'HH:mm dd-MM-yyyy');
         return formattedDate;
     };
-    console.log(typeData);
     return (
         <>
             <div className={cx('path')}>
@@ -59,8 +59,8 @@ function BlogDetail() {
                         <div className={cx('title')}>{data.title}</div>
                         <div className={cx('info')}>
                             <FontAwesomeIcon icon={faCalendarDays} /> {formatDate(data.createAt ?? 1)} /{' '}
-                            <FontAwesomeIcon icon={faUser} /> bởi {data.fullName} /{' '}
-                            <FontAwesomeIcon icon={faComments} /> 6
+                            <FontAwesomeIcon icon={faUser} /> bởi {data.fullName} / <FontAwesomeIcon icon={faEye} />{' '}
+                            {data.view}
                         </div>
                         <div className={cx('image')}>
                             <img src={data.image} alt="blog" />

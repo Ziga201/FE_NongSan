@@ -23,8 +23,15 @@ class Blog {
         const url = 'https://localhost:7211/api/Blog/DeleteBlog/' + id;
         return axios.delete(url);
     }
-    getAll() {
-        const url = 'https://localhost:7211/api/Blog/GetAll';
+    updateView(id) {
+        const url = 'https://localhost:7211/api/Blog/UpdateViewBlog/' + id;
+        return axios.put(url);
+    }
+    getAll(pageSize, pageNumber) {
+        const url =
+            pageSize != null && pageNumber != null
+                ? `https://localhost:7211/api/Blog/GetAll?PageSize=${pageSize}&PageNumber=${pageNumber}`
+                : 'https://localhost:7211/api/Blog/GetAll';
         return axios.get(url);
     }
     getAllByBlogTypeID(id) {

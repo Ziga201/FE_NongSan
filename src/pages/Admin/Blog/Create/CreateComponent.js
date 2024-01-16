@@ -51,6 +51,7 @@ function CreateComponent(props) {
         formData.append('title', title);
         formData.append('content', content);
         formData.append('image', image);
+        toast.success('Vui lòng chờ !');
 
         const response = await blogService.create(formData);
 

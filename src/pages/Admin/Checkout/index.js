@@ -98,7 +98,7 @@ function Checkout() {
 
                                         <td>{checkout.phone}</td>
                                         <td>{checkout.address}</td>
-                                        <td>{parseInt(checkout.actualPrice).toLocaleString('vi-VN')} VND</td>
+                                        <td>{parseInt(checkout.totalPrice).toLocaleString('vi-VN')} VND</td>
                                         <td>{formatDate(checkout.createdAt)}</td>
                                         <td>{checkout.orderName}</td>
 

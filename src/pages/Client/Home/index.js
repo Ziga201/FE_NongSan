@@ -34,9 +34,9 @@ function Home() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await productService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
+            const response = await productService.getAllProduct();
 
-            setData(response.data);
+            setData(response);
         };
         fetchData();
     }, []);
@@ -192,22 +192,25 @@ function Home() {
                             .filter((item) => {
                                 return item.status == 'ACTIVE';
                             })
-                            .slice(0, 10)
-                            .map((post, index) => (
-                                <div key={post.productID} className={cx('product-block', 'col-md-2dot4')}>
-                                    <Link to={`/product/${post.productID}`}>
+                            .slice(0, 5)
+                            .map((item, index) => (
+                                <div key={item.productID} className={cx('product-block', 'col-md-2dot4')}>
+                                    <Link to={`/product/${item.productID}`} className={cx('product-link')}>
                                         <div className={cx('product-img')}>
-                                            <img src={post.avatarImageProduct} alt="product" />
+                                            <img src={item.avatarImageProduct} alt="product" />
                                         </div>
-                                        <div className={cx('product-name')}>{post.nameProduct}</div>
+                                        <div className={cx('product-name')}>{item.nameProduct}</div>
                                     </Link>
+
                                     <div className={cx('product-price')}>
-                                        {parseInt(post.price).toLocaleString('vi-VN')} VND
+                                        {parseInt(item.price).toLocaleString('vi-VN')} VND
                                     </div>
-                                    <button onClick={() => addToCart(post)} className={cx('product-add')}>
-                                        Thêm giỏ hàng
-                                        <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
-                                    </button>
+                                    <div>
+                                        <button onClick={() => addToCart(item.productID)} className={cx('product-add')}>
+                                            Thêm giỏ hàng
+                                            <FontAwesomeIcon className={cx('add-icon')} icon={faAnglesRight} />
+                                        </button>
+                                    </div>
                                     <ToastContainer position="bottom-right" />
                                 </div>
                             ))}

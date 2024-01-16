@@ -11,25 +11,34 @@ import UpdateComponent from './Update/UpdateComponent';
 import { format } from 'date-fns';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Pagination from '@mui/material/Pagination';
 
 const cx = classNames.bind(style);
 
 function Blog() {
     const [data, setData] = useState({});
     const [update, setUpdate] = useState('');
-
+    const [pageNumber, setPageNumber] = useState({
+        pageNumber: 1,
+        pageSize: 6,
+    });
+    const [totalPages, setTotalPages] = useState();
     useEffect(() => {
         const fetchData = async () => {
-            const response = await blogService.getAll();
-            setData(response);
+            const response = await blogService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
+            setTotalPages(response.data.pagination.totalPage);
+            setData(response.data);
         };
         fetchData();
     }, [update]);
     const formatDate = (date) => {
         const dateObject = new Date(date);
-
         const formattedDate = format(dateObject, 'HH:mm dd-MM-yyyy');
         return formattedDate;
+    };
+    const handlePageClick = (event, value) => {
+        setPageNumber({ pageNumber: value, pageSize: 6 });
+        setUpdate(new Date());
     };
     const deleteBlog = async (id, e) => {
         var response = await blogService.delete(id);
@@ -118,6 +127,9 @@ function Blog() {
                     </table>
                 </div>
             )}
+            <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
+                <Pagination count={totalPages} onChange={handlePageClick} color="primary" />
+            </div>
         </div>
     );
 }

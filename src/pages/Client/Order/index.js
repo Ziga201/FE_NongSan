@@ -120,7 +120,7 @@ function Order() {
                                 </div>
                                 <div className={cx('status-item')}>
                                     <span>Tổng thanh toán:</span>
-                                    <p>{item.actualPrice.toLocaleString('vi-VN')} VND</p>
+                                    <p>{item.totalPrice.toLocaleString('vi-VN')} VND</p>
                                 </div>
                             </div>
                             <div className={cx('cancel')}>

@@ -1,8 +1,9 @@
 import axios from 'axios';
-
+const localhost = 'http://tungpts-001-site1.atempurl.com/';
+// const localhost = "https://localhost:7211/"
 class Other {
     sendMessage(formData) {
-        const url = 'https://localhost:7211/api/Other/SendMessage';
+        const url = localhost + 'api/Other/SendMessage';
 
         const config = {
             headers: {
@@ -14,7 +15,7 @@ class Other {
     }
 
     getAll() {
-        const url = 'https://localhost:7211/api/Other/GetAll';
+        const url = localhost + 'api/Other/GetAll';
         return axios.get(url);
     }
 }

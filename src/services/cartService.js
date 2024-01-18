@@ -1,8 +1,9 @@
 import axios from 'axios';
-
+const localhost = 'http://tungpts-001-site1.atempurl.com/';
+// const localhost = "https://localhost:7211/"
 class Cart {
     addToCart(formData) {
-        const url = 'https://localhost:7211/api/Cart/AddToCart';
+        const url = localhost + 'api/Cart/AddToCart';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -12,24 +13,24 @@ class Cart {
     }
 
     handleQuantity(formData) {
-        const url = 'https://localhost:7211/api/Cart/HandleQuantity';
+        const url = localhost + 'api/Cart/HandleQuantity';
 
         return axios.put(url, formData);
     }
 
     getAll(id) {
-        const url = 'https://localhost:7211/api/Cart/GetAll/' + id;
+        const url = localhost + 'api/Cart/GetAll/' + id;
 
         return axios.get(url);
     }
 
     deleteCart(id) {
-        const url = 'https://localhost:7211/api/Cart/DeleteCart/' + id;
+        const url = localhost + 'api/Cart/DeleteCart/' + id;
         return axios.delete(url);
     }
 
     delete(id) {
-        const url = 'https://localhost:7211/api/Cart/DeleteCartItem/' + id;
+        const url = localhost + 'api/Cart/DeleteCartItem/' + id;
         return axios.delete(url);
     }
 }

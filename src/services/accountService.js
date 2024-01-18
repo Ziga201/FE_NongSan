@@ -1,10 +1,12 @@
 import axios from 'axios';
 
 const jwtToken = localStorage.getItem('jwtToken');
+const localhost = 'http://tungpts-001-site1.atempurl.com/';
+// const localhost = "https://localhost:7211/"
 
 class Account {
     login(formData) {
-        const url = 'https://localhost:7211/api/Auth/Login';
+        const url = localhost + 'api/Auth/Login';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -13,7 +15,7 @@ class Account {
         return axios.put(url, formData, config);
     }
     register(formData) {
-        const url = 'https://localhost:7211/api/Auth/Register';
+        const url = localhost + 'api/Auth/Register';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -23,22 +25,22 @@ class Account {
     }
 
     active(formData) {
-        const url = 'https://localhost:7211/api/Auth/ActiveAccount';
+        const url = localhost + 'api/Auth/ActiveAccount';
         return axios.put(url, formData);
     }
 
     sendCode(formData) {
-        const url = 'https://localhost:7211/api/Auth/SendCode';
+        const url = localhost + 'api/Auth/SendCode';
         return axios.post(url, formData);
     }
 
     forgotPassword(formData) {
-        const url = 'https://localhost:7211/api/Auth/ForgotPassword';
+        const url = localhost + 'api/Auth/ForgotPassword';
         return axios.put(url, formData);
     }
 
     create(formData) {
-        const url = 'https://localhost:7211/api/Auth/AddAccount';
+        const url = localhost + 'api/Auth/AddAccount';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -48,7 +50,7 @@ class Account {
     }
 
     update(formData) {
-        const url = 'https://localhost:7211/api/Auth/UpdateAccount';
+        const url = localhost + 'api/Auth/UpdateAccount';
         const config = {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -57,11 +59,11 @@ class Account {
         return axios.put(url, formData, config);
     }
     delete(id) {
-        const url = 'https://localhost:7211/api/Auth/DeleteAccount/' + id;
+        const url = localhost + 'api/Auth/DeleteAccount/' + id;
         return axios.delete(url);
     }
     getAll() {
-        const url = 'https://localhost:7211/api/Auth/GetAll';
+        const url = localhost + 'api/Auth/GetAll';
         // const config = {
         //     headers: {
         //         Authorization: 'Bearer ' + jwtToken,
@@ -71,12 +73,12 @@ class Account {
     }
 
     getAllStaff() {
-        const url = 'https://localhost:7211/api/Auth/GetAllStaff';
+        const url = localhost + 'api/Auth/GetAllStaff';
         return axios.get(url);
     }
 
     getAccountByID(id) {
-        const url = 'https://localhost:7211/api/Auth/GetAccountByID/' + id;
+        const url = localhost + 'api/Auth/GetAccountByID/' + id;
         return axios.get(url);
     }
 }

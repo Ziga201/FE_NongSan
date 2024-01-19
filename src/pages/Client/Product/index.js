@@ -94,6 +94,7 @@ function Product() {
 
     return (
         <>
+            <ToastContainer position="bottom-right" />
             <div className={cx('banner')}>
                 <div className={cx('wrapper')}>
                     <div className={cx('heading')}>Sản phẩm</div>
@@ -196,7 +197,6 @@ function Product() {
                                                         />
                                                     </button>
                                                 </div>
-                                                <ToastContainer position="bottom-right" />
                                             </div>
                                         ))}
                                 </div>

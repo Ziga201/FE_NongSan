@@ -11,19 +11,30 @@ import { useState, useEffect } from 'react';
 import orderService from '~/services/orderService';
 import { format } from 'date-fns';
 import ListComponent from './List/ListComponent';
-
+import Pagination from '@mui/material/Pagination';
 const cx = classNames.bind(style);
 
 function Checkout() {
     const [order, setOrder] = useState([]);
     const [update, setUpdate] = useState();
+    const [pageNumber, setPageNumber] = useState({
+        pageNumber: 1,
+        pageSize: 6,
+    });
+    const [totalPages, setTotalPages] = useState();
     useEffect(() => {
         const fetchData = async () => {
-            const response = await orderService.getAll();
-            setOrder(response);
+            const response = await orderService.getAll(pageNumber.pageSize, pageNumber.pageNumber);
+            setOrder(response.data);
+            setTotalPages(response.data.pagination.totalPage);
         };
         fetchData();
     }, [update]);
+
+    const handlePageClick = (event, value) => {
+        setPageNumber({ pageNumber: value, pageSize: 6 });
+        setUpdate(new Date());
+    };
 
     const formatDate = (date) => {
         const dateObject = new Date(date);
@@ -126,6 +137,9 @@ function Checkout() {
                     </table>
                 </div>
             )}
+            <div style={{ display: 'flex', marginTop: '20px', justifyContent: 'center' }}>
+                <Pagination count={totalPages} onChange={handlePageClick} color="primary" />
+            </div>
         </div>
     );
 }

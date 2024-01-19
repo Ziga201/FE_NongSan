@@ -22,8 +22,8 @@ class Order {
         return axios.post(url, orderDetail, config);
     }
 
-    getAll() {
-        const url = localhost + '/api/Order/GetAll';
+    getAll(pageSize, pageNumber) {
+        const url = localhost + `/api/Order/GetAll?PageSize=${pageSize}&PageNumber=${pageNumber}`;
         return axios.get(url);
     }
 

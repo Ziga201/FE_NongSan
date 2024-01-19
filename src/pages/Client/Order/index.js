@@ -68,6 +68,7 @@ function Order() {
 
     return (
         <div className={cx('container')}>
+            <ToastContainer position="bottom-right" />
             {order.data !== undefined && order.data.length > 0 && (
                 <div>
                     {order.data.map((item) => (
@@ -143,7 +144,6 @@ function Order() {
                                         Hoàn thành đơn hàng
                                     </button>
                                 )}
-                                <ToastContainer position="bottom-right" />
                             </div>
                         </div>
                     ))}

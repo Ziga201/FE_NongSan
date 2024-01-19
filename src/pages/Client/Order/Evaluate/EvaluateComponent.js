@@ -17,7 +17,7 @@ function EvaluateComponent(props) {
 
     const [productID] = useState(props.productID);
     const [accountID] = useState(props.accountID);
-    const [pointEvaluation, setPointEvaluation] = useState('');
+    const [pointEvaluation, setPointEvaluation] = useState(5);
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
 
@@ -33,7 +33,7 @@ function EvaluateComponent(props) {
         formData.append('image', image);
 
         const response = await productService.addProductReview(formData);
-        toast.success(response.data.result.message);
+        toast.success(response.data.message);
         props.setUpdate(new Date());
 
         event.target.reset();

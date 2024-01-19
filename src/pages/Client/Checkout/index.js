@@ -99,7 +99,7 @@ function Checkout() {
 
         if (response.data.status === 200) {
             const deleteCart = await cartService.deleteCart(jwtDecoded.Id);
-            navigate(response.data.message);
+            window.location.href = response.data.message;
         } else {
             toast.error(response.data.message);
             navigate('/cart');

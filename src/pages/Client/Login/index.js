@@ -20,6 +20,7 @@ function Login() {
 
         formData.append('userName', username);
         formData.append('password', password);
+        toast.success('Vui lòng chờ');
 
         const response = await accountService.login(formData);
         if (response.data.status === 200) {

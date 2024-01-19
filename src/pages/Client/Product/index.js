@@ -83,6 +83,12 @@ function Product() {
 
         const response = await cartService.addToCart(formData);
         toast.success(response.data.message);
+        if (account == null) {
+            toast.success('Bạn chưa đăng nhập');
+            setTimeout(() => {
+                window.location.href = 'https://fe-nong-san.vercel.app/login';
+            }, 2000);
+        }
     };
 
     return (

@@ -39,7 +39,7 @@ function Cart() {
     const handleSubmit = () => {
         if (cart.data == '') toast.error('Chưa có sản phẩm trong giỏ hàng !');
         else {
-            window.location.href = 'http://localhost:3000/checkout';
+            window.location.href = 'https://fe-nong-san.vercel.app/checkout';
         }
     };
 

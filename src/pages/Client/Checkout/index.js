@@ -6,6 +6,7 @@ import accountService from '~/services/accountService';
 import orderService from '~/services/orderService';
 import { toast, ToastContainer } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 const cx = classNames.bind(style);
 
@@ -13,7 +14,7 @@ function Checkout() {
     const [cart, setCart] = useState([]);
     const [user, setUser] = useState([]);
     const [paymentType, setPaymentType] = useState([]);
-
+    const navigate = useNavigate();
     const jwtToken = localStorage.getItem('jwtToken');
     const jwtDecoded = jwtDecode(jwtToken);
 
@@ -94,12 +95,15 @@ function Checkout() {
         }
 
         toast.success('Đang đặt hàng !');
-
         const response = await orderService.order(order, orderDetail);
 
-        const deleteCart = await cartService.deleteCart(jwtDecoded.Id);
-
-        window.location.href = response.data.message;
+        if (response.data.status === 200) {
+            const deleteCart = await cartService.deleteCart(jwtDecoded.Id);
+            navigate('/confirm');
+        } else {
+            toast.error(response.data.message);
+            navigate('/cart');
+        }
 
         event.target.reset();
     };

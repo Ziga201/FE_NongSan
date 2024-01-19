@@ -4,7 +4,7 @@ import { faBars, faBell, faSignOut } from '@fortawesome/free-solid-svg-icons';
 import style from './Header.module.scss';
 import logo from './img/logo.svg';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import accountService from '~/services/accountService';
 import { jwtDecode } from 'jwt-decode';
 import { useEffect, useState } from 'react';
@@ -12,8 +12,10 @@ import { useEffect, useState } from 'react';
 const cx = classNames.bind(style);
 
 function Header() {
+    const navigate = useNavigate();
+
     const signOut = () => {
-        window.location.href = '/login';
+        navigate('/login');
         localStorage.removeItem('jwtToken');
     };
 

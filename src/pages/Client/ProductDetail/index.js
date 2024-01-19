@@ -2,7 +2,7 @@ import style from './ProductDetail.module.scss';
 import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import productService from '~/services/productService';
 import cartService from '~/services/cartService';
@@ -20,6 +20,7 @@ function ProductDetail() {
     const [review, setReview] = useState([]);
     const [account, setAccount] = useState([]);
     const [average, setAverage] = useState(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetch = async () => {
@@ -83,10 +84,10 @@ function ProductDetail() {
         formData.append('accountID', account.Id);
         formData.append('productID', item);
 
-        if (account == null) {
+        if (account.length == 0) {
             toast.success('Bạn chưa đăng nhập');
             setTimeout(() => {
-                window.location.href = 'https://fe-nong-san.vercel.app/login';
+                navigate('/login');
             }, 2000);
         } else {
             const response = await cartService.addToCart(formData);

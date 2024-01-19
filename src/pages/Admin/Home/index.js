@@ -162,7 +162,7 @@ function Home() {
                                         <FontAwesomeIcon className={cx('icon-item')} icon={faChartPie} />
                                     </div>
                                 </div>
-                                <Link to="/">
+                                <Link to="/admin/checkout">
                                     <div className={cx('more')}>
                                         Chi tiết <FontAwesomeIcon className={cx('more-item')} icon={faCircleRight} />
                                     </div>

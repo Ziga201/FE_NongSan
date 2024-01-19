@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import accountService from '~/services/accountService';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(style);
 
@@ -12,6 +13,7 @@ function ForgotPassword() {
     const [codeActive, setCodeActive] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [showForm, setShowForm] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {}, [showForm]);
 
@@ -41,8 +43,8 @@ function ForgotPassword() {
         if (response.data.status == 200) {
             toast.success(response.data.message);
             setTimeout(() => {
-                window.location.href = '/login';
-            }, 3000);
+                navigate('/login');
+            }, 2000);
         } else {
             toast.error(response.data.message);
         }

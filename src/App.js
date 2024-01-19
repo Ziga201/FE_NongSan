@@ -4,28 +4,22 @@ import { publicRoutes, privateRoutes, adminRoutes } from '~/routes';
 import { DefaultLayout } from '~/components/Layout';
 import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import Product from '~/pages/Client/Product';
 
 function App() {
     const jwtToken = localStorage.getItem('jwtToken');
-    let userId;
+    let role;
     if (jwtToken) {
         try {
             const decodedToken = jwtDecode(jwtToken);
-            userId = decodedToken.Username;
+            role = decodedToken.role;
         } catch (error) {
             console.error('Error decoding JWT:', error);
         }
     }
 
-    console.log(userId);
     return (
         <Router>
             <div className="App">
-                {/* <div style={{ display: 'none' }}>
-                    <Product id={2} />
-                </div> */}
-
                 <Routes>
                     {publicRoutes.map((route, index) => {
                         const Page = route.component;
@@ -50,7 +44,7 @@ function App() {
                         );
                     })}
 
-                    {userId == 'admin' || userId == 'user'
+                    {role == 'Admin' || role == 'User'
                         ? privateRoutes.map((route, index) => {
                               const Page = route.component;
                               let Layout = DefaultLayout;
@@ -76,7 +70,7 @@ function App() {
                               return <Route key={index} path={route.path} element={<Navigate to="/login" />} />;
                           })}
 
-                    {userId == 'admin'
+                    {role == 'Admin'
                         ? adminRoutes.map((route, index) => {
                               const Page = route.component;
                               let Layout = DefaultLayout;

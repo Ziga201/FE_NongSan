@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import style from './Cart.module.scss';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import cartService from '~/services/cartService';
 import { jwtDecode } from 'jwt-decode';
 import { toast, ToastContainer } from 'react-toastify';
@@ -15,6 +15,7 @@ function Cart() {
     const [update, setUpdate] = useState([]);
     const jwtToken = localStorage.getItem('jwtToken');
     const jwt = jwtDecode(jwtToken);
+    const navigate = useNavigate();
 
     console.log(jwt);
 
@@ -39,7 +40,7 @@ function Cart() {
     const handleSubmit = () => {
         if (cart.data == '') toast.error('Chưa có sản phẩm trong giỏ hàng !');
         else {
-            window.location.href = 'https://fe-nong-san.vercel.app/checkout';
+            navigate('/checkout');
         }
     };
 
@@ -73,10 +74,20 @@ function Cart() {
                         <tbody className={cx('tbody')}>
                             {cart.data.map((item, index) => (
                                 <tr className={cx('tr')} key={index}>
-                                    <td className={cx('td')}>{item.nameProduct}</td>
-                                    <td className={cx('td')}>
-                                        <img style={{ width: '100px' }} src={item.avatarImageProduct} alt="product" />
+                                    <td className={cx('td')} style={{ fontWeight: '500' }}>
+                                        <Link to={'/product/' + item.productID}>{item.nameProduct}</Link>
                                     </td>
+
+                                    <td to={'/product/' + item.productID} className={cx('td')}>
+                                        <Link to={'/product/' + item.productID}>
+                                            <img
+                                                style={{ width: '100px' }}
+                                                src={item.avatarImageProduct}
+                                                alt="product"
+                                            />
+                                        </Link>
+                                    </td>
+
                                     <td className={cx('td')}>
                                         <span className={cx('original-price')}>
                                             {parseInt(item.price).toLocaleString('vi-VN')}

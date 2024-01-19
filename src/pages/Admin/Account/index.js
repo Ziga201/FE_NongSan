@@ -77,7 +77,7 @@ function Account() {
                                     <tr key={item.accountID}>
                                         <td>{index + 1}</td>
                                         <td>{item.userName}</td>
-                                        <td data-fulltext={item.password}>{item.password}</td>
+                                        <td>***********</td>
 
                                         <td>{item.email}</td>
                                         <td>{item.status}</td>

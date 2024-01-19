@@ -8,7 +8,7 @@ import brand3 from '~/assets/images/brand3.svg';
 import brand4 from '~/assets/images/brand4.svg';
 import brand5 from '~/assets/images/brand5.svg';
 import brand6 from '~/assets/images/brand6.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { faAnglesRight, faArrowRight, faCircleChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast, ToastContainer } from 'react-toastify';
@@ -31,7 +31,7 @@ function Home() {
     });
     const [account, setAccount] = useState([]);
     const [typeData, setTypeData] = useState([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
             const response = await productService.getAllProduct();
@@ -83,7 +83,6 @@ function Home() {
     const handleFilter = (key) => {
         setKey(key);
     };
-    const handleClick = (key) => {};
 
     const addToCart = async (item) => {
         const formData = new FormData();
@@ -91,10 +90,10 @@ function Home() {
         formData.append('accountID', account.Id);
         formData.append('productID', item);
 
-        if (account == null) {
+        if (account.length == 0) {
             toast.success('Bạn chưa đăng nhập');
             setTimeout(() => {
-                window.location.href = 'https://fe-nong-san.vercel.app/login';
+                navigate('/login');
             }, 2000);
         } else {
             const response = await cartService.addToCart(formData);

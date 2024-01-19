@@ -5,7 +5,7 @@ import productTypeService from '~/services/productTypeService';
 import cartService from '~/services/cartService';
 import 'bootstrap/dist/css/bootstrap.css';
 import classNames from 'classnames/bind';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faAnglesRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { jwtDecode } from 'jwt-decode';
@@ -28,6 +28,7 @@ function Product() {
     const [search, setSearch] = useState('');
     const [priceRange, setPriceRange] = useState([0, 100000]);
     const [account, setAccount] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetch = async () => {
@@ -43,7 +44,6 @@ function Product() {
                 }
             }
         };
-
         fetch();
     }, []);
 
@@ -81,10 +81,10 @@ function Product() {
         formData.append('accountID', account.Id);
         formData.append('productID', item);
 
-        if (account == null) {
+        if (account.length == 0) {
             toast.success('Bạn chưa đăng nhập');
             setTimeout(() => {
-                window.location.href = 'https://fe-nong-san.vercel.app/login';
+                navigate('/login');
             }, 2000);
         } else {
             const response = await cartService.addToCart(formData);

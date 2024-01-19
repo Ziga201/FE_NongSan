@@ -1,7 +1,7 @@
 import style from '~/pages/Client/Login/Login.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import accountService from '~/services/accountService';
 
 import { toast, ToastContainer } from 'react-toastify';
@@ -19,6 +19,8 @@ function Login() {
     const [countdown, setCountdown] = useState(120);
     const [expired, setExpired] = useState(false);
     const [update, setUpdate] = useState();
+    const navigate = useNavigate();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -80,7 +82,7 @@ function Login() {
             toast.success(response.data.message);
 
             setTimeout(() => {
-                window.location.href = '/login';
+                navigate('/login');
             }, 3000);
         } else {
             toast.error(response.data.message);

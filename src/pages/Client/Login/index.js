@@ -1,7 +1,7 @@
 import style from './Login.module.scss';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import accountService from '~/services/accountService';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,7 @@ function Login() {
     const [user, setUser] = useState([]);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,7 +27,7 @@ function Login() {
         if (response.data.status === 200) {
             localStorage.setItem('jwtToken', response.data.data.accessToken);
             toast.success(response.data.message);
-            window.location.href = '/';
+            navigate('/');
         } else {
             toast.error(response.data.message);
         }

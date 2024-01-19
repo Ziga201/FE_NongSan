@@ -4,13 +4,14 @@ import { useEffect, useState } from 'react';
 import UpdateComponent from './Update/UpdateComponent';
 import accountService from '~/services/accountService';
 import { jwtDecode } from 'jwt-decode';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 
 const cx = classNames.bind(style);
 function Account() {
     const jwtToken = localStorage.getItem('jwtToken');
     const responseJWT = jwtDecode(jwtToken);
+    const navigate = useNavigate();
 
     const [data, setData] = useState(null);
     const [update, setUpdate] = useState();
@@ -22,10 +23,10 @@ function Account() {
         fetchData();
     }, [update]);
 
-    console.log(data);
+    console.log(responseJWT.role);
 
     const signOut = () => {
-        window.location.href = '/login';
+        navigate('/login');
         localStorage.removeItem('jwtToken');
     };
 
@@ -71,7 +72,7 @@ function Account() {
                             </div>
                         </div>
                         <div className={cx('button')}>
-                            {responseJWT.Username == 'admin' && (
+                            {responseJWT.role == 'Admin' && (
                                 <div className={cx('btn', 'btn-success')}>
                                     <Link to="/admin">Admin</Link>
                                 </div>

@@ -22,6 +22,11 @@ class Order {
         return axios.post(url, orderDetail, config);
     }
 
+    getAlls() {
+        const url = localhost + '/api/Order/GetAll';
+        return axios.get(url);
+    }
+
     getAll(pageSize, pageNumber) {
         const url = localhost + `/api/Order/GetAll?PageSize=${pageSize}&PageNumber=${pageNumber}`;
         return axios.get(url);

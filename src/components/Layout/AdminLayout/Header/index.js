@@ -31,10 +31,9 @@ function Header() {
         fetchData();
     }, []);
 
-    console.log(data);
     return (
         <header className={cx('header')}>
-            <Link to="/" className={cx('logo')}>
+            <Link to="/admin" className={cx('logo')}>
                 <img src={logo} />
             </Link>
             <div className={cx('info')}>

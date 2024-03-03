@@ -31,7 +31,7 @@ function Home() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await orderService.getAll();
+            const response = await orderService.getAlls();
             setOrder(response);
         };
         fetchData();
@@ -44,8 +44,6 @@ function Home() {
         fetchData();
     }, []);
 
-    console.log(product);
-
     useEffect(() => {
         const fetchData = async () => {
             const response = await accountService.getAll();
@@ -54,7 +52,7 @@ function Home() {
         fetchData();
     }, []);
 
-    const result = order.data != undefined ? order.data.reduce((acc, item) => acc + item.totalPrice, 0) : 0;
+    const result = order.data != undefined ? order.data.data.reduce((acc, item) => acc + item.totalPrice, 0) : 0;
     const totalUser = account.data != undefined ? account.data.filter((x) => x.decentralizationID == 1).length : 0;
     const totalProduct =
         product.data != undefined ? product.data.data.reduce((acc, item) => acc + item.purchases, 0) : 0;
@@ -100,7 +98,7 @@ function Home() {
                                 <div className={cx('info')}>
                                     <div className={cx('data')}>
                                         <div className={cx('number')}>
-                                            {order.data != undefined ? order.data.length : 0}
+                                            {order.data != undefined ? order.data.data.length : 0}
                                         </div>
                                         <div className={cx('text')}>Tổng đơn hàng</div>
                                     </div>

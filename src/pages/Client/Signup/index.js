@@ -100,6 +100,13 @@ function Login() {
         setUpdate(new Date());
     };
 
+    const active = () => {
+        setShowSignup(false);
+        setCountdown(0);
+        setExpired(true);
+        setShowComfirm(true);
+    };
+
     return (
         <>
             <div className={cx('login-wrap')}>
@@ -179,12 +186,17 @@ function Login() {
                     </form>
                 )}
 
-                <p className={cx('p')}>
-                    Bạn đã có tài khoản ?{' '}
-                    <Link to="/login">
-                        <span className={cx('sign')}>Đăng nhập</span>
-                    </Link>
-                </p>
+                <div className={cx('p')}>
+                    <div onClick={active} className={cx('active')}>
+                        Kích hoạt tài khoản
+                    </div>
+                    <p>
+                        Bạn đã có tài khoản ?{' '}
+                        <Link to="/login">
+                            <span className={cx('sign')}>Đăng nhập</span>
+                        </Link>
+                    </p>
+                </div>
                 <ToastContainer position="bottom-right" />
             </div>
         </>

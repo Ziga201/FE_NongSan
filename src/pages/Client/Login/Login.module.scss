@@ -42,7 +42,9 @@
 }
 .p {
     margin-top: 15px;
-    text-align: end;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
 }
 
 .sign {
@@ -50,6 +52,14 @@
     font-weight: 600;
     &:hover {
         color: rgba(66, 148, 108, 0.616);
+    }
+}
+
+.active {
+    color: #3a7e3c;
+    cursor: pointer;
+    &:hover {
+        color: #53aa58;
     }
 }
 
